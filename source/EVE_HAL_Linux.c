@@ -182,8 +182,8 @@ void HAL_SetWriteAddress(uint32_t address)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 3;
 	xfer[0].cs_change = 0;
 
@@ -205,8 +205,8 @@ void HAL_SetReadAddress(uint32_t address)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 4;
 	xfer[0].cs_change = 0;
 
@@ -227,8 +227,8 @@ void HAL_Write(const uint8_t *buffer, uint32_t length)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)buffer;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)buffer;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = length;
 	xfer[0].cs_change = 0;
 
@@ -249,8 +249,8 @@ void HAL_Write32(uint32_t val32)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&val;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&val;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 4;
 	xfer[0].cs_change = 0;
 
@@ -271,8 +271,8 @@ void HAL_Write16(uint16_t val16)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&val;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&val;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 2;
 	xfer[0].cs_change = 0;
 
@@ -292,8 +292,8 @@ void HAL_Write8(uint8_t val8)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&val8;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&val8;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 1;
 	xfer[0].cs_change = 0;
 
@@ -313,8 +313,8 @@ uint32_t HAL_Read32(void)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)NULL;
-	xfer[0].rx_buf = (uint32_t)&val32;
+	xfer[0].tx_buf = (uintptr_t)NULL;
+	xfer[0].rx_buf = (uintptr_t)&val32;
 	xfer[0].len = 4;
 	xfer[0].cs_change = 0;
 
@@ -338,8 +338,8 @@ uint16_t HAL_Read16(void)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)NULL;
-	xfer[0].rx_buf = (uint32_t)&val16;
+	xfer[0].tx_buf = (uintptr_t)NULL;
+	xfer[0].rx_buf = (uintptr_t)&val16;
 	xfer[0].len = 2;
 	xfer[0].cs_change = 0;
 
@@ -363,8 +363,8 @@ uint8_t HAL_Read8(void)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)NULL;
-	xfer[0].rx_buf = (uint32_t)&val8;
+	xfer[0].tx_buf = (uintptr_t)NULL;
+	xfer[0].rx_buf = (uintptr_t)&val8;
 	xfer[0].len = 1;
 	xfer[0].cs_change = 0;
 
@@ -396,12 +396,12 @@ void HAL_MemWrite32(uint32_t address, uint32_t val32)
 
 	HAL_ChipSelect(1);
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 3;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)&val;
-	xfer[1].rx_buf = (uint32_t)NULL;
+	xfer[1].tx_buf = (uintptr_t)&val;
+	xfer[1].rx_buf = (uintptr_t)NULL;
 	xfer[1].len = 4;
 	xfer[1].cs_change = 0;
 
@@ -424,12 +424,12 @@ void HAL_MemWrite16(uint32_t address, uint16_t val16)
 
 	HAL_ChipSelect(1);
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 3;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)&val;
-	xfer[1].rx_buf = (uint32_t)NULL;
+	xfer[1].tx_buf = (uintptr_t)&val;
+	xfer[1].rx_buf = (uintptr_t)NULL;
 	xfer[1].len = 2;
 	xfer[1].cs_change = 0;
 
@@ -451,12 +451,12 @@ void HAL_MemWrite8(uint32_t address, uint8_t val8)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 3;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)&val8;
-	xfer[1].rx_buf = (uint32_t)NULL;
+	xfer[1].tx_buf = (uintptr_t)&val8;
+	xfer[1].rx_buf = (uintptr_t)NULL;
 	xfer[1].len = 1;
 	xfer[1].cs_change = 0;
 
@@ -479,12 +479,12 @@ uint32_t HAL_MemRead32(uint32_t address)
 
 	HAL_ChipSelect(1);
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 4;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)NULL;
-	xfer[1].rx_buf = (uint32_t)&val32;
+	xfer[1].tx_buf = (uintptr_t)NULL;
+	xfer[1].rx_buf = (uintptr_t)&val32;
 	xfer[1].len = 4;
 	xfer[1].cs_change = 0;
 
@@ -510,12 +510,12 @@ uint16_t HAL_MemRead16(uint32_t address)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 4;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)NULL;
-	xfer[1].rx_buf = (uint32_t)&val16;
+	xfer[1].tx_buf = (uintptr_t)NULL;
+	xfer[1].rx_buf = (uintptr_t)&val16;
 	xfer[1].len = 2;
 	xfer[1].cs_change = 0;
 
@@ -541,12 +541,12 @@ uint8_t HAL_MemRead8(uint32_t address)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&addr;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 4;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)NULL;
-	xfer[1].rx_buf = (uint32_t)&val8;
+	xfer[1].tx_buf = (uintptr_t)NULL;
+	xfer[1].rx_buf = (uintptr_t)&val8;
 	xfer[1].len = 1;
 	xfer[1].cs_change = 0;
 
@@ -571,16 +571,16 @@ void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
 
 	memset(xfer, 0, sizeof(xfer));
 
-	xfer[0].tx_buf = (uint32_t)&cmd;
-	xfer[0].rx_buf = (uint32_t)NULL;
+	xfer[0].tx_buf = (uintptr_t)&cmd;
+	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 1;
 	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uint32_t)&param;
-	xfer[1].rx_buf = (uint32_t)NULL;
+	xfer[1].tx_buf = (uintptr_t)&param;
+	xfer[1].rx_buf = (uintptr_t)NULL;
 	xfer[1].len = 1;
 	xfer[1].cs_change = 0;
-	xfer[2].tx_buf = (uint32_t)&zero;
-	xfer[2].rx_buf = (uint32_t)NULL;
+	xfer[2].tx_buf = (uintptr_t)&zero;
+	xfer[2].rx_buf = (uintptr_t)NULL;
 	xfer[2].len = 1;
 	xfer[2].cs_change = 0;
 
