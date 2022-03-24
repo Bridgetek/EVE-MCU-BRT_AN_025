@@ -48,7 +48,7 @@
  */
 
 // Guard against being used for incorrect CPU type.
-#if PLATFORM == RASPBERRYPI
+#if defined(PLATFORM_RASPBERRYPI)
 
 #pragma message "Compiling " __FILE__ " for Raspberry Pi"
 
@@ -288,5 +288,5 @@ uint32_t Platform_le32toh(uint32_t h)
     return le32toh(h);
 }
 
-#endif /* PLATFORM == RASPBERRYPI */
+#endif /* (PLATFORM_RASPBERRYPI) */
 

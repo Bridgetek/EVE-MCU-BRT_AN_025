@@ -48,15 +48,17 @@
  */
 
 // Guard against being used for incorrect CPU type. PIC is compiled with Microchip XC compiler.
-#if defined ( __XC__ ) && PLATFORM==PIC
+#if defined(PLATFORM_PIC)
+
+#pragma message "Compiling " __FILE__ " for Microchip PIC"
 
 #define bswap16(x) (((x) >> 8) | ((x) << 8))
 #define bswap32(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) \
                   | (((x) & 0x0000FF00) << 8) | ((x) << 24))
 
 
-///////////////////////////////#pragma message "Compiling " __FILE__ " for PIC"
 #include <xc.h>
+
 #include <EVE.h>
 #include <EVE_config.h>
 #include <FT8xx.h>
@@ -358,4 +360,4 @@ uint32_t MCU_le32toh (uint32_t h)
         return bswap32(h);
 }
 
-#endif /* defined ( __XC__ ) && PLATFORM==PIC */
+#endif /* defined(PLATFORM_PIC) */

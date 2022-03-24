@@ -48,7 +48,7 @@
  */
 
 // Guard against being used for incorrect CPU type.
-#if defined( __arm__ ) && PLATFORM == BEAGLEBONE
+#if defined(PLATFORM_BEAGLEBONE)
 
 #pragma message "Compiling " __FILE__ " for Beaglebone Black"
 
@@ -288,4 +288,4 @@ uint32_t Platform_le32toh(uint32_t h)
     return le32toh(h);
 }
 
-#endif /* defined( __arm__ ) && PLATFORM == BEAGLEBONE */
+#endif /* defined(PLATFORM_BEAGLEBONE) */

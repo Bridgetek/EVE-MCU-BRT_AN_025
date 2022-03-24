@@ -48,7 +48,7 @@
  */
 
 // Guard against being used for incorrect CPU type.
-#if defined( __FT32__ ) && (PLATFORM==FT900 || PLATFORM==FT930)
+#if defined(PLATFORM_FT9XX)
 
 #pragma message "Compiling " __FILE__ " for BridgeTek FT9XX"
 
@@ -64,7 +64,7 @@
 #include "EVE_config.h"
 
 // SPI Master pins
-#if PLATFORM==FT900
+#if defined(__FT900__)
 
 #define PIN_NUM_MISO 30
 #define PIN_NUM_MOSI 29
@@ -75,7 +75,7 @@
 // Powerdown pin
 #define PIN_NUM_PD   43
 
-#elif PLATFORM==FT930
+#elif defined(__FT930__)
 
 #define PIN_NUM_MISO 35
 #define PIN_NUM_MOSI 36
@@ -86,7 +86,7 @@
 // Powerdown pin
 #define PIN_NUM_PD   15
 
-#endif
+#endif //
 
 // This is the MCU specific section and contains the functions which talk to the
 // PIC registers. If porting the code to a different PIC or to another MCU, these
@@ -99,10 +99,16 @@ void MCU_Init(void)
 	sys_enable(sys_device_spi_master);
 
 	gpio_function(PIN_NUM_CLK, pad_spim_sck); /* GPIO27 to SPIM_CLK */
+#if __FT900__
 	gpio_function(PIN_NUM_CS, pad_spim_ss0); /* GPIO28 as CS */
+	gpio_function(PIN_NUM_PD, pad_gpio43);
+#else
+	gpio_function(PIN_NUM_CS, pad30_spim_ss0); /* GPIO30 as CS */
+	gpio_function(PIN_NUM_PD, pad_gpio15);
+#endif
+
 	gpio_function(PIN_NUM_MOSI, pad_spim_mosi); /* GPIO29 to SPIM_MOSI */
 	gpio_function(PIN_NUM_MISO, pad_spim_miso); /* GPIO30 to SPIM_MISO */
-	gpio_function(PIN_NUM_PD, pad_gpio43);
 
 	gpio_dir(PIN_NUM_CLK, pad_dir_output);
 	gpio_dir(PIN_NUM_CS, pad_dir_output);
@@ -285,4 +291,4 @@ uint32_t MCU_le32toh(uint32_t h)
 	return h;
 }
 
-#endif /* defined( __FT32__ ) && (PLATFORM==FT900 || PLATFORM==FT930) */
+#endif /* defined(PLATFORM_FT9XX) */

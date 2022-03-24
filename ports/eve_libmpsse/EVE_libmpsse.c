@@ -49,7 +49,7 @@
 
 // Guard against being used for incorrect platform or architecture.
 // USE_MPSSE holds the MPSSE channel to open.
-#ifdef USE_MPSSE
+#if defined(USE_MPSSE)
 
 #pragma message ("Compiling " __FILE__ " for libMPSSE")
 
@@ -330,4 +330,4 @@ uint32_t MCU_le32toh(uint32_t h)
 #endif // _WIN32
 }
 
-#endif /* USE_MPSSE */
+#endif /* defined(USE_MPSSE) */

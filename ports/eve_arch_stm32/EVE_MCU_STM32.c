@@ -47,7 +47,9 @@
 * ============================================================================
 */
 
-#if defined ( __arm__ ) && PLATFORM==STM32
+#if defined(PLATFORM_STM32)
+
+#pragma message "Compiling " __FILE__ " for ST STM32"
 
 #define bswap16(x) (((x) >> 8) | ((x) << 8))
 #define bswap32(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) \
@@ -58,7 +60,10 @@
 #include <stm32f0xx_hal_gpio.h>
 #include <stm32f0xx_hal_rcc.h>
 #include <stm32f0xx_hal_spi.h>
+
+/* Replace with header file for target MCU */
 #include "stm32f0308_discovery.h"
+
 #include <main.h>
 #include <EVE.h>
 #include <EVE_config.h>
@@ -464,4 +469,4 @@ uint32_t MCU_le32toh (uint32_t h)
 //  }
 //}
 
-#endif /* defined ( __arm__ ) && PLATFORM==STM32 */
+#endif /* defined (PLATFORM_STM32) */

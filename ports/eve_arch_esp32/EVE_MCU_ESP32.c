@@ -49,7 +49,7 @@
  */
 
 // Guard against being used for incorrect CPU type. ESP32 is Xtensa LE based.
-#if defined( __XTENSA__ ) && PLATFORM == ESP32
+#if defined(PLATFORM_ESP32)
 
 #pragma message "Compiling " __FILE__ " for Espressif ESP32"
 
@@ -336,4 +336,4 @@ uint32_t MCU_le32toh(uint32_t h)
 	return le32toh(h);
 }
 
-#endif /* __XTENSA__  && PLATFORM == ESP32 */
+#endif /* defined(PLATFORM_ESP32) */

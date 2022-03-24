@@ -48,9 +48,13 @@
  */
 
 // Guard against being used for incorrect CPU type.
-#if defined( __MSP430__ ) && PLATFORM==MSP430
+#if defined(PLATFORM_MSP430)
 
+#pragma message "Compiling " __FILE__ " for TI MSP430"
+
+/* Replace with header file for target MCU */
 #include <msp430g2553.h>
+
 #include "..\include\EVE.h"
 #include "..\include\EVE_config.h"
 #include "..\include\FT8xx.h"
@@ -372,4 +376,4 @@ uint32_t MCU_le32toh (uint32_t h)
 
 }
 
-#endif /* defined( __MSP430__ ) && PLATFORM==MSP430 */
+#endif /* defined(PLATFORM_MSP430) */
