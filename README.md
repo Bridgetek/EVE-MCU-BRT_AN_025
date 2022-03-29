@@ -16,6 +16,7 @@ The PLATFORM macro sets the port files to be used by the compiler. The options a
     <tr><td>Microchip PIC18F</td><td>PLATFORM_PIC</td><td>eve_arch_pic</td></tr>
     <tr><td>ST STM32</td><td>PLATFORM_STM32</td><td>eve_arch_stm32</td></tr>
     <tr><td>Raspberry Pi</td><td>PLATFORM_RASPBERRYPI</td><td>eve_arch_rpi</td></tr>
+    <tr><td>Raspberry Pi Pico</td><td>PLATFORM_RP2040</td><td>eve_arch_rpi</td></tr>
     <tr><td>Generic using libMPSSE</td><td>USE_MPSSE</td><td>eve_libmpsse</td></tr>
 </table>
 
