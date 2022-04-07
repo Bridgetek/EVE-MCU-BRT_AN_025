@@ -809,8 +809,8 @@
 #define EVE_RAM_TOP                 3162112UL
 #define EVE_CMDBUF_SIZE             4096UL
 #define EVE_RAM_CMD_SIZE            (4*1024L)
-#define RAM_ERR_REPORT              0x309800
-#define ROMFONT_TABLEADDRESS        3145724UL
+#define EVE_RAM_ERR_REPORT          0x309800
+#define EVE_ROMFONT_TABLEADDRESS    3145724UL
 
 #define EVE_REG_ADAPTIVE_FRAMERATE  0x30257C //3155324UL
 #define EVE_REG_ANALOG              3154284UL
