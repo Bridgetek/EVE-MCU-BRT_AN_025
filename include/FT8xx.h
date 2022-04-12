@@ -216,9 +216,8 @@
 #define EVE_ENC_BITMAP_HANDLE(handle) ((0x5UL << 24)|(((handle) & 0x1fUL) << 0))
 #define EVE_ENC_BITMAP_LAYOUT(format,linestride,height) ((0x7UL << 24)|(((format) & 0x1fUL) << 19)|(((linestride) & 0x3ffUL) << 9)|(((height) & 0x1ffUL) << 0))
 #define EVE_ENC_BITMAP_SIZE(filter,wrapx,wrapy,width,height) ((0x8UL << 24)|(((filter) & 0x1UL) << 20)|(((wrapx) & 0x1UL) << 19)|(((wrapy) & 0x1UL) << 18)|(((width) & 0x1ffUL) << 9)|(((height) & 0x1ffUL) << 0))
-//#define EVE_ENC_BITMAP_SOURCE(addr) ((0x1UL << 24)|(((addr) & 0xffffffUL) << 0))
 #define EVE_ENC_BITMAP_ADDR_MASK 1048575UL
-#define EVE_ENC_BITMAP_SOURCE(addr) ((1UL << 24) | ((addr) < 0 ? (((addr) & (EVE_ENC_BITMAP_ADDR_MASK >> 1))) : ((addr)&EVE_ENC_BITMAP_ADDR_MASK)))
+#define EVE_ENC_BITMAP_SOURCE(addr) ((1UL << 24) | ((addr)&EVE_ENC_BITMAP_ADDR_MASK))
 #define EVE_ENC_BITMAP_TRANSFORM_A(a) ((0x15UL << 24)|((((uint32_t)(a)) & 0x1FFFFUL) << 0))
 #define EVE_ENC_BITMAP_TRANSFORM_B(b) ((0x16UL << 24)|((((uint32_t)(b)) & 0x1FFFFUL) << 0))
 #define EVE_ENC_BITMAP_TRANSFORM_C(c) ((0x17UL << 24)|((((uint32_t)(c)) & 0xFFFFFFUL) << 0))
@@ -557,11 +556,7 @@
 #define EVE_ENC_BITMAP_SIZE_H(width,height) ((0x29UL << 24)|(((width) & 0x3UL) << 2)|(((height) & 0x3UL) << 0))
 #define EVE_ENC_BITMAP_SIZE(filter,wrapx,wrapy,width,height) ((0x8UL << 24)|(((filter) & 0x1UL) << 20)|(((wrapx) & 0x1UL) << 19)|(((wrapy) & 0x1UL) << 18)|(((width) & 0x1ffUL) << 9)|(((height) & 0x1ffUL) << 0))
 
-
-//#define EVE_ENC_BITMAP_SOURCE(addr) ((0x1UL << 24)|(((addr) & 0x3FFFFFUL) << 0))
-#define EVE_ENC_BITMAP_ADDR_MASK 4194303UL
-#define EVE_ENC_BITMAP_SOURCE(addr) ((1UL << 24) | ((addr) < 0 ? (((addr) & (EVE_ENC_BITMAP_ADDR_MASK >> 1))) : ((addr)&EVE_ENC_BITMAP_ADDR_MASK)))
-
+#define EVE_ENC_BITMAP_SOURCE(addr) ((0x1UL << 24)|(((addr) & 0x3FFFFFUL) << 0))
 
 #define EVE_ENC_BITMAP_TRANSFORM_A(a) ((0x15UL << 24)|((((uint32_t)(a)) & 0x1FFFFUL) << 0))
 #define EVE_ENC_BITMAP_TRANSFORM_B(b) ((0x16UL << 24)|((((uint32_t)(b)) & 0x1FFFFUL) << 0))
@@ -809,8 +804,8 @@
 #define EVE_RAM_TOP                 3162112UL
 #define EVE_CMDBUF_SIZE             4096UL
 #define EVE_RAM_CMD_SIZE            (4*1024L)
-#define RAM_ERR_REPORT              0x309800
-#define ROMFONT_TABLEADDRESS        3145724UL
+#define EVE_RAM_ERR_REPORT          0x309800
+#define EVE_ROMFONT_TABLEADDRESS    3145724UL
 
 #define EVE_REG_ADAPTIVE_FRAMERATE  0x30257C //3155324UL
 #define EVE_REG_ANALOG              3154284UL
@@ -1067,12 +1062,9 @@
 
 #define EVE_ENC_VERTEX2F(x,y)                                ((1UL<<30)|(((x)&32767UL)<<15)|(((y)&32767UL)<<0))
 #define EVE_ENC_VERTEX2II(x,y,handle,cell)                   ((2UL<<30)|(((x)&511UL)<<21)|(((y)&511UL)<<12)|(((handle)&31UL)<<7)|(((cell)&127UL)<<0))
-//#define EVE_ENC_BITMAP_SOURCE(addr)                          ((1UL<<24) | ((addr) < 0 ?  (((addr)&8388607UL)) : ((addr)&16777215UL)))
-////#define EVE_ENC_BITMAP_SOURCE(addr) ((0x1UL << 24)|(((addr) & 0x3FFFFFUL) << 0))
-//#define EVE_ENC_BITMAP_SOURCE2(flash_or_ram, addr)           ((1UL<<24)|((flash_or_ram) << 23)|(((addr)&8388607UL)<<0))
 
 #define EVE_ENC_BITMAP_ADDR_MASK 16777215UL
-#define EVE_ENC_BITMAP_SOURCE(addr)                     ((1UL << 24) | ((addr) < 0 ? (((addr) & (EVE_ENC_BITMAP_ADDR_MASK >> 1))) : ((addr)&EVE_ENC_BITMAP_ADDR_MASK)))
+#define EVE_ENC_BITMAP_SOURCE(addr)                     ((1UL << 24) | ((addr)&EVE_ENC_BITMAP_ADDR_MASK))
 #define EVE_ENC_BITMAP_SOURCE2(flash_or_ram, addr)      ((1UL << 24) | ((flash_or_ram) << 23) | (((addr) & (EVE_ENC_BITMAP_ADDR_MASK >> 1)) << 0))
 #define EVE_ENC_CLEAR_COLOR_RGB(red,green,blue)              ((2UL<<24)|(((red)&255UL)<<16)|(((green)&255UL)<<8)|(((blue)&255UL)<<0))
 #define EVE_ENC_TAG(s)                                       ((3UL<<24)|(((s)&255UL)<<0))

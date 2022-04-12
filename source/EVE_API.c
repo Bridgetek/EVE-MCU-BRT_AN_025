@@ -387,11 +387,11 @@ void EVE_CLEAR_COLOR_RGB(uint8_t R, uint8_t G, uint8_t B)
 	HAL_IncCmdPointer(4);
 }
 
-//void EVE_CLEAR_COLOR(uint32_t c)
-//{
-//	HAL_Write32(EVE_ENC_CLEAR_COLOR(c));
-//	HAL_IncCmdPointer(4);
-//}
+void EVE_CLEAR_COLOR(uint32_t c)
+{
+	HAL_Write32(EVE_ENC_CLEAR_COLOR(c));
+	HAL_IncCmdPointer(4);
+}
 
 void EVE_CLEAR(uint8_t C, uint8_t S, uint8_t T)
 {
@@ -405,11 +405,11 @@ void EVE_COLOR_RGB(uint8_t R, uint8_t G, uint8_t B)
 	HAL_IncCmdPointer(4);
 }
 
-//void EVE_COLOR(uint32_t c)
-//{
-//	HAL_Write32(EVE_ENC_COLOR(c));
-//	HAL_IncCmdPointer(4);
-//}
+void EVE_COLOR(uint32_t c)
+{
+	HAL_Write32(EVE_ENC_COLOR(c));
+	HAL_IncCmdPointer(4);
+}
 
 void EVE_VERTEX2F(int16_t x, int16_t y)
 {
