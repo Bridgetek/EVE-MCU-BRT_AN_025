@@ -56,8 +56,6 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-#include "FT8xx.h" // Register and command definitions for FT8xx
-
 /**
  @brief Platform specific debugging output
  @details Set debugging preferences for Linux HALs which use this header files.

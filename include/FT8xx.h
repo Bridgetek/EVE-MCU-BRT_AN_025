@@ -50,17 +50,63 @@
 #ifndef _FT8XX_H_
 #define	_FT8XX_H_
 
-/* Definitions used for co-processor command buffer */
-//#define EVE_CMD_SIZE          (4)       //4 byte per coprocessor command of EVE
+/* Definitions used for target device selection */
+#define FT800 8
+#define FT801 9
+#define FT810 10
+#define FT811 11
+#define FT812 12
+#define FT813 13
+#define BT815 15
+#define BT816 16
+#define BT817 17
+#define BT818 18
 
 /* For capacitive versions */
 #define CTOUCH_MODE_COMPATIBILITY 1
 #define CTOUCH_MODE_EXTENDED 0
 
+#undef EVE1_ENABLE
+#undef EVE2_ENABLE
+#undef EVE3_ENABLE
+#undef EVE4_ENABLE
+
+#if (FT8XX_TYPE == FT800)
+#define EVE1_ENABLE
+
+#elif (FT8XX_TYPE == FT801)
+#define EVE1_ENABLE
+
+#elif (FT8XX_TYPE == FT810)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == FT811)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == FT812)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == FT813)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == BT815)
+#define EVE3_ENABLE
+
+#elif (FT8XX_TYPE == BT816)
+#define EVE3_ENABLE
+
+#elif (FT8XX_TYPE == BT817)
+#define EVE4_ENABLE
+
+#elif (FT8XX_TYPE == BT818)
+#define EVE4_ENABLE
+
+#else
+#warning FT8XX_TYPE definition not recognised.
+#endif
+
 
 #if defined EVE1_ENABLE
-
-//#define FT800_VERSION "1.9.0".
 
 /* For FT81x enable the switch in platform.h file */
 /* Lower boundary of trimming */
@@ -70,7 +116,7 @@
 #define EVE_RAM_G_SIZE           	(256*1024L)
 #define EVE_ROM_CHIPID           	0x0C0000UL		// Chip ID
 #define EVE_ROM_FONT			 	0x0BB23CUL		// Font table and bitmap
-#define EVE_ROM_FONT_ADDR		 	0x0FFFFCUL		// Font table pointer address
+#define EVE_ROMFONT_TABLEADDRESS    0x0FFFFCUL		// Font table pointer address
 #define EVE_RAM_DL               	0x100000UL		// RAM_DL
 #define EVE_RAM_DL_SIZE          	(8*1024L)
 #define EVE_RAM_PAL              	0x102000UL		// Palette RAM
@@ -105,10 +151,9 @@
 #define EVE_REG_TAG_Y            	0x102474UL
 #define EVE_REG_TAG_X            	0x102470UL
 
-
-
 //---------------------------------------------------
 // FT800 specific
+
 #define EVE_REG_TOUCH_ADC_MODE   	0x1024f4UL
 #define EVE_REG_TOUCH_SCREEN_XY  	0x102510UL
 #define EVE_REG_TOUCH_RAW_XY     	0x102508UL
@@ -139,8 +184,8 @@
 #define EVE_REG_CTOUCH_TRANSFORM_E 	0x10252cUL
 #define EVE_REG_CTOUCH_TRANSFORM_F 	0x102530UL
 #define EVE_REG_CTOUCH_TAG        	0x102518UL
-//---------------------------------------------------
 
+//---------------------------------------------------
 
 #define EVE_REG_TOUCH_TAG_XY     	0x102514UL
 #define EVE_REG_TOUCH_RZTHRESH  	0x102504UL
@@ -148,9 +193,6 @@
 #define EVE_REG_TOUCH_SETTLE     	0x1024fcUL
 #define EVE_REG_TOUCH_CHARGE     	0x1024f8UL
 #define EVE_REG_TOUCH_MODE       	0x1024f0UL
-
-//#define EVE_REG_CTOUCH_GESTURE 		0x102538UL
-//#define EVE_REG_CTOUCH_IDS 			0x10250cUL
 
 #define EVE_REG_PLAY             	0x102488UL
 #define EVE_REG_SOUND            	0x102484UL
@@ -196,20 +238,6 @@
 #define EVE_REG_MACRO_1          	0x1024ccUL
 
 #define EVE_REG_ROMSUB_SEL       	0x1024e0UL
-
-
-
-// Misc
-//#define EVE_REG_ANA_COMP         	0x102570UL
-//#define EVE_REG_CRC              	0x102568UL
-//#define EVE_REG_CYA_TOUCH        	0x102534UL
-//#define EVE_REG_CYA0             	0x1024d0UL
-//#define EVE_REG_CYA1             	0x1024d4UL
-//#define EVE_REG_DATESTAMP        	0x10253cUL
-//#define EVE_REG_RENDERMODE       	0x102410UL
-
-
-
 
 #define EVE_ENC_ALPHA_FUNC(func,ref) ((0x9UL << 24)|(((func) & 0x7UL) << 8)|(((ref) & 0xffUL) << 0))
 #define EVE_ENC_BEGIN(prim) ((0x1fUL << 24)|(((prim) & 0xFUL) << 0))
@@ -408,16 +436,11 @@
 #define EVE_ADC_DIFFERENTIAL         0x1UL
 #define EVE_ADC_SINGLE_ENDED         0x0UL
 
-
 //#################################################################################################################
 //#####################################  EVE 2 ####################################################################
 //#################################################################################################################
 
-
-
 #elif defined EVE2_ENABLE
-
-#define FT81X_VERSION "1.0.4"
 
 /* For FT801 enable the switch in platform.h file */
 /* Lower boundary of trimming */
@@ -762,37 +785,13 @@
 #define EVE_ADC_SINGLE_ENDED         0x0UL //?
 #define EVE_ADPCM_SAMPLES            0x2UL //?
 
-//#endif
-
-
-
-
-
 //#################################################################################################################
 //#####################################  EVE 3/4 ####################################################################
 //#################################################################################################################
 
-
-
 #elif (defined (EVE3_ENABLE) || defined (EVE4_ENABLE))
 
-
-
 #define EVE_LOW_FREQ_BOUND  58800000L//98% of 60Mhz
-
-
-
-//#define EVE_RAM_CMD              0x108000UL
-//
-//#define EVE_RAM_DL               0x100000UL
-//#define EVE_RAM_DL_SIZE          (8*1024L)
-//#define EVE_RAM_G                0x0UL
-//#define EVE_RAM_G_SIZE           (256*1024L)
-//#define EVE_RAM_PAL              0x102000UL
-//#define EVE_RAM_REG              0x102400UL
-
-
-
 
 #define EVE_RAM_G_SIZE              1024*1024L
 #define EVE_RAM_BIST                3670016UL
@@ -1079,7 +1078,9 @@
 #define EVE_ENC_STENCIL_OP(sfail,spass)     ((12UL<<24)|(((sfail)&7UL)<<3)|(((spass)&7UL)<<0))
 #define EVE_ENC_POINT_SIZE(size)            ((13UL<<24)|(((size)&8191UL)<<0))
 #define EVE_ENC_LINE_WIDTH(width)           ((14UL<<24)|(((width)&4095UL)<<0))
+#define EVE_ENC_CLEAR_COLOR(c)              ((2UL<<24)|(((uint32_t)(c)) & 0x00ffffffUL))
 #define EVE_ENC_CLEAR_COLOR_A(alpha)        ((15UL<<24)|(((alpha)&255UL)<<0))
+#define EVE_ENC_COLOR(c)                    ((4UL<<24)|(((uint32_t)(c)) & 0x00ffffffUL))
 #define EVE_ENC_COLOR_A(alpha)              ((16UL<<24)|(((alpha)&255UL)<<0))
 #define EVE_ENC_CLEAR_STENCIL(s)            ((17UL<<24)|(((s)&255UL)<<0))
 #define EVE_ENC_CLEAR_TAG(s)                ((18UL<<24)|(((s)&255UL)<<0))
@@ -1290,9 +1291,6 @@
 #define EVE_ENC_BITMAP_TRANSFORM_D(d) EVE_ENC_BITMAP_TRANSFORM_D_EXT(0,d)
 #define EVE_ENC_BITMAP_TRANSFORM_E(e) EVE_ENC_BITMAP_TRANSFORM_E_EXT(0,e)
 
-
-
-
 #if defined (EVE4_ENABLE)
 
 #define EVE_REG_UNDERRUN            0x30260C
@@ -1319,17 +1317,19 @@
 #endif    // defined EVE4_ENABLE
 
  //End BT81x parameters
+#else
+
+#error No EVE support level selected. EVE1_ENABLE, EVE2_ENABLE, EVE3_ENABLE or EVE4_ENABLE required.
+
 #endif
-
-
-
 
 #define FT_GPU_NUMCHAR_PERFONT (128)
 #define FT_GPU_FONT_TABLE_SIZE (148)
 
-/* FT81x and FT80x font table structure */
+/* BT81x, FT81x and FT80x font table structure */
 /* Font table address in ROM can be found by reading the address from 0xFFFFC location. */
-/* 16 font tables are present at the address read from location 0xFFFFC */
+/* 16 font tables are present at the address read from location 0xFFFFC. */
+/* On EVE4 this is called the Legacy Font Structure. */
 typedef struct
 {
 	/* All the values are in bytes */

@@ -52,8 +52,6 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-#include "FT8xx.h" // Register and command definitions for FT8xx
-
 /**
  @brief MCU specific initialisation
  @details Must contain any MCU-specific initialisation. This will typically be
