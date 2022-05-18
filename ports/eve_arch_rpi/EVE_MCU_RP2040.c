@@ -67,13 +67,13 @@
 #undef QUADSPI_ENABLE
 
 // Pins to match Bridgetek IDM2040-7A board.
-const uint pd_pin = 7;
-const uint cs_pin = 13;
-const uint sck_pin = 10;
-const uint mosi_pin = 11;
-const uint miso_pin = 12;
+const uint pd_pin = 15;
+const uint cs_pin = 5;
+const uint sck_pin = 2;
+const uint mosi_pin = 3;
+const uint miso_pin = 4;
 // Port to match Bridgetek IDM2040-7A board.
-spi_inst_t *spi_port = spi1;
+spi_inst_t *spi_port = spi0;
 
 // This is the MCU specific section and contains the functions which talk to the
 // PIC registers. If porting the code to a different PIC or to another MCU, these

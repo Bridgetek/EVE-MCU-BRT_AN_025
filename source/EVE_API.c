@@ -387,11 +387,11 @@ void EVE_CLEAR_COLOR_RGB(uint8_t R, uint8_t G, uint8_t B)
 	HAL_IncCmdPointer(4);
 }
 
-//void EVE_CLEAR_COLOR(uint32_t c)
-//{
-//	HAL_Write32(EVE_ENC_CLEAR_COLOR(c));
-//	HAL_IncCmdPointer(4);
-//}
+void EVE_CLEAR_COLOR(uint32_t c)
+{
+	HAL_Write32(EVE_ENC_CLEAR_COLOR(c));
+	HAL_IncCmdPointer(4);
+}
 
 void EVE_CLEAR(uint8_t C, uint8_t S, uint8_t T)
 {
@@ -405,11 +405,11 @@ void EVE_COLOR_RGB(uint8_t R, uint8_t G, uint8_t B)
 	HAL_IncCmdPointer(4);
 }
 
-//void EVE_COLOR(uint32_t c)
-//{
-//	HAL_Write32(EVE_ENC_COLOR(c));
-//	HAL_IncCmdPointer(4);
-//}
+void EVE_COLOR(uint32_t c)
+{
+	HAL_Write32(EVE_ENC_COLOR(c));
+	HAL_IncCmdPointer(4);
+}
 
 void EVE_VERTEX2F(int16_t x, int16_t y)
 {
@@ -434,6 +434,14 @@ void EVE_BITMAP_SOURCE(int32_t addr)
 	HAL_Write32(EVE_ENC_BITMAP_SOURCE((int32_t)addr));
 	HAL_IncCmdPointer(4);
 }
+
+#if (defined EVE3_ENABLE || defined EVE4_ENABLE)
+void EVE_BITMAP_SOURCE2(uint8_t flash_or_ram, int32_t addr)
+{
+	HAL_Write32(EVE_ENC_BITMAP_SOURCE2(flash_or_ram, (int32_t)addr));
+	HAL_IncCmdPointer(4);
+}
+#endif // (defined EVE3_ENABLE || defined EVE4_ENABLE)
 
 void EVE_BITMAP_LAYOUT(uint8_t format, uint16_t linestride, uint16_t height )
 {
