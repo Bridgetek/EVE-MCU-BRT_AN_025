@@ -30,17 +30,17 @@ There are example projects for many MCUs and platforms. These include this repos
 ### Microcontrollers
 | MCU | Example Repository |
 | --- | --- |
-|Bridgetek FT90x/FT93x | [EVE-MCU-BRT_AN_025-Example-FT900](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-FT900) </td></tr>
-|Raspberry Pi Pico | [EVE-MCU-BRT_AN_012-Example-Pico](https://github.com/ftdigdm/EVE-MCU-BRT_AN_012-Example-Pico) </td></tr>
-|Beaglebone Black | [EVE-MCU-BRT_AN_025-Example-Beaglebone](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-Beaglebone) </td></tr>
-|Expressif ESP32 | [EVE-MCU-BRT_AN_025-Example-ESP32](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-ESP32) </td></tr>
-|TI MSP430 | [EVE-MCU-BRT_AN_025-Example-MSP430](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-MSP430) </td></tr>
-|Microchip PIC18F | [EVE-MCU-BRT_AN_025-Example-PIC18F46K22](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-PIC18F46K22) </td></tr>
-|ST STM32 | [EVE-MCU-BRT_AN_025-Example-STM32](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-STM32) </td></tr>
+|Bridgetek FT90x/FT93x | [EVE-MCU-BRT_AN_025-Example-FT900](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-FT900) </td></tr>
+|Raspberry Pi Pico | [EVE-MCU-BRT_AN_012-Example-Pico](https://github.com/Bridgetek/EVE-MCU-BRT_AN_012-Example-Pico) </td></tr>
+|Beaglebone Black | [EVE-MCU-BRT_AN_025-Example-Beaglebone](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-Beaglebone) </td></tr>
+|Expressif ESP32 | [EVE-MCU-BRT_AN_025-Example-ESP32](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-ESP32) </td></tr>
+|TI MSP430 | [EVE-MCU-BRT_AN_025-Example-MSP430](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-MSP430) </td></tr>
+|Microchip PIC18F | [EVE-MCU-BRT_AN_025-Example-PIC18F46K22](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-PIC18F46K22) </td></tr>
+|ST STM32 | [EVE-MCU-BRT_AN_025-Example-STM32](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-STM32) </td></tr>
 </table>
 
 ### Platforms
 | Platform | Example Repository |
 | --- | --- |
-|Raspberry Pi | [EVE-MCU-BRT_AN_025-Example-RPi](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-RPi) </td></tr>
-|Generic using libMPSSE | [EVE-MCU-BRT_AN_025-Example-libMPSSE](https://github.com/ftdigdm/EVE-MCU-BRT_AN_025-Example-libMPSSE) </td></tr>
+|Raspberry Pi | [EVE-MCU-BRT_AN_025-Example-RPi](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-RPi) </td></tr>
+|Generic using libMPSSE | [EVE-MCU-BRT_AN_025-Example-libMPSSE](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-libMPSSE) </td></tr>
