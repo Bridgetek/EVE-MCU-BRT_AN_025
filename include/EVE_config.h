@@ -64,7 +64,10 @@
 #define	WQVGA	480		// e.g. VM800B with 5" or 4.3" display
 #define WVGA 	800		// e.g. ME813A-WH50C or VM816
 #define	WSVGA	1024	// e.g. ME817EV with 7" display
-// Select the 
+#define	WXGA	1280	// e.g. ME817EV with 10.1" display
+
+
+// Select the resolution
 #ifndef DISPLAY_RES
 #define DISPLAY_RES WVGA
 #endif
@@ -134,6 +137,27 @@
 // Set the PCLK frequency to 51MHz (recommend to use the CMD_PCLKFREQ for easier calculation)
 #define SET_PCLK_FREQ
 #define EVE_DISP_PCLK_FREQ  0xD12	// set 51MHz (must also define SET_PCLK_FREQ in line above to use this)
+
+#elif DISPLAY_RES == WXGA
+
+#define EVE_DISP_WIDTH 1280 // Active width of LCD display
+#define EVE_DISP_HEIGHT 800 // Active height of LCD display
+#define EVE_DISP_HCYCLE 1411 // Total number of clocks per line
+#define EVE_DISP_HOFFSET 120 // Start of active line
+#define EVE_DISP_HSYNC0 0 // Start of horizontal sync pulse
+#define EVE_DISP_HSYNC1 100 // End of horizontal sync pulse
+#define EVE_DISP_VCYCLE 815 // Total number of lines per screen
+#define EVE_DISP_VOFFSET 14 // Start of active screen
+#define EVE_DISP_VSYNC0 0 // Start of vertical sync pulse
+#define EVE_DISP_VSYNC1 10 // End of vertical sync pulse
+#define EVE_DISP_PCLK 1 // Pixel Clock
+#define EVE_DISP_SWIZZLE 0 // Define RGB output pins
+#define EVE_DISP_PCLKPOL 0 // Define active edge of PCLK
+#define EVE_DISP_CSPREAD 0
+#define EVE_DISP_DITHER 0
+// Set the PCLK frequency to 51MHz (recommend to use the CMD_PCLKFREQ for easier calculation)
+#define SET_PCLK_FREQ
+#define EVE_DISP_PCLK_FREQ  0x8B1	// set 51MHz (must also define SET_PCLK_FREQ in line above to use this)
 
 #else
 
