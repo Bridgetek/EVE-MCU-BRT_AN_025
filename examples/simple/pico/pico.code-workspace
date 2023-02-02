@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../common"
+		},
+		{
+			"path": "../../../include"
+		},
+		{
+			"path": "../../../ports"
+		},
+		{
+			"path": "../../../source"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"eve_example.h": "c",
+			"platform_defs.h": "c",
+			"flash.h": "c",
+			"sync.h": "c"
+		}
+	}
+}
