@@ -57,7 +57,7 @@
 // required. This must be called prior to including FT8xx.h.
 // "#define FT8XX_TYPE BT817" is equivelant to having "#define EVE4_ENABLE".
 #ifndef FT8XX_TYPE
-#define FT8XX_TYPE FT812
+#define FT8XX_TYPE BT816
 #endif
 
 // Definitions used for target display resolution selection
@@ -69,7 +69,7 @@
 
 // Select the resolution
 #ifndef DISPLAY_RES
-#define DISPLAY_RES WVGA
+#define DISPLAY_RES WSVGA
 #endif
 
 // Explicitly disable QuadSPI

@@ -55,11 +55,11 @@
 /* Replace with header file for target MCU */
 #include <msp430g2553.h>
 
-#include "..\include\EVE.h"
-#include "..\include\EVE_config.h"
-#include "..\include\FT8xx.h"
-#include "..\include\HAL.h"
-#include "..\include\MCU.h"
+#include "EVE.h"
+#include "EVE_config.h"
+#include "FT8xx.h"
+#include "HAL.h"
+#include "MCU.h"
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
 

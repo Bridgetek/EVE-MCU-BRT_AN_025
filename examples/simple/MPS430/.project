@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>BRT_AN_025_EVE_Example_for_FT9xx</name>
+	<name>BRT_AN_025_FT8xx_Example_for_MSP430</name>
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
-			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -19,35 +18,32 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>com.ti.ccstudio.core.ccsNature</nature>
 		<nature>org.eclipse.cdt.core.cnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
 	<linkedResources>
 		<link>
-			<name>eve</name>
+			<name>common</name>
 			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/common</locationURI>
 		</link>
 		<link>
-			<name>example</name>
+			<name>include</name>
 			<type>2</type>
-			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/common</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/include</locationURI>
 		</link>
 		<link>
-			<name>eve/include</name>
+			<name>ports</name>
 			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/include</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/ports</locationURI>
 		</link>
 		<link>
-			<name>eve/ports</name>
+			<name>source</name>
 			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/ports</locationURI>
-		</link>
-		<link>
-			<name>eve/source</name>
-			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/source</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/source</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
