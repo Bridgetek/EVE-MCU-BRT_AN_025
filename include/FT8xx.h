@@ -1178,6 +1178,7 @@
 #define EVE_FILTER_NEAREST            0UL
 #define EVE_TEST_NEVER                0UL
 #define EVE_TEST_NOTEQUAL             6UL
+#define EVE_BLEND_ZERO                0UL
 #define EVE_BLEND_ONE                 1UL
 #define EVE_BLEND_ONE_MINUS_DST_ALPHA 5UL
 #define EVE_BLEND_ONE_MINUS_SRC_ALPHA 4UL
