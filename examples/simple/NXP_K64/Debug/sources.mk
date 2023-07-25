@@ -24,5 +24,9 @@ S_UPPER_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+source \
+eve_arch_nxpk64 \
+common \
+Sources \
 Project_Settings/Startup_Code \
 

@@ -48,7 +48,7 @@
  */
 
 // Guard against being used for incorrect CPU type.
-#if defined(PLATFORM_NXP)
+#if defined(PLATFORM_NXPK64)
 
 #pragma message "Compiling " __FILE__ " for NXP K64"
 

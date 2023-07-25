@@ -8,6 +8,10 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include source/subdir.mk
+-include eve_arch_nxpk64/subdir.mk
+-include common/subdir.mk
+-include Sources/subdir.mk
 -include Project_Settings/Startup_Code/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -50,7 +54,7 @@ all: NXP_K64.elf secondary-outputs
 NXP_K64.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "MK64FN1M0xxx12_flash.ld" -Xlinker --gc-sections -L"C:/workspace.kds/EVE-MCU-BRT_AN_025/examples/simple/NXP_K64/Project_Settings/Linker_Files" -L"C:\EVE-MCU-BRT_AN_025\source" -L"C:\EVE-MCU-BRT_AN_025\examples\simple\common" -L"C:\EVE-MCU-BRT_AN_025\include" -L"C:\EVE-MCU-BRT_AN_025\ports\eve_arch_nxpk64" -Wl,-Map,"NXP_K64.map" -specs=nano.specs -specs=nosys.specs -o "NXP_K64.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "MK64FN1M0xxx12_flash.ld" -Xlinker --gc-sections -L"C:/workspace.kds/EVE-MCU-BRT_AN_025/examples/simple/NXP_K64/Project_Settings/Linker_Files" -L"C:\EVE-MCU-BRT_AN_025\examples\simple\common" -L"C:\EVE-MCU-BRT_AN_025\include" -Wl,-Map,"NXP_K64.map" -specs=nano.specs -specs=nosys.specs -o "NXP_K64.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

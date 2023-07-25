@@ -17,7 +17,7 @@ C_DEPS += \
 Sources/%.o: ../Sources/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -DPLATFORM_NXPK64=1 -I"../Sources" -I"../Includes" -I"C:\EVE-MCU-BRT_AN_025\examples\simple\common" -I"C:\EVE-MCU-BRT_AN_025\include" -I"C:\EVE-MCU-BRT_AN_025\source" -I"C:\EVE-MCU-BRT_AN_025\ports\eve_arch_nxpk64" -std=c99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -DPLATFORM_NXPK64=1 -I"../Sources" -I"../Includes" -I"C:/workspace.kds/EVE-MCU-BRT_AN_025/examples/simple/NXP_K64..\..\common" -I"C:/workspace.kds/EVE-MCU-BRT_AN_025/examples/simple/NXP_K64..\..\..\..\include" -std=c99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
