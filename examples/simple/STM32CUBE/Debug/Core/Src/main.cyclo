@@ -1,4 +1,0 @@
-main.c:49:8:platform_calib_init	1
-main.c:54:8:platform_calib_write	1
-main.c:59:8:platform_calib_read	1
-main.c:108:5:main	1
