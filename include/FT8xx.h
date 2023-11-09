@@ -468,9 +468,9 @@
 #define EVE_RAM_DL_SIZE          (8*1024L)
 #define EVE_RAM_G                0x0UL
 
-#if (defined (BT880) || defined (BT881) || defined (BT882) || defined (BT883) )
+#if ((FT8XX_TYPE == BT880) || (FT8XX_TYPE == BT881) || (FT8XX_TYPE == BT882) || (FT8XX_TYPE == BT883) )
 #define EVE_RAM_G_SIZE           (256*1024L)
-#else if (defined (FT810) || defined (FT811) || defined (FT812) || defined (FT813) )
+#else
 #define EVE_RAM_G_SIZE           (1024*1024L)
 #endif
 
