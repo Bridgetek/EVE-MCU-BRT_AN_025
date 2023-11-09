@@ -291,6 +291,7 @@ void EVE_CMD_FLASHWRITEEXT(uint32_t dest, uint32_t num, uint8_t *data);
 void EVE_CMD_FLASHWRITE(uint32_t ptr, uint32_t num);
 void EVE_CMD_FLASHUPDATE(uint32_t dest, uint32_t src, uint32_t num);
 void EVE_CMD_FLASHREAD(uint32_t dest, uint32_t src, uint32_t num);
+void EVE_CMD_FLASHPROGRAM(uint32_t dest, uint32_t src, uint32_t num);
 void EVE_CMD_FLASHSOURCE(uint32_t ptr);
 void EVE_CMD_FLASHSPITX(uint32_t num);
 void EVE_CMD_FLASHFAST(uint32_t result);

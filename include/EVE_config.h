@@ -69,7 +69,7 @@
 
 // Select the resolution
 #ifndef DISPLAY_RES
-#define DISPLAY_RES WSVGA
+#define DISPLAY_RES WVGA
 #endif
 
 // Explicitly disable QuadSPI
