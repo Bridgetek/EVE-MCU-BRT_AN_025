@@ -62,8 +62,6 @@
 
 #include "EVE.h"
 
-#include "tinyprintf.h"
-
 #include "eve_example.h"
 
 /**
@@ -83,7 +81,6 @@ __flash__ uint8_t __attribute__((aligned(256))) dlog_pm[256] = {[0 ... 255] = 0x
 
 void setup(void);
 void debug_uart_init(void);
-void tfp_putc(void* p, char c);
 
 /* FUNCTIONS ***********************************************************************/
 
@@ -179,20 +176,10 @@ void setup(void)
 
 #ifdef DEBUG
 	/* Print out a welcome message... */
-	tfp_printf ("(C) Copyright, Bridgetek Pte. Ltd. \r\n \r\n");
-	tfp_printf ("---------------------------------------------------------------- \r\n");
-	tfp_printf ("Welcome to BRT_AN_025 Example for FT9xx\r\n");
+	printf ("(C) Copyright, Bridgetek Pte. Ltd. \r\n \r\n");
+	printf ("---------------------------------------------------------------- \r\n");
+	printf ("Welcome to BRT_AN_025 Example for FT9xx\r\n");
 #endif
-}
-
-/** @name tfp_putc
- *  @details Machine dependent putc function for tfp_printf (tinyprintf) library.
- *  @param p Parameters (machine dependent)
- *  @param c The character to write
- */
-void tfp_putc(void* p, char c)
-{
-	uart_write((ft900_uart_regs_t*)p, (uint8_t)c);
 }
 
 /* Initializes the UART for the testing */
@@ -220,15 +207,10 @@ void debug_uart_init(void)
 			uart_parity_none,         /* Parity */
 			uart_stop_bits_1);        /* No. Stop Bits */
 
-	/* Print out a welcome message... */
+#ifdef DEBUG
 	uart_puts(UART0,
 			"\x1B[2J" /* ANSI/VT100 - Clear the Screen */
 			"\x1B[H\r\n"  /* ANSI/VT100 - Move Cursor to Home */
 	);
-
-#ifdef DEBUG
-	/* Enable tfp_printf() functionality... */
-	init_printf(UART0, tfp_putc);
 #endif
 }
-
