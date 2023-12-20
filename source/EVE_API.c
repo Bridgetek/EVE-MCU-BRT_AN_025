@@ -1405,6 +1405,20 @@ void EVE_CMD_FLASHREAD(uint32_t dest, uint32_t src, uint32_t num)
   HAL_IncCmdPointer(16);
 }
 
+
+/*
+	Program data to flash
+*/
+void EVE_CMD_FLASHPROGRAM(uint32_t dest, uint32_t src, uint32_t num)
+{
+  HAL_Write32(EVE_ENC_CMD_FLASHPROGRAM);
+  HAL_Write32(dest);
+  HAL_Write32(src);
+  HAL_Write32(num);
+  HAL_IncCmdPointer(16);
+}
+
+
 void EVE_CMD_FLASHSOURCE(uint32_t ptr)
 {
   HAL_Write32(EVE_ENC_CMD_FLASHSOURCE);

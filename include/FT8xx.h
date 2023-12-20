@@ -8,7 +8,7 @@
  * Nov 2019		Initial beta for FT81x and FT80x
  * Mar 2020		Updated beta - added BT815/6 commands
  * Mar 2021		Beta with BT817/8 support added
- *
+ * Nov 2023		Added BT88x definitions, added CMD_FLASHPROGRAM
  *
  *
  *
@@ -51,16 +51,20 @@
 #define	_FT8XX_H_
 
 /* Definitions used for target device selection */
-#define FT800 8
-#define FT801 9
-#define FT810 10
-#define FT811 11
-#define FT812 12
-#define FT813 13
-#define BT815 15
-#define BT816 16
-#define BT817 17
-#define BT818 18
+#define FT800 800
+#define FT801 801
+#define FT810 810
+#define FT811 811
+#define FT812 812
+#define FT813 813
+#define BT880 880
+#define BT881 881
+#define BT882 882
+#define BT883 883
+#define BT815 815
+#define BT816 816
+#define BT817 817
+#define BT818 818
 
 /* For capacitive versions */
 #define CTOUCH_MODE_COMPATIBILITY 1
@@ -87,6 +91,18 @@
 #define EVE2_ENABLE
 
 #elif (FT8XX_TYPE == FT813)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == BT880)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == BT881)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == BT882)
+#define EVE2_ENABLE
+
+#elif (FT8XX_TYPE == BT883)
 #define EVE2_ENABLE
 
 #elif (FT8XX_TYPE == BT815)
@@ -451,7 +467,13 @@
 #define EVE_RAM_DL               0x300000UL
 #define EVE_RAM_DL_SIZE          (8*1024L)
 #define EVE_RAM_G                0x0UL
+
+#if ((FT8XX_TYPE == BT880) || (FT8XX_TYPE == BT881) || (FT8XX_TYPE == BT882) || (FT8XX_TYPE == BT883) )
+#define EVE_RAM_G_SIZE           (256*1024L)
+#else
 #define EVE_RAM_G_SIZE           (1024*1024L)
+#endif
+
 #define EVE_RAM_REG              0x302000UL
 #define EVE_RAM_ROMSUB           0x30a000UL
 
@@ -988,6 +1010,7 @@
 #define EVE_ENC_CMD_FLASHERASE      4294967108UL
 #define EVE_ENC_CMD_FLASHFAST       4294967114UL
 #define EVE_ENC_CMD_FLASHREAD       4294967110UL
+#define EVE_ENC_CMD_FLASHPROGRAM    4294967152UL
 #define EVE_ENC_CMD_FLASHSOURCE     4294967118UL
 #define EVE_ENC_CMD_FLASHSPIDESEL   4294967115UL
 #define EVE_ENC_CMD_FLASHSPIRX      4294967117UL
@@ -1178,6 +1201,7 @@
 #define EVE_FILTER_NEAREST            0UL
 #define EVE_TEST_NEVER                0UL
 #define EVE_TEST_NOTEQUAL             6UL
+#define EVE_BLEND_ZERO                0UL
 #define EVE_BLEND_ONE                 1UL
 #define EVE_BLEND_ONE_MINUS_DST_ALPHA 5UL
 #define EVE_BLEND_ONE_MINUS_SRC_ALPHA 4UL

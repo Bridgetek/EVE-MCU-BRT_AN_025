@@ -56,18 +56,19 @@
 #include <string.h>
 #include <stdint.h>
 /* Endian tools required as we send 32 bit values. */
-#include <machine/endian.h>
+#include <endian.h>
 
 /* REQUIRE FreeRTOS to enable accurate timers. */
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 /* Local copy of endian.h */
-#include "endian.h"
-
-#include "driver/gpio.h"
+/*#include "endian.h"*/
 
 #include "esp_system.h"
 #include "driver/spi_master.h"
+#include "soc/gpio_struct.h"
+#include "rom/gpio.h"
+#include "driver/gpio.h"
 #include "esp_log.h"
 
 #include "../include/MCU.h"
@@ -286,12 +287,12 @@ void MCU_SPIWrite32(uint32_t DataToWrite)
 
 void MCU_Delay_20ms(void)
 {
-    vTaskDelay(20 / portTICK_RATE_MS);
+    vTaskDelay(20 / portTICK_PERIOD_MS);
 }
 
 void MCU_Delay_500ms(void)
 {
-    vTaskDelay(500 / portTICK_RATE_MS);
+    vTaskDelay(500 / portTICK_PERIOD_MS);
 }
 
 // ESP32 is Little Endian.
