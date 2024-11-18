@@ -25,22 +25,24 @@ The Rasberrry Pi platform is suitable for generic Linux by modifying the GPIO pi
 
 ## Example Code
 
-There are example projects for many MCUs and platforms. These include this repository as a submodule within the required code for the platform.
+There are example projects for many MCUs and platforms. These are included in various directories in this repository.
 
 ### Microcontrollers
-| MCU | Example Repository |
+| MCU | Example Directory |
 | --- | --- |
-|Bridgetek FT90x/FT93x | [EVE-MCU-BRT_AN_025-Example-FT900](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-FT900) </td></tr>
-|Raspberry Pi Pico | [EVE-MCU-BRT_AN_012-Example-Pico](https://github.com/Bridgetek/EVE-MCU-BRT_AN_012-Example-Pico) </td></tr>
-|Beaglebone Black | [EVE-MCU-BRT_AN_025-Example-Beaglebone](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-Beaglebone) </td></tr>
-|Expressif ESP32 | [EVE-MCU-BRT_AN_025-Example-ESP32](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-ESP32) </td></tr>
-|TI MSP430 | [EVE-MCU-BRT_AN_025-Example-MSP430](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-MSP430) </td></tr>
-|Microchip PIC18F | [EVE-MCU-BRT_AN_025-Example-PIC18F46K22](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-PIC18F46K22) </td></tr>
-|ST STM32 | [EVE-MCU-BRT_AN_025-Example-STM32](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-STM32) </td></tr>
+|Bridgetek FT90x/FT93x | [FT900](examples/simple/ft900) </td></tr>
+|Raspberry Pi Pico | [Pico](examples/simple/pico) </td></tr>
+|Beaglebone Black | [Beaglebone](examples/simple/BeagleBone) </td></tr>
+|Expressif ESP32 | [ESP32](examples/simple/ESP32) </td></tr>
+|TI MSP430 | [MSP430](examples/simple/MSP430) </td></tr>
+|Microchip PIC18F | [PIC18F46K22](examples/simple/PIC18F) </td></tr>
+|NXP K64 | [K64](examples/simple/NXP_K64) </td></tr>
+|ST STM32 | [STM32](example/simple/STM32) </td></tr>
+|ST STM32 Cube | [STM32](example/simple/STM32CUBE) </td></tr>
 </table>
 
 ### Platforms
-| Platform | Example Repository |
+| Platform | Example Directory |
 | --- | --- |
-|Raspberry Pi | [EVE-MCU-BRT_AN_025-Example-RPi](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-RPi) </td></tr>
-|Generic using libMPSSE | [EVE-MCU-BRT_AN_025-Example-libMPSSE](https://github.com/Bridgetek/EVE-MCU-BRT_AN_025-Example-libMPSSE) </td></tr>
+|Raspberry Pi | [RPi](examples/simple/raspberry_pi) </td></tr>
+|Generic using libMPSSE | [libMPSSE](examples/simple/libmpsse) </td></tr>
