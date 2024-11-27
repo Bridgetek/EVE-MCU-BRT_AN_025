@@ -99,10 +99,10 @@ void MCU_Init(void)
 	sys_enable(sys_device_spi_master);
 
 	gpio_function(PIN_NUM_CLK, pad_spim_sck); /* GPIO27 to SPIM_CLK */
-#if __FT900__
+#if defined(__FT900__)
 	gpio_function(PIN_NUM_CS, pad_spim_ss0); /* GPIO28 as CS */
 	gpio_function(PIN_NUM_PD, pad_gpio43);
-#else
+#elif defined(__FT930__)
 	gpio_function(PIN_NUM_CS, pad30_spim_ss0); /* GPIO30 as CS */
 	gpio_function(PIN_NUM_PD, pad_gpio15);
 #endif
