@@ -46,6 +46,7 @@
  * has no liability in relation to those amendments.
  * ============================================================================
  */
+#include <stdio.h>
 
 #include <stdint.h>
 #include "EVE.h"
@@ -75,7 +76,7 @@ void eve_display(void)
 		EVE_COLOR_RGB(255, 255, 255);
 
 		EVE_BEGIN(EVE_BEGIN_BITMAPS);
-#if (defined EVE2_ENABLE || defined EVE3_ENABLE || defined EVE4_ENABLE)
+#if IS_EVE_API(2, 3, 4, 5)
 		// Set origin on canvas using EVE_VERTEX_TRANSLATE.
 		EVE_VERTEX_TRANSLATE_X(((EVE_DISP_WIDTH/2)-(eve_img_bridgetek_logo_width/2)) * 16);
 		EVE_VERTEX2II(0, 0, BITMAP_BRIDGETEK_LOGO, 0);
@@ -95,8 +96,9 @@ void eve_display(void)
 		EVE_BEGIN(EVE_BEGIN_BITMAPS);
 		units = 1;
 
-#if (defined EVE2_ENABLE || defined EVE3_ENABLE || defined EVE4_ENABLE)
+#if IS_EVE_API(2, 3, 4, 5)
 		EVE_VERTEX_TRANSLATE_Y((EVE_DISP_HEIGHT / 2) * 16);
+
 		for (i = 0; i < 5; i++)
 		{
 			EVE_VERTEX_TRANSLATE_X((((EVE_DISP_WIDTH - (font0_hdr->FontWidthInPixels * 5)) / 2) - (font0_hdr->FontWidthInPixels) + (font0_hdr->FontWidthInPixels * (5 - i))) * 16);
@@ -138,13 +140,16 @@ void eve_example(void)
 	EVE_Init();
 
 	// Calibrate the display
+	printf("Calibrating display...\n");
 	eve_calibrate();
 
 	// Load fonts and images
+	printf("Loading font...\n");
 	font_end = eve_init_fonts();
-
+	printf("Loading images...\n");
 	eve_load_images(font_end);
 
 	// Start example code
+	printf("Starting demo:\n");
 	eve_display();
 }

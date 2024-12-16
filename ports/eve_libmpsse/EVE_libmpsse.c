@@ -69,9 +69,26 @@
 #include "libmpsse_spi.h"
 
 
+// ----------------------- MCU Transmit Buffering  -----------------------------
+
+#define MCU_BUFFER_SIZE 512
+uint8_t *MCU_buffer;
+uint16_t MCU_bufferLen;
+
 // This is the Windows Platform specific section and contains the functions which
 // enable the GPIO and SPI interfaces.
 
+/*
+	MPSSE pin connections:
+
+	BD0 - SCK
+	BD1 - MOSI
+	BD2 - MISO
+	BD3 - SS#	(SPI_CONFIG_OPTION_CS_DBUS3)
+	BD7 - PD#	(SPI_CONFIG_OPTION_CS_DBUS7)
+
+	Direction (1 =Output, 0 =Inputs) 1xxx 1011
+*/
 // ------------------ Platform specific initialisation  ------------------------
 
 FT_HANDLE ftHandle;
@@ -84,7 +101,8 @@ void MCU_Init(void)
 	DWORD channels;
 	FT_STATUS status;
 
-	channelConf.ClockRate = 100000;
+	memset(&channelConf, 0, sizeof(ChannelConfig));
+	channelConf.ClockRate = 15000000;
 	channelConf.LatencyTimer = 10;
 	channelConf.configOptions = SPI_CONFIG_OPTION_MODE0 | SPI_CONFIG_OPTION_CS_DBUS3 | SPI_CONFIG_OPTION_CS_ACTIVELOW;
 
@@ -125,13 +143,63 @@ void MCU_Init(void)
 		fprintf(stderr, "No SPI channels found\n");
 		exit (-1);
 	}
+
+	MCU_buffer = malloc(MCU_BUFFER_SIZE);
+	if (MCU_buffer == NULL)
+	{
+		fprintf(stderr, "Setup malloc failed\n");
+		exit(-99);
+	}
+	MCU_bufferLen = 0;
 }
 
 void MCU_Setup(void)
 {
 }
 
-// ########################### GPIO CONTROL ####################################
+// ------------------------- Output buffering ----------------------------------
+
+void MCU_transmit_buffer(void)
+{
+	FT_STATUS status;
+	DWORD transferred;
+
+	status = SPI_Write(ftHandle, (uint8_t *)MCU_buffer, MCU_bufferLen, &transferred, 0);
+ 	if (FT_OK != status)
+ 	{
+ 		// spi master write failed
+		fprintf(stderr, "MCU_transmit_buffer failed %d\n", status);
+	}
+	MCU_bufferLen = 0;
+}
+
+int MCU_append_buffer(const uint8_t *buffer, uint16_t length)
+{
+	FT_STATUS status;
+	int i = MCU_bufferLen;
+	int j = 0;
+	int plength;
+
+	while (j < length)
+	{
+		plength = length - j;
+		
+		if (plength + MCU_bufferLen >= MCU_BUFFER_SIZE)
+			plength = MCU_BUFFER_SIZE - MCU_bufferLen;
+		
+		memcpy(&MCU_buffer[i], &buffer[j], plength);
+		j += plength;
+		i += plength;
+		MCU_bufferLen += plength;
+		if (MCU_bufferLen >= MCU_BUFFER_SIZE)
+		{
+			MCU_transmit_buffer();
+			i = 0;
+		}
+	}
+
+	return i;
+}
 
 // --------------------- Chip Select line low ----------------------------------
 void MCU_CSlow(void)
@@ -142,6 +210,7 @@ void MCU_CSlow(void)
 // --------------------- Chip Select line high ---------------------------------
 void MCU_CShigh(void)
 {
+	MCU_transmit_buffer();
 	SPI_ToggleCS(ftHandle, FALSE);
 }
 
@@ -149,6 +218,7 @@ void MCU_CShigh(void)
 void MCU_PDlow(void)
 {
 	// PD# set to 0, connect BLUE wire of MPSSE to PD# of FT8xx board
+	SPI_ToggleCS(ftHandle, FALSE);
 	SPI_ChangeCS(ftHandle, SPI_CONFIG_OPTION_MODE0 | SPI_CONFIG_OPTION_CS_DBUS7 | SPI_CONFIG_OPTION_CS_ACTIVELOW);
 	SPI_ToggleCS(ftHandle, TRUE);
 }
@@ -157,8 +227,10 @@ void MCU_PDlow(void)
 void MCU_PDhigh(void)
 {
 	// PD# set to 1, connect BLUE wire of MPSSE to PD# of FT8xx board
+	SPI_ChangeCS(ftHandle, SPI_CONFIG_OPTION_MODE0 | SPI_CONFIG_OPTION_CS_DBUS7 | SPI_CONFIG_OPTION_CS_ACTIVELOW);
 	SPI_ToggleCS(ftHandle, FALSE);
 	SPI_ChangeCS(ftHandle, SPI_CONFIG_OPTION_MODE0 | SPI_CONFIG_OPTION_CS_DBUS3 | SPI_CONFIG_OPTION_CS_ACTIVELOW);
+	SPI_ToggleCS(ftHandle, FALSE);
 }
 
 // ------------------------- Delay functions -----------------------------------
@@ -185,77 +257,109 @@ void MCU_Delay_500ms(void)
 
 uint8_t MCU_SPIRead8(void)
 {
+	FT_STATUS status;
 	uint8_t DataRead = 0;
 	DWORD transferred;
 
-	SPI_Read(ftHandle, &DataRead, 1, &transferred, 0);
+	MCU_transmit_buffer();
+	status = SPI_Read(ftHandle, &DataRead, 1, &transferred, 0);
+ 	if (FT_OK != status)
+ 	{
+ 		// spi master read failed
+		fprintf(stderr, "MCU_SPIRead8 failed %d\n", status);
+	}
 
 	return DataRead;
 }
 
 void MCU_SPIWrite8(uint8_t DataToWrite)
 {
-	DWORD transferred;
-
-	SPI_Write(ftHandle, &DataToWrite, 1, &transferred, 0);
+	MCU_append_buffer(&DataToWrite, 1);
 }
 
 uint16_t MCU_SPIRead16(void)
 {
+	FT_STATUS status;
 	uint16_t DataRead = 0;
 	DWORD transferred;
 
-	SPI_Read(ftHandle, (UCHAR *)&DataRead, 2, &transferred, 0);
+	MCU_transmit_buffer();
+	status = SPI_Read(ftHandle, (UCHAR *)&DataRead, 2, &transferred, 0);
+ 	if (FT_OK != status)
+ 	{
+ 		// spi master read failed
+		fprintf(stderr, "MCU_SPIRead16 failed %d\n", status);
+	}
 
 	return DataRead;
 }
 
 void MCU_SPIWrite16(uint16_t DataToWrite)
 {
-	DWORD transferred;
-
-	SPI_Write(ftHandle, (UCHAR *)&DataToWrite, 2, &transferred, 0);
+	MCU_append_buffer((const uint8_t *)&DataToWrite, 2);
 }
 
 uint32_t MCU_SPIRead24(void)
 {
+	FT_STATUS status;
 	uint32_t DataRead = 0;
 	DWORD transferred;
 
-	SPI_Read(ftHandle, (UCHAR *)&DataRead, 3, &transferred, 0);
+	MCU_transmit_buffer();
+	status = SPI_Read(ftHandle, (UCHAR *)&DataRead, 3, &transferred, 0);
+ 	if (FT_OK != status)
+ 	{
+ 		// spi master read failed
+		fprintf(stderr, "MCU_SPIRead24 failed %d\n", status);
+	}
 
 	return DataRead;
 }
 
 void MCU_SPIWrite24(uint32_t DataToWrite)
 {
-	DWORD transferred;
-
-	SPI_Write(ftHandle, (UCHAR *)&DataToWrite, 3, &transferred, 0);
+	MCU_append_buffer((const uint8_t *)&DataToWrite, 3);
 }
 
 uint32_t MCU_SPIRead32(void)
 {
+	FT_STATUS status;
 	uint32_t DataRead = 0;
 	DWORD transferred;
 
-	SPI_Read(ftHandle, (UCHAR *)&DataRead, 4, &transferred, 0);
+	MCU_transmit_buffer();
+	status = SPI_Read(ftHandle, (UCHAR *)&DataRead, 4, &transferred, 0);
+ 	if (FT_OK != status)
+ 	{
+ 		// spi master read failed
+		fprintf(stderr, "MCU_SPIRead32 failed %d\n", status);
+	}
 
 	return DataRead;
 }
 
 void MCU_SPIWrite32(uint32_t DataToWrite)
 {
+	MCU_append_buffer((const uint8_t *)&DataToWrite, 4);
+}
+
+void MCU_SPIRead(const uint8_t *DataToRead, uint32_t length)
+{
+	FT_STATUS status;
 	DWORD transferred;
 
-	SPI_Write(ftHandle, (UCHAR *)&DataToWrite, 4, &transferred, 0);
+	MCU_transmit_buffer();
+	status = SPI_Read(ftHandle, (UCHAR *)DataToRead, length, &transferred, 0);
+ 	if (FT_OK != status)
+ 	{
+ 		// spi master read failed
+		fprintf(stderr, "MCU_SPIRead failed %d\n", status);
+	}
 }
 
 void MCU_SPIWrite(const uint8_t *DataToWrite, uint32_t length)
 {
-	DWORD transferred;
-
-	SPI_Write(ftHandle, (UCHAR *)DataToWrite, length, &transferred, 0);
+	MCU_append_buffer(DataToWrite, length);
 }
 
 uint16_t MCU_htobe16(uint16_t h)

@@ -105,6 +105,14 @@ void HAL_IncCmdPointer(uint16_t commandSize);
 uint16_t HAL_GetCmdPointer(void);
 
 /**
+ @brief Reset the current command memory write pointer
+ @details Sets the current command memory write pointer to zero
+ 	 internally in the HAL. It is not the value read from the 
+	 REG_CMD_WRITE register.
+ */
+void HAL_ResetCmdPointer(void);
+
+/**
  @brief Commits the current command memory write pointer
  @details Stores the internal HAL command memory write pointer to
  	 the REG_CMD_WRITE register. This will start the coprocessor
@@ -150,7 +158,9 @@ void HAL_MemWrite32(uint32_t address, uint32_t val32);
  @param address - 24 bit address on EVE
  @param val16 - value to write
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 void HAL_MemWrite16(uint32_t address, uint16_t val16);
+#endif
 
 /**
  @brief Write an 8 bit value to an EVE memory location
@@ -160,7 +170,9 @@ void HAL_MemWrite16(uint32_t address, uint16_t val16);
  @param address - 24 bit address on EVE
  @param val8 - value to write
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 void HAL_MemWrite8(uint32_t address, uint8_t val8);
+#endif
 
 /**
  @brief Read a 32 bit value from an EVE memory location
@@ -180,7 +192,9 @@ uint32_t HAL_MemRead32(uint32_t address);
  @param address - 24 bit address on EVE
  @returns value read from EVE
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 uint16_t HAL_MemRead16(uint32_t address);
+#endif
 
 /**
  @brief Read an 8 bit value from an EVE memory location
@@ -190,7 +204,9 @@ uint16_t HAL_MemRead16(uint32_t address);
  @param address - 24 bit address on EVE
  @returns value read from EVE
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 uint8_t HAL_MemRead8(uint32_t address);
+#endif
 
 /**
  @brief Sends an address for writing to EVE
@@ -209,12 +225,16 @@ void HAL_SetWriteAddress(uint32_t address);
 void HAL_SetReadAddress(uint32_t address);
 
 /**
- @brief Sends an 8 bit command to EVE
- @details Sends a 8 bit command and paramter using SPI to the EVE.
+ @brief Sends a command to EVE
+ @details Sends a 8 bit command and parameters using SPI to the EVE.
    	   This function will control chip select.
  @returns 8 bit value read
  */
+#if IS_EVE_API(1, 2, 3, 4) // Different host commands on BT82x
 void HAL_HostCmdWrite(uint8_t cmd, uint8_t param);
+#else
+void HAL_HostCmdWrite(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint8_t b5);
+#endif
 
 /**
  @brief Sends a block of data to EVE
@@ -238,7 +258,9 @@ void HAL_Write32(uint32_t val32);
    	   This function will not control chip select.
  @param val16 - 16 bit value
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 void HAL_Write16(uint16_t val16);
+#endif
 
 /**
  @brief Sends a 8 bit value to EVE
@@ -246,7 +268,9 @@ void HAL_Write16(uint16_t val16);
    	   This function will not control chip select.
  @param val8 - 8 bit value
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 void HAL_Write8(uint8_t val8);
+#endif
 
 /**
  @brief Reads a 32 bit value from EVE
@@ -264,7 +288,9 @@ uint32_t HAL_Read32(void);
    	   This function will not control chip select.
  @returns 16 bit value read
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 uint16_t HAL_Read16(void);
+#endif
 
 /**
  @brief Reads a 8 bit value from EVE
@@ -273,6 +299,8 @@ uint16_t HAL_Read16(void);
    	   This function will not control chip select.
  @returns 8 bit value read
  */
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 uint8_t HAL_Read8(void);
+#endif
 
 #endif	/* HAL_HEADER_H */

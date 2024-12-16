@@ -3,23 +3,22 @@ Windows
 
 Important Information about Windows builds using Visual Studio and Visual Studio Code.
 
-To compile this you will have to download the libMPSSE library for Windows. Recommended version is v1.0.2 or later. It is available from the FTDI website:
+To compile this you will have to download the libFT4222 library for Windows. Recommended version is v1.4.7 or later. It is available from the FTDI website:
 
-https://ftdichip.com/software-examples/mpsse-projects/
+https://ftdichip.com/software-examples/ft4222h-software-examples/
 
-Download the libmpsse-windows-x.x.x.zip file to this directory and unzip it.
+Download the LibFT4222-vx.x.x.zip file to this directory and unzip it.
 
 The following files are used in this sample code.
 
-- release\build\libmpsse.dll
-- release\build\libmpsse.lib
-- release\include\libmpsse_i2c.h
-- release\include\libmpsse_spi.h
-- release\libftd2xx\ftd2xx.h
+- imports\LibFT4222\dll/amd64\LibFT4222-64.lib
+- imports\LibFT4222\dll/amd64\LibFT4222-64.dll
+- imports\ftd2xx\dll\amd64\ftd2xx.lib 
+- imports\ftd2xx\ftd2xx.h
+- imports\ftd2xx\WinTypes.h
+- imports\LibFT4222\inc\LibFT4222\LibFT4222.h
 
-There may be other, possibly older, versions of this FT8xx-SPI sample code in the "samples" folder of the distribution. 
-
-The example application will load and use the libmpsse.dll file. This file must be available either locally (in the same directory as the example application) or on the system path (recommended "C:\Windows\System32").
+The example application will load and use the LibFT4222-64.dll file. This file must be available either locally (in the same directory as the example application) or on the system path (recommended "C:\Windows\System32").
 
 Visual Studio Code
 ------------------
@@ -46,4 +45,4 @@ When the example application is launched in Visual Studio it will add the locati
 Linux
 =====
 
-The "Makefile" will compile the required files for the example application. The libMPSSE library for Linux will be taken from the "/usr/local/lib" directory and the include files from "/usr/local/include".
+The "Makefile" will compile the required files for the example application. The LibFT4222 library for Linux will be taken from the "/usr/local/lib" directory and the include files from "/usr/local/include".

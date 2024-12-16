@@ -53,13 +53,23 @@
 #include <string.h>
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
+#undef DEBUG
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 #include "../include/EVE.h"
 #include "../include/HAL.h"
 #include "../include/MCU.h"
 
+#ifdef DEBUG
+#define DEBUG_PRINTF(...) printf(__VA_ARGS__)
+#else
+#define DEBUG_PRINTF(...)
+#endif
+
 // Used to navigate command ring buffer
 static uint16_t writeCmdPointer = 0x0000;
-
 
 void HAL_EVE_Init(void)
 {
@@ -69,7 +79,7 @@ void HAL_EVE_Init(void)
 
 	// Set Chip Select OFF
 	HAL_ChipSelect(0);
-
+	
 	// Reset the display
 	MCU_Delay_20ms();
 	HAL_PowerDown(1);
@@ -77,7 +87,7 @@ void HAL_EVE_Init(void)
 	HAL_PowerDown(0);
 	MCU_Delay_20ms();
 
-#if (defined EVE1_ENABLE)
+#if IS_EVE_API(1)
 	// FT80x_selection - FT80x modules from BRT generally use external crystal 
 	// You can also send the host command to set the PLL here if you want to change it from the default of 48MHz (FT80x) or 60MHz (FT81x)
 	// Clock selection and clock rate selection will put EVE to sleep and so must be before the Active command
@@ -86,17 +96,18 @@ void HAL_EVE_Init(void)
 	HAL_HostCmdWrite(0x62, 0x00); // 0x64 = HostCMD_CLK48M
 #endif
 
-#if defined (EVE3_ENABLE) || defined (EVE4_ENABLE)
+#if IS_EVE_API(3, 4)
 	// can optionally set to 72MHz system clock here
 	// In this case also adjust REG_FREQUENCY a few lines down from here in this file
 	HAL_HostCmdWrite(0x44, 0x00); // 0x44 = HostCMD_CLKEXT
 	HAL_HostCmdWrite(0x61, 0x46);
 #endif
 
-#if defined (EVE2_ENABLE) || defined (EVE3_ENABLE)|| defined (EVE4_ENABLE)
+#if IS_EVE_API(2, 3, 4)
 	HAL_HostCmdWrite(0x68, 0x00); // Reset
 #endif
 
+#if IS_EVE_API(1, 2, 3, 4)
 	// Set active
 	HAL_HostCmdWrite(0, 0x00);
 	
@@ -111,13 +122,91 @@ void HAL_EVE_Init(void)
 	while (HAL_MemRead8(EVE_REG_CPURESET) != 0x00)
 	{
 	}
+#endif
 
-#if defined (EVE3_ENABLE) || defined (EVE4_ENABLE)
+#if IS_EVE_API(3, 4)
 	HAL_MemWrite32(EVE_REG_FREQUENCY, 72000000);
 #endif
 
-	// This function will not return unless an EVE device is present.
+#if IS_EVE_API(5)
+	HAL_ChipSelect(0);
+
+	while (1)
+	{
+		unsigned char bb[128];
+		int i;
+
+		memset(bb, 0, sizeof(bb));
+
+		MCU_Delay_20ms();
+		// Set System PLL NS = 15 for 576MHz
+		HAL_HostCmdWrite(0xFF, 0xE4, 0x0F, 0x00, 0x00);
+		// Set System clock divider to 0x17 for 72MHz
+		HAL_HostCmdWrite(0xFF, 0xE6, 0x17, 0x00, 0x00);
+		// Set bypass BOOT_BYPASS_OTP, DDRTYPT_BYPASS_OTP and set BootCfgEn
+		HAL_HostCmdWrite(0xFF, 0xE9, 0xe1, 0x00, 0x00);
+		// Set DDR Type - 1333, DDR3L, 4096
+		HAL_HostCmdWrite(0xFF, 0xEB, 0x08, 0x00, 0x00);
+		// Set DDR, JT and AUD in Boot Control
+		HAL_HostCmdWrite(0xFF, 0xE8, 0xF0, 0x00, 0x00);
+		// Clear BootCfgEn
+		HAL_HostCmdWrite(0xFF, 0xE9, 0xC0, 0x00, 0x00);
+		// Perform a reset pulse
+		HAL_HostCmdWrite(0xFF, 0xE7, 0x00, 0x00, 0x00) ; 
+		// Write 4 zeros
+		MCU_SPIWrite(bb, 4);
+		// Delay 100 mS
+		MCU_Delay_20ms();
+		MCU_Delay_20ms();
+		MCU_Delay_20ms();
+		MCU_Delay_20ms();
+		MCU_Delay_20ms();
+
+		HAL_ChipSelect(1);
+		MCU_SPIRead(bb, 128);
+		HAL_ChipSelect(0);
+
+		for (i = 0; i < 128; i++)
+		{
+			if (bb[i] == 1)
+			{
+				uint32_t boot;
+
+				// Wait for the REG_ID register to be set to 0x7c
+				while (HAL_MemRead32(EVE_REG_ID) != 0x7c)
+				{
+                    DEBUG_PRINTF("[Waiting for REG_ID...]\n", boot);
+					MCU_Delay_20ms();
+				}
+
+                boot = HAL_MemRead32(EVE_BOOT_STATUS);
+				if (boot != 0x522e2e2e)
+				{
+                    DEBUG_PRINTF("[Timeout waiting for BOOT_STATUS, stuck at 0x%08x, retrying...]\n", boot);
+                    continue;
+				}
+
+				if (HAL_MemRead32(EVE_REG_FREQUENCY) != 72000000)
+				{
+                    DEBUG_PRINTF("[frequency %d, retrying...]\n", HAL_MemRead32(EVE_REG_FREQUENCY));
+					continue;
+				}
+				break;
+			}
+		}
+		if (i < 128) break;
+
+        DEBUG_PRINTF("[Boot fail after reset, retrying...]\n");
+	}
+	DEBUG_PRINTF("[Boot complete]\n");
+
+#endif
+
+	// Perform any additional MCU functions. This is when the SPI interface
+	// could be switched to QuadSPI.
 	MCU_Setup();
+
+	// This function will not return unless an EVE device is present.
 }
 
 // --------------------- Chip Select line ----------------------------------
@@ -141,19 +230,27 @@ void HAL_PowerDown(int8_t enable)
 // ------------------ Send FT81x register address for writing ------------------
 void HAL_SetWriteAddress(uint32_t address)
 {
+#if IS_EVE_API(1, 2, 3, 4) // Different addressing on BT82x
 	// Send three bytes of a register address which has to be subsequently
 	// written. Ignore return values as this is an SPI write only.
 	// Send high byte of address with 'write' bits set.
 	MCU_SPIWrite24(MCU_htobe32((address << 8) | (1UL << 31)));
+#else
+	MCU_SPIWrite32(MCU_htobe32(address | (1UL << 31)));
+#endif
 }
 
 // ------------------ Send FT81x register address for reading ------------------
 void HAL_SetReadAddress(uint32_t address)
 {
+#if IS_EVE_API(1, 2, 3, 4) // Different addressing on BT82x
 	// Send three bytes of a register address which has to be subsequently read.
 	// Ignore return values as this is an SPI write only.
 	// Send high byte of address with 'read' bits set.
 	MCU_SPIWrite32(MCU_htobe32((address << 8) | (0UL << 31)));
+#else
+	MCU_SPIWrite32(MCU_htobe32(address | (0UL << 31)));
+#endif
 }
 
 // ------------------------ Send a block of data --------------------------
@@ -173,6 +270,7 @@ void HAL_Write32(uint32_t val32)
 	MCU_SPIWrite32(MCU_htole32(val32));
 }
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Send a 16-bit data value --------------------------
 void HAL_Write16(uint16_t val16)
 {
@@ -180,7 +278,9 @@ void HAL_Write16(uint16_t val16)
 	// values as this is an SPI write only.
 	MCU_SPIWrite16(MCU_htole16(val16));
 }
+#endif
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Send an 8-bit data value ---------------------------
 void HAL_Write8(uint8_t val8)
 {
@@ -188,6 +288,7 @@ void HAL_Write8(uint8_t val8)
 	// values as this is an SPI write only.
 	MCU_SPIWrite8(val8);
 }
+#endif
 
 // ------------------------ Read a 32-bit data value --------------------------
 uint32_t HAL_Read32(void)
@@ -197,12 +298,36 @@ uint32_t HAL_Read32(void)
 	uint32_t val32;
 
 	// Read low byte of data first.
-	val32 = MCU_SPIRead32();
+#if IS_EVE_API(1, 2, 3, 4)
+		val32 = MCU_SPIRead32();
+#else
+		unsigned char bb[36];
+		int i;
+		do
+		{
+			MCU_SPIRead(bb, 36);
+			for (i = 0; i < 36; i++)
+			{
+				if (bb[i] == 1)
+				{
+					i++;
+					// read data in LE format
+					val32 = *(uint32_t *)&bb[i];
+					break;
+				}
+			}
+			if (i < 36)
+			{
+				break;
+			}
+		} while (1);
+#endif
 
 	// Return combined 32-bit value
 	return MCU_le32toh(val32);
 }
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Read a 16-bit data value ---------------------------
 uint16_t HAL_Read16(void)
 {
@@ -216,7 +341,9 @@ uint16_t HAL_Read16(void)
 	// Return combined 16-bit value
 	return MCU_le16toh(val16);
 }
+#endif
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Read an 8-bit data value ---------------------------
 uint8_t HAL_Read8(void)
 {
@@ -229,6 +356,7 @@ uint8_t HAL_Read8(void)
 	// Return 8-bit value read
 	return val8;
 }
+#endif
 
 // ################# COMBINED ADDRESSING AND DATA FUNCTIONS ####################
 
@@ -249,6 +377,7 @@ void HAL_MemWrite32(uint32_t address, uint32_t val32)
 	HAL_ChipSelect(0);
 }
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Write a 16-bit value to specified address --------------------
 void HAL_MemWrite16(uint32_t address, uint16_t val16)
 {
@@ -261,7 +390,9 @@ void HAL_MemWrite16(uint32_t address, uint16_t val16)
 	// CS high terminates the SPI transfer
 	HAL_ChipSelect(0);
 }
+#endif
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Write an 8-bit value to specified address --------------------
 void HAL_MemWrite8(uint32_t address, uint8_t val8)
 {
@@ -274,6 +405,7 @@ void HAL_MemWrite8(uint32_t address, uint8_t val8)
 	// CS high terminates the SPI transfer
 	HAL_ChipSelect(0);
 }
+#endif
 
 // -------------- Read a 32-bit value from specified address --------------------
 uint32_t HAL_MemRead32(uint32_t address)
@@ -292,6 +424,8 @@ uint32_t HAL_MemRead32(uint32_t address)
 	// Return 32-bit value read
 	return val32;
 }
+
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Read a 16-bit value from specified address --------------------
 uint16_t HAL_MemRead16(uint32_t address)
 {
@@ -309,6 +443,9 @@ uint16_t HAL_MemRead16(uint32_t address)
 	// Return 16-bit value read
 	return val16;
 }
+#endif
+
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Read an 8-bit value from specified address --------------------
 uint8_t HAL_MemRead8(uint32_t address)
 {
@@ -326,8 +463,11 @@ uint8_t HAL_MemRead8(uint32_t address)
 	// Return 8-bit value read
 	return val8;
 }
+#endif
+
 // ############################# HOST COMMANDS #################################
 // -------------------------- Write a host command -----------------------------
+#if IS_EVE_API(1, 2, 3, 4) // Different host commands on BT82x
 void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
 {
 	// CS low begins the SPI transfer
@@ -341,6 +481,24 @@ void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
 	// CS high terminates the SPI transfer
 	HAL_ChipSelect(0);
 }
+#else
+void HAL_HostCmdWrite(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint8_t b5)
+{
+	uint8_t command[5];
+	command[0] = b1;
+	command[1] = b2;
+	command[2] = b3;
+	command[3] = b4;
+	command[4] = b5;
+	
+	// CS low begins the SPI transfer
+	HAL_ChipSelect(1);
+	// Send command
+	MCU_SPIWrite(command, 5);
+	// CS high terminates the SPI transfer
+	HAL_ChipSelect(0);
+}
+#endif
 // ######################## SUPPORTING FUNCTIONS ###############################
 
 // --------- Increment co-processor address offset counter --------------------
@@ -355,6 +513,11 @@ uint16_t HAL_GetCmdPointer(void)
 {
 	// Return new offset
 	return writeCmdPointer;
+}
+
+void HAL_ResetCmdPointer(void)
+{
+	writeCmdPointer = 0;
 }
 
 void HAL_WriteCmdPointer(void)
@@ -373,13 +536,15 @@ uint8_t HAL_WaitCmdFifoEmpty(void)
 	{
 		// Read the graphics processor read pointer
 		readCmdPointer = HAL_MemRead32(EVE_REG_CMD_READ);
+	} while ((writeCmdPointer != readCmdPointer) && (readCmdPointer != (EVE_RAM_CMD_SIZE - 1)));
 
-	} while ((writeCmdPointer != readCmdPointer) && (readCmdPointer != 0xFFF));
-
-
-	if(readCmdPointer == 0xFFF)
+	if(readCmdPointer == (EVE_RAM_CMD_SIZE - 1))
 	{
 		// Return 0xFF if an error occurred
+		#ifdef DEBUG
+		fprintf(stderr, "Co-processor exception.\n");
+		#endif
+		
 		return 0xFF;
 	}
 	else
@@ -391,12 +556,11 @@ uint8_t HAL_WaitCmdFifoEmpty(void)
 // ------------ Check how much free space is available in CMD FIFO -------------
 uint16_t HAL_CheckCmdFreeSpace(void)
 {
-	uint32_t readCmdPointer = 0;
+	uint32_t readCmdPointer;
 	uint16_t Fullness, Freespace;
 
 	// Check the graphics processor read pointer
 	readCmdPointer = HAL_MemRead32(EVE_REG_CMD_READ);
-
 	// Fullness is difference between MCUs current write pointer value and the FT81x's REG_CMD_READ
 	Fullness = ((writeCmdPointer - (uint16_t)readCmdPointer) & (EVE_RAM_CMD_SIZE - 1));
 	// Free Space is 4K - 4 - Fullness (-4 avoids buffer wrapping round)

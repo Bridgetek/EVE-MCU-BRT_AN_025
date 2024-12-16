@@ -52,12 +52,13 @@
 
 // Select the EVE controller type from the supported list in FT8xx.h.
 // Note: In FT8xx.h this will lead to the selection of the EVE Programming
-// support methods via macros "EVEx_ENABLE" where 'x' depends on the level of
-// the EVE device support. Alternatively directly set the EVEx_ENABLE macro
-// required. This must be called prior to including FT8xx.h.
-// "#define FT8XX_TYPE BT817" is equivelant to having "#define EVE4_ENABLE".
+// support methods via macros "EVE_GEN" where the value depends on the level of
+// the EVE device support. Alternatively directly set the EVE_GEN and EVE_SUB_GEN
+// macro as required. This must be called prior to including FT8xx.h.
+// "#define FT8XX_TYPE BT817" is equivelant to having "#define EVE_GEN 4".
+// Note the use of EVEx_ENABLE is deprecated but the macro is still defined.
 #ifndef FT8XX_TYPE
-#define FT8XX_TYPE BT816
+#define FT8XX_TYPE BT820
 #endif
 
 // Definitions used for target display resolution selection
@@ -65,11 +66,11 @@
 #define WVGA 	800		// e.g. ME813A-WH50C or VM816
 #define	WSVGA	1024	// e.g. ME817EV with 7" display
 #define	WXGA	1280	// e.g. ME817EV with 10.1" display
-
+#define HD      1920    // 
 
 // Select the resolution
 #ifndef DISPLAY_RES
-#define DISPLAY_RES WVGA
+#define DISPLAY_RES HD
 #endif
 
 // Explicitly disable QuadSPI
@@ -159,16 +160,28 @@
 #define SET_PCLK_FREQ
 #define EVE_DISP_PCLK_FREQ  0x8B1	// set 51MHz (must also define SET_PCLK_FREQ in line above to use this)
 
+#elif DISPLAY_RES == HD
+
+#define EVE_DISP_WIDTH 1920 // Active width of LCD display
+#define EVE_DISP_HEIGHT 1200 // Active height of LCD display
+#define EVE_DISP_HCYCLE (1920 + 180) // Total number of clocks per line
+#define EVE_DISP_HOFFSET 50 // Start of active line
+#define EVE_DISP_HSYNC0 0 // Start of horizontal sync pulse
+#define EVE_DISP_HSYNC1 30 // End of horizontal sync pulse
+#define EVE_DISP_VCYCLE (1200 + 45) // Total number of lines per screen
+#define EVE_DISP_VOFFSET 10 // Start of active screen
+#define EVE_DISP_VSYNC0 0 // Start of vertical sync pulse
+#define EVE_DISP_VSYNC1 3 // End of vertical sync pulse
+#define EVE_DISP_PCLK 2 // Pixel Clock
+#define EVE_DISP_SWIZZLE 0 // Define RGB output pins
+#define EVE_DISP_PCLKPOL 0 // Define active edge of PCLK
+#define EVE_DISP_CSPREAD 0
+#define EVE_DISP_DITHER 1
+
 #else
 
 #error EVE_DISP_* parameters must be configured.
 
 #endif
-
-
-
-
-
-
 
 #endif /* _EVE_CONFIG_H_ */

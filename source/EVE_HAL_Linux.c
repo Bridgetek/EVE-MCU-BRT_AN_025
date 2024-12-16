@@ -99,7 +99,7 @@ void HAL_EVE_Init(void)
 	Platform_Delay_20ms();
 	Platform_Delay_20ms();
 
-#if (defined EVE1_ENABLE)
+#if IS_EVE_API(1)
 	// FT80x_selection - FT80x modules from BRT generally use external crystal
 	// You can also send the host command to set the PLL here if you want to change it from the default of 48MHz (FT80x) or 60MHz (FT81x)
 	// Clock selection and clock rate selection will put EVE to sleep and so must be before the Active command
@@ -108,14 +108,14 @@ void HAL_EVE_Init(void)
 	HAL_HostCmdWrite(0x62, 0x00); // 0x64 = HostCMD_CLK48M
 #endif
 
-#if defined (EVE3_ENABLE) || defined (EVE4_ENABLE)
+#if IS_EVE_API(3,4)
 	// can optionally set to 72MHz system clock here
 	// In this case also adjust REG_FREQUENCY a few lines down from here in this file
 	HAL_HostCmdWrite(0x44, 0x00); // 0x44 = HostCMD_CLKEXT
 	HAL_HostCmdWrite(0x61, 0x46);
 #endif
 
-#if defined (EVE2_ENABLE) || defined (EVE3_ENABLE)|| defined (EVE4_ENABLE)
+#if IS_EVE_API(2, 3,4,5)
 	HAL_HostCmdWrite(0x68, 0x00); // Reset
 #endif
 
@@ -142,11 +142,9 @@ void HAL_EVE_Init(void)
 	}
 	info_printf("done\n");
 
-#if defined (EVE3_ENABLE) || defined (EVE4_ENABLE)
+#if IS_EVE_API(3,4)
 	HAL_MemWrite32(EVE_REG_FREQUENCY, 72000000);
 #endif
-
-
 
 	// This function will not return unless an EVE device is present.
 	Platform_Setup();

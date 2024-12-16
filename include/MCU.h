@@ -110,6 +110,15 @@ void MCU_PDhigh(void);
 void MCU_SPIWrite(const uint8_t *DataToWrite, uint32_t length);
 
 /**
+ @brief MCU specific SPI read
+ @details Performs an SPI read of the data block sending zeros as data
+	 to the device as dummy writes.
+ @param DataToWrite - pointer to buffer to read.
+ @param length - number of bytes to read.
+ */
+void MCU_SPIRead(const uint8_t *DataToRead, uint32_t length);
+
+/**
  @brief MCU specific SPI 8 bit read
  @details Performs an SPI dummy write and returns the data received in
     	 response.

@@ -203,7 +203,11 @@ uint32_t eve_init_fonts(void)
 	EVE_BITMAP_SIZE(EVE_FILTER_NEAREST, EVE_WRAP_BORDER, EVE_WRAP_BORDER,
 			font0_hdr->FontWidthInPixels,
 			font0_hdr->FontHeightInPixels);
+#if IS_EVE_API(5)
+	EVE_CMD_SETFONT(FONT_CUSTOM, font0_offset, 0);
+#else
 	EVE_CMD_SETFONT(FONT_CUSTOM, font0_offset);
+#endif
 	EVE_END();
 	EVE_DISPLAY();
 	EVE_CMD_SWAP();
