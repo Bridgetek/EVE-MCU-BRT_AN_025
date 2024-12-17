@@ -3,7 +3,7 @@
 APP = simple
 
 # Use MPSSE. This tells BRT_AN_025 to override
-CFLAGS = -DUSE_MPSSE=1
+CFLAGS += -DUSE_MPSSE=1
 #CFLAGS += -Wall -Wextra 
 
 ifeq ($(OS),Windows_NT)

@@ -3,7 +3,7 @@
 APP = simple
 
 # Use MPSSE. This tells BRT_AN_025 to use a specific interface.
-CFLAGS = -DUSE_FT4222=0
+CFLAGS += -DUSE_FT4222=0
 #CFLAGS += -Wall -Wextra 
 
 ifeq ($(OS),Windows_NT)
