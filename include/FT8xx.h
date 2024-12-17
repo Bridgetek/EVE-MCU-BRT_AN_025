@@ -158,9 +158,12 @@
  * So, to support BT815, BT817, BT820 this will need EVE APIs 3, 4, and 5.
  *
  * #if IS_EVE_API(3,4,5)
-  */
+ * 
+ * On Visual Studio it is necessary to enable the "/Zc:preprocessor" option
+ * to enable preprocessor conformance mode.
+ */
 #define _NUM_ARGS2(X,X5,X4,X3,X2,X1,N,...) N
-#define NUM_ARGS(...) _NUM_ARGS2(0, __VA_ARGS__ ,5,4,3,2,1,0)
+#define NUM_ARGS(...) _NUM_ARGS2(0, ## __VA_ARGS__ ,5,4,3,2,1,0)
 
 #define IS_EVE_API_1(a)     (a == EVE_API)
 #define IS_EVE_API_2(a,b)   (IS_EVE_API_1(a) | IS_EVE_API_1(b))
@@ -169,8 +172,8 @@
 #define IS_EVE_API_5(a,...) (IS_EVE_API_1(a) | IS_EVE_API_4(__VA_ARGS__))
 
 #define _IS_EVE_API_N(N, ...) IS_EVE_API_ ## N(__VA_ARGS__)
-#define _IS_EVE_API(N, ...)  _IS_EVE_API_N(N, __VA_ARGS__)
-#define IS_EVE_API(...)      _IS_EVE_API(NUM_ARGS(__VA_ARGS__), __VA_ARGS__)
+#define _IS_EVE_API(N, ...)  _IS_EVE_API_N(N, ## __VA_ARGS__)
+#define IS_EVE_API(...)      _IS_EVE_API(NUM_ARGS(__VA_ARGS__), ## __VA_ARGS__)
 
 /** EVE API definitions. */
 
@@ -190,7 +193,7 @@
 
 #include "FT81x.h"
 
-#elif IS_EVE_API(3,4)
+#elif IS_EVE_API(3, 4)
 
 //###########################################################################
 //###################################  EVE 3/4 ##############################
