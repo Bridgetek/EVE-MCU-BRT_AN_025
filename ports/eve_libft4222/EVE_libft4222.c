@@ -49,6 +49,9 @@
 
 // Guard against being used for incorrect platform or architecture.
 // USE_FT4222 holds the FT4222H channel to open.
+// In gcc compilers this is in the Makefile. -DUSE_FT4222=0
+// In VisualStudio this is in Project Properties -> Configuration Properties -> 
+//     C/C++ -> Preprocessor -> Preprocessor Definitions.
 #if defined(USE_FT4222)
 
 #pragma message ("Compiling " __FILE__ " for libFT4222")
@@ -90,7 +93,6 @@ FT_HANDLE ftHandleGPIO;
 
 void MCU_Init(void)
 {
-	FT_DEVICE_LIST_INFO_NODE devList;
 	FT_STATUS ftStatus;
 
     DWORD numOfDevices = 0;
@@ -111,38 +113,46 @@ void MCU_Init(void)
                                         devInfo.SerialNumber,
                                         devInfo.Description,
                                         &devInfo.ftHandle);
+		if (ftStatus != FT_OK)
+		{
+			printf("FT_GetDeviceInfoDetail returned %d for interface %d\n", ftStatus, iDev);
+			continue;
+		}
 
-        if (FT_OK == ftStatus)
-        {
-            printf("Dev %d:\n", iDev);
-            printf("  Flags= 0x%x %s %s\n",       devInfo.Flags,
-                ((devInfo.Flags & 0x01) ? "DEVICE_OPEN" : "DEVICE_CLOSED"), ((devInfo.Flags & 0x02) ? "High-speed USB" : "Full-speed USB"));
-            printf("  Type= 0x%x\n",        devInfo.Type);
-            printf("  ID= 0x%x\n",          devInfo.ID);
-            printf("  LocId= 0x%x\n",       devInfo.LocId);
-            printf("  SerialNumber= \"%s\"\n",  devInfo.SerialNumber);
-            printf("  Description= \"%s\"\n",   devInfo.Description);
-            printf("  ftHandle= 0x%p\n",    devInfo.ftHandle);
+		printf("FT4222 device % d: ", iDev);
 
-            if (devInfo.SerialNumber[0] == 'A')
+		if (devInfo.SerialNumber[0] == 'A')
+		{
+			if (countSPI == 0)
 			{
-				if (countSPI == 0)
-				{
-					devNumSPI = devInfo.LocId;
-					printf("FT4222H SPI on locID %d\n", devNumSPI);
-				}
-				countSPI--;
+				devNumSPI = devInfo.LocId;
+				printf("selected\n");
+				printf("\t\tVID/PID: 0x%04x/0x%04x\n", devInfo.ID >> 16, devInfo.ID & 0xffff);
+				printf("\t\tSerialNumber: %s\n", devInfo.SerialNumber);
+				printf("\t\tDescription: %s\n", devInfo.Description);
 			}
-
-            if (devInfo.SerialNumber[0] == 'B')
+			else
 			{
-				if (countGPIO == 0)
-				{
-					devNumGPIO = devInfo.LocId;
-					printf("FT4222H GPIO on locID %d\n", devNumGPIO);
-				}
-				countGPIO--;
+				printf("ignored\n");
 			}
+			countSPI--;
+		}
+
+		if (devInfo.SerialNumber[0] == 'B')
+		{
+			if (countGPIO == 0)
+			{
+				devNumGPIO = devInfo.LocId;
+				printf("selected\n");
+				printf("\t\tVID/PID: 0x%04x/0x%04x\n", devInfo.ID >> 16, devInfo.ID & 0xffff);
+				printf("\t\tSerialNumber: %s\n", devInfo.SerialNumber);
+				printf("\t\tDescription: %s\n", devInfo.Description);
+			}
+			else
+			{
+				printf("ignored\n");
+			}
+			countGPIO--;
 		}
 	}
 
@@ -257,7 +267,6 @@ int MCU_transmit_buffer(int end)
 
 int MCU_append_buffer(const uint8_t *buffer, uint16_t length, int end)
 {
-	FT_STATUS status;
 	int i = MCU_bufferLen;
 	int j = 0;
 	int plength;
@@ -374,9 +383,6 @@ uint8_t MCU_SPIRead8(void)
 
 void MCU_SPIWrite8(uint8_t DataToWrite)
 {
-	FT_STATUS status;
-	uint16_t transferred;
-
 	MCU_append_buffer((uint8_t *)&DataToWrite, 1, 0);
 }
 
@@ -399,9 +405,6 @@ uint16_t MCU_SPIRead16(void)
 
 void MCU_SPIWrite16(uint16_t DataToWrite)
 {
-	FT_STATUS status;
-	uint16_t transferred;
-
 	MCU_append_buffer((uint8_t *)&DataToWrite, 2, 0);
 }
 
@@ -424,9 +427,6 @@ uint32_t MCU_SPIRead24(void)
 
 void MCU_SPIWrite24(uint32_t DataToWrite)
 {
-	FT_STATUS status;
-	uint16_t transferred;
-
 	MCU_append_buffer((uint8_t *)&DataToWrite, 3, 0);
 }
 
@@ -449,9 +449,6 @@ uint32_t MCU_SPIRead32(void)
 
 void MCU_SPIWrite32(uint32_t DataToWrite)
 {
-	FT_STATUS status;
-	uint16_t transferred;
-
 	MCU_append_buffer((uint8_t *)&DataToWrite, 4, 0);
 }
 
@@ -471,9 +468,6 @@ void MCU_SPIRead(const uint8_t *DataToRead, uint32_t length)
 
 void MCU_SPIWrite(const uint8_t *DataToWrite, uint32_t length)
 {
-	FT_STATUS status;
-	uint16_t transferred;
-
 	MCU_append_buffer(DataToWrite, length, 0);
 }
 

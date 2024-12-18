@@ -11,6 +11,8 @@ ifeq ($(OS),Windows_NT)
 # FT4222H link library and D2XX link library.
 LIBPATHFT4222 = imports/LibFT4222/dll/amd64/LibFT4222-64.lib
 LIBPATHD2XX = imports/ftd2xx/dll/amd64/ftd2xx.lib 
+DLLRUNTIMEFT4222 = $(basename $(notdir $(LIBPATHFT4222))).dll
+DLLPATHFT4222 = $(dir $(LIBPATHFT4222))$(DLLRUNTIMEFT4222)
 
 # Add in include directories for BRT_AN_025.
 CFLAGS += -Iimports/ftd2xx -Iimports/LibFT4222/inc -I../include -I../../../include  -I../common
@@ -31,6 +33,8 @@ LIBFILES = -L$(dir $(LIBPATHFT4222)) -l:$(notdir $(LIBPATHFT4222)) -L$(dir $(LIB
 all: $(APP).exe $(DLLRUNTIMEFT4222)
 
 $(APP).exe: $(OBJ_FILES) 
+	echo $(DLLRUNTIMEFT4222)
+	echo $(DLLPATHFT4222)
 	$(CC) $(CFLAGS) $(DEPENDENCIES) $^ $(LIBFILES) -o $(APP).exe 
 
 $(DLLRUNTIMEFT4222): 

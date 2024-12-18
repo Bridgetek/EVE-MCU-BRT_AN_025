@@ -126,9 +126,9 @@ void MCU_Init(void)
 		{
 			printf("selected\n");
 			/*print the dev info*/
-			printf("		VID/PID: 0x%04x/0x%04x\n", devList.ID >> 16, devList.ID & 0xffff);
-			printf("		SerialNumber: %s\n", devList.SerialNumber);
-			printf("		Description: %s\n", devList.Description);
+			printf("\t\tVID/PID: 0x%04x/0x%04x\n", devList.ID >> 16, devList.ID & 0xffff);
+			printf("\t\tSerialNumber: %s\n", devList.SerialNumber);
+			printf("\t\tDescription: %s\n", devList.Description);
 		}
 		else
 		{

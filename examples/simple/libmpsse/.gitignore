@@ -2,7 +2,7 @@
 .vs
 .vscode
 release/
-VisualStudio/
+VisualStudio/*
 !VisualStudio/libMPSSE.sln
 !VisualStudio/libMPSSE.vcxproj
 !VisualStudio/libMPSSE.vcxproj.filters
