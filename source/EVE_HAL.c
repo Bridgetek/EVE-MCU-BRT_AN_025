@@ -537,12 +537,21 @@ uint8_t HAL_WaitCmdFifoEmpty(void)
 {
 	uint32_t readCmdPointer;
 
+#ifndef EVE_USE_CMDB_METHOD
 	// Wait until the two registers match
 	do
 	{
 		// Read the graphics processor read pointer
 		readCmdPointer = HAL_MemRead32(EVE_REG_CMD_READ);
 	} while ((writeCmdPointer != readCmdPointer) && (readCmdPointer != (EVE_RAM_CMD_SIZE - 1)));
+#else
+	// Wait until there is all the potential space free
+	do
+	{
+		// Read the graphics processor read pointer
+		readCmdPointer = HAL_MemRead32(EVE_REG_CMDB_SPACE);
+	} while (readCmdPointer != (EVE_RAM_CMD_SIZE - 4));
+#endif
 
 	if(readCmdPointer == (EVE_RAM_CMD_SIZE - 1))
 	{
@@ -562,6 +571,7 @@ uint8_t HAL_WaitCmdFifoEmpty(void)
 // ------------ Check how much free space is available in CMD FIFO -------------
 uint16_t HAL_CheckCmdFreeSpace(void)
 {
+#ifndef EVE_USE_CMDB_METHOD
 	uint32_t readCmdPointer;
 	uint16_t Fullness, Freespace;
 
@@ -573,6 +583,12 @@ uint16_t HAL_CheckCmdFreeSpace(void)
 	Freespace = (EVE_RAM_CMD_SIZE - 4) - Fullness;
 
 	return Freespace;
+#else
+	uint32_t readCmdSpace;
+	readCmdSpace = HAL_MemRead32(EVE_REG_CMDB_SPACE);
+
+	return readCmdSpace;
+#endif
 }
 
 #endif // __linux__

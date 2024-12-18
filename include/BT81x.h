@@ -73,6 +73,10 @@
 #define EVE_RAM_TOP                    0x304000UL
 #define EVE_RAM_ERR_REPORT             0x309800UL
 
+// Coprocessor Method
+
+#define EVE_USE_CMDB_METHOD
+
 // Chip ID Register
 
 #define EVE_REG_ID                     0x302000UL

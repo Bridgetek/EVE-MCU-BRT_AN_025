@@ -268,8 +268,14 @@ void EVE_LIB_BeginCoProList(void)
 
 	// Begins SPI transaction
 	HAL_ChipSelect(1);
+
+#if IS_EVE_API(1)
 	// Send address for writing as the next free location in the co-pro buffer
 	HAL_SetWriteAddress(EVE_RAM_CMD + HAL_GetCmdPointer());
+#else
+	// Send address for writing
+	HAL_SetWriteAddress(EVE_REG_CMDB_WRITE);
+#endif
 }
 
 // Ends co-pro list for display creation
@@ -278,7 +284,9 @@ void EVE_LIB_EndCoProList(void)
 	// End SPI transaction
 	HAL_ChipSelect(0);
 	// Update the ring buffer pointer to start decode
+#ifndef EVE_USE_CMDB_METHOD
 	HAL_WriteCmdPointer();
+#endif
 }
 
 // Waits for the read and write pointers to become equal

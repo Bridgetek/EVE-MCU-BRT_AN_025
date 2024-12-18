@@ -71,6 +71,10 @@
 #define EVE_RAM_ERR_REPORT             0x00309800UL
 #define EVE_COPROC_ERR_REPORT          0x7f004800UL
 
+// Coprocessor Method
+
+#define EVE_USE_CMDB_METHOD
+
 // Chip ID Register
 
 #define EVE_REG_ID                     0x7f006000   //  Identification register, always reads as 0x7c

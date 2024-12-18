@@ -80,6 +80,10 @@
 #define EVE_ROMFONT_TABLEADDRESS       0x2ffffcUL
 #define EVE_ROM_CHIPID                 0x0c0000UL      // Chip ID
 
+// Coprocessor Method
+
+#define EVE_USE_CMDB_METHOD
+
 // Chip ID Register
 
 #define EVE_REG_ID                     0x302000UL

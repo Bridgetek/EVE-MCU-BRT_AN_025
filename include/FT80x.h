@@ -73,6 +73,10 @@
 #define EVE_RAM_PAL                    0x102000UL      // Palette RAM
 #define EVE_ROM_CHIPID                 0x0c0000UL      // Chip ID
 
+// Coprocessor Method
+
+#undef EVE_USE_CMDB_METHOD             // Not supported on FT80x
+
 // Chip ID Register
 
 #define EVE_REG_ID                     0x102400UL
