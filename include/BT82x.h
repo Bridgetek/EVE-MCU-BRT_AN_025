@@ -69,6 +69,7 @@
 #define EVE_ROMFONT_TABLEADDRESS       0x07ffff00UL
 #define EVE_RAM_TOP                    0x00304000UL
 #define EVE_RAM_ERR_REPORT             0x00309800UL
+#define EVE_COPROC_ERR_REPORT          0x7f004800UL
 
 // Chip ID Register
 
@@ -155,7 +156,8 @@
 #define EVE_REG_CMD_DL                 0x7f006154   //  Command DL offset
 #define EVE_REG_CMD_READ               0x7f00614c   //  Command buffer read pointer
 #define EVE_REG_CMD_WRITE              0x7f006150   //  Command buffer write pointer
-#define EVE_REG_CMDB_SPACE             0x7f006594   //  Command DL (bulk) space available
+#define EVE_REG_CMDB_WRITE             0x7f010000   //  Command write
+#define EVE_REG_CMDB_SPACE             0x7f006594   //  Command (bulk) space available
 
 // Tracking Registers
 

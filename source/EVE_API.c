@@ -142,6 +142,11 @@ void EVE_Init(void)
 #elif IS_EVE_API(5) 
 
 	EVE_LIB_BeginCoProList();
+	EVE_CMD_REGWRITE(EVE_REG_TOUCH_CONFIG, EVE_TOUCH_CONFIG);
+	EVE_LIB_EndCoProList();
+	EVE_LIB_AwaitCoProEmpty();
+
+	EVE_LIB_BeginCoProList();
 	EVE_CMD_REGWRITE(EVE_REG_SC0_SIZE, 2);
 	EVE_CMD_REGWRITE(EVE_REG_SC0_PTR0, 10 << 20);
 	EVE_CMD_REGWRITE(EVE_REG_SC0_PTR1, 18 << 20);
@@ -277,11 +282,29 @@ void EVE_LIB_EndCoProList(void)
 }
 
 // Waits for the read and write pointers to become equal
-void EVE_LIB_AwaitCoProEmpty(void)
+int EVE_LIB_AwaitCoProEmpty(void)
 {
 	// Await completion of processing
-	HAL_WaitCmdFifoEmpty();
+	return HAL_WaitCmdFifoEmpty();
 }
+
+#if IS_EVE_API(5)
+// Obtain the coprocessor exception description
+void EVE_LIB_GetCoProException(char* desc)
+{
+	uint32_t report = EVE_COPROC_ERR_REPORT;
+	for (uint32_t j = 0; j < 256; j += 4)
+	{
+		uint32_t w = HAL_MemRead32(report + j);
+		for (int i = 0; i < 4; i++)
+		{
+			char c = (w >> (i * 8)) & 0x7f;
+			*desc++ = c;
+			if (c == '\0') break;
+		}
+	}
+}
+#endif
 
 // Writes a block of data to the RAM_G
 void EVE_LIB_WriteDataToRAMG(const uint8_t *ImgData, uint32_t DataSize, uint32_t DestAddress)

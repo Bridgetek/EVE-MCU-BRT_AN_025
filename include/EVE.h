@@ -80,8 +80,19 @@ void EVE_LIB_EndCoProList(void);
 /**
  @brief EVE API: Waits for coprocessor list to end
  @details Will poll the coprocessor command list until it has been completed.
+ @returns 0 for successful completion, 0xff for coprocessor exception.
  */
-void EVE_LIB_AwaitCoProEmpty(void);
+int EVE_LIB_AwaitCoProEmpty(void);
+
+#if IS_EVE_API(5)
+/**
+ @brief EVE API: Get coprocessor exception description
+ @details Will query the coprocessor exception description to a string.
+ @returns Coprocessor exception description. This is a pointer to a string
+  and must be sufficient to hold 256 characters.
+ */
+void EVE_LIB_GetCoProException(char *desc);
+#endif
 
 /**
  @brief EVE API: Write a buffer to memory mapped RAM

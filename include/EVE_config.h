@@ -100,6 +100,8 @@
 #define EVE_DISP_CSPREAD 0
 #define EVE_DISP_DITHER 1
 
+#define EVE_TOUCH_CONFIG    ((0x38 << 4) | (1) | (1 << 11)) // Focaltech FT5206
+
 #elif DISPLAY_RES == WVGA
 
 #define EVE_DISP_WIDTH 800 // Active width of LCD display
@@ -117,6 +119,8 @@
 #define EVE_DISP_PCLKPOL 1 // Define active edge of PCLK
 #define EVE_DISP_CSPREAD 0
 #define EVE_DISP_DITHER 1
+
+#define EVE_TOUCH_CONFIG    ((0x38 << 4) | (1) | (1 << 11)) // Focaltech FT5206
 
 #elif DISPLAY_RES == WSVGA
 
@@ -139,6 +143,8 @@
 #define SET_PCLK_FREQ
 #define EVE_DISP_PCLK_FREQ  0xD12	// set 51MHz (must also define SET_PCLK_FREQ in line above to use this)
 
+#define EVE_TOUCH_CONFIG    ((0x38 << 4) | (1) | (1 << 11)) // Focaltech FT5206
+
 #elif DISPLAY_RES == WXGA
 
 #define EVE_DISP_WIDTH 1280 // Active width of LCD display
@@ -160,6 +166,8 @@
 #define SET_PCLK_FREQ
 #define EVE_DISP_PCLK_FREQ  0x8B1	// set 51MHz (must also define SET_PCLK_FREQ in line above to use this)
 
+#define EVE_TOUCH_CONFIG    ((0x38 << 4) | (1) | (1 << 11)) // Focaltech FT5206
+
 #elif DISPLAY_RES == HD
 
 #define EVE_DISP_WIDTH 1920 // Active width of LCD display
@@ -177,6 +185,8 @@
 #define EVE_DISP_PCLKPOL 0 // Define active edge of PCLK
 #define EVE_DISP_CSPREAD 0
 #define EVE_DISP_DITHER 1
+
+#define EVE_TOUCH_CONFIG    ((0x5d << 4) | (2) | (1 << 11)) // Goodix GT911
 
 #else
 
