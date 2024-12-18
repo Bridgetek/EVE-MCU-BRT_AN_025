@@ -71,6 +71,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\imports\ftd2xx;..\imports\LibFT4222\inc;..\..\include;..\..\..\..\include;..\..\common;..\release\include;..\release\libftd2xx;..\..\..\..\source;..\..\..\..\ports\eve_libmpsse;..\..\..\..\include;..\..\common;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -78,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(ShortProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>..\imports\ftd2xx;..\imports\LibFT4222\inc;..\..\include;..\..\..\..\include;..\..\common;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -98,7 +100,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\imports\LibFT4222\dll\i386\LibFT4222-64.lib;..\imports\ftd2xx\dll\i386\ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\imports\LibFT4222\dll\i386\LibFT4222.lib;..\imports\ftd2xx\dll\i386\ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\imports\LibFT4222\dll\i386\LibFT4222.dll $(SolutionDir)$(Platform)\$(Configuration)\LibFT4222.dll</Command>
@@ -140,7 +142,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>..\imports\LibFT4222\dll\i386\LibFT4222-64.lib;..\imports\ftd2xx\dll\i386\ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\imports\LibFT4222\dll\i386\LibFT4222.lib;..\imports\ftd2xx\dll\i386\ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\imports\LibFT4222\dll\i386\LibFT4222.dll $(SolutionDir)$(Platform)\$(Configuration)\LibFT4222.dll</Command>
