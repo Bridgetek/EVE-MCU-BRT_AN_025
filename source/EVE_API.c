@@ -63,7 +63,6 @@
 
 void EVE_Init(void)
 {
-	uint8_t regGpio;
 	int i;
 
 	HAL_EVE_Init();
@@ -72,6 +71,7 @@ void EVE_Init(void)
 
 	// LCD display parameters
 #if IS_EVE_API(1, 2, 3, 4)
+	uint8_t regGpio;
 
 	// Active width of LCD display
 	HAL_MemWrite16(EVE_REG_HSIZE,   EVE_DISP_WIDTH);

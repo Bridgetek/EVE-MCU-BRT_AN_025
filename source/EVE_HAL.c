@@ -53,8 +53,16 @@
 #include <string.h>
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-#undef DEBUG
-#ifdef DEBUG
+// Note: on platforms where there is assumed to be an operating system
+// with a console running turn on DEBUG unless it is has specifically
+// been set to zero in the environment.
+#ifndef DEBUG
+#if defined(USE_MPSSE) || defined(USE_FT4222)
+#define DEBUG 1
+#endif
+#endif
+
+#if DEBUG > 0
 #include <stdio.h>
 #endif
 
@@ -62,7 +70,7 @@
 #include "../include/HAL.h"
 #include "../include/MCU.h"
 
-#ifdef DEBUG
+#if DEBUG > 0
 #define DEBUG_PRINTF(...) printf(__VA_ARGS__)
 #else
 #define DEBUG_PRINTF(...)
@@ -73,8 +81,6 @@ static uint16_t writeCmdPointer = 0x0000;
 
 void HAL_EVE_Init(void)
 {
-	uint8_t val;
-
 	MCU_Init();
 
 	// Set Chip Select OFF
@@ -111,11 +117,11 @@ void HAL_EVE_Init(void)
 	// Set active
 	HAL_HostCmdWrite(0, 0x00);
 	
-//	MCU_Delay_500ms();		// Optional delay can be commented so long as we check the REG_ID and REG_CPURESET
-
 	// Read REG_ID register (0x302000) until reads 0x7C
+	uint8_t val;
 	while ((val = HAL_MemRead8(EVE_REG_ID)) != 0x7C)
 	{
+		(void)val;
 	}
 
 	// Ensure CPUreset register reads 0 and so FT8xx is ready
@@ -175,7 +181,7 @@ void HAL_EVE_Init(void)
 				// Wait for the REG_ID register to be set to 0x7c
 				while (HAL_MemRead32(EVE_REG_ID) != 0x7c)
 				{
-                    DEBUG_PRINTF("[Waiting for REG_ID...]\n", boot);
+                    DEBUG_PRINTF("[Waiting for REG_ID...]\n");
 					MCU_Delay_20ms();
 				}
 

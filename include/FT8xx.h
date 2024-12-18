@@ -137,15 +137,15 @@
 #undef EVE4_ENABLE // deprecated
 #undef EVE5_ENABLE // deprecated
 #if EVE_API == 1
-#undef EVE1_ENABLE // deprecated
+#define EVE1_ENABLE // deprecated
 #elif EVE_API == 2
-#undef EVE2_ENABLE // deprecated
+#define EVE2_ENABLE // deprecated
 #elif EVE_API == 3
-#undef EVE3_ENABLE // deprecated
+#define EVE3_ENABLE // deprecated
 #elif EVE_API == 4
-#undef EVE4_ENABLE // deprecated
+#define EVE4_ENABLE // deprecated
 #elif EVE_API == 5
-#undef EVE5_ENABLE // deprecated
+#define EVE5_ENABLE // deprecated
 #endif
 
 /** Macros to allow us to select which API a command applies to.
@@ -161,18 +161,26 @@
  * 
  * On Visual Studio it is necessary to enable the "/Zc:preprocessor" option
  * to enable preprocessor conformance mode.
+ * This works by counting the number of parameters then calling a chain of
+ * macros to make a chain of conditions for each parameters in the macros
+ * IS_EVE_API_1/2/3/4/5. (This can be expanded to more than 5 in future)
+ * (x == n)||(y == n)||...
+ * The parameters are counted by pasting the passed parameters into the 
+ * parameters passed from NUM_ARGS to _NUM_ARGS and selectng the Nth one,
+ * which then becomes one of the numbers after __VA_ARGS__ in NUM_ARGS.
+ * The first arguments in _NUM_ARGS are dummies.
  */
-#define _NUM_ARGS2(X,X5,X4,X3,X2,X1,N,...) N
-#define NUM_ARGS(...) _NUM_ARGS2(0, ## __VA_ARGS__ ,5,4,3,2,1,0)
+#define _NUM_ARGS(X,X5,X4,X3,X2,X1,N,...) N
+#define NUM_ARGS(...) _NUM_ARGS(0, ## __VA_ARGS__ ,5,4,3,2,1,0)
 
 #define IS_EVE_API_1(a)     (a == EVE_API)
-#define IS_EVE_API_2(a,b)   (IS_EVE_API_1(a) | IS_EVE_API_1(b))
-#define IS_EVE_API_3(a,...) (IS_EVE_API_1(a) | IS_EVE_API_2(__VA_ARGS__))
-#define IS_EVE_API_4(a,...) (IS_EVE_API_1(a) | IS_EVE_API_3(__VA_ARGS__))
-#define IS_EVE_API_5(a,...) (IS_EVE_API_1(a) | IS_EVE_API_4(__VA_ARGS__))
+#define IS_EVE_API_2(a,b)   (IS_EVE_API_1(a) || IS_EVE_API_1(b) )
+#define IS_EVE_API_3(a,...) (IS_EVE_API_1(a) || IS_EVE_API_2( __VA_ARGS__) )
+#define IS_EVE_API_4(a,...) (IS_EVE_API_1(a) || IS_EVE_API_3( __VA_ARGS__) )
+#define IS_EVE_API_5(a,...) (IS_EVE_API_1(a) || IS_EVE_API_4( __VA_ARGS__) )
 
 #define _IS_EVE_API_N(N, ...) IS_EVE_API_ ## N(__VA_ARGS__)
-#define _IS_EVE_API(N, ...)  _IS_EVE_API_N(N, ## __VA_ARGS__)
+#define _IS_EVE_API(N, ...)  _IS_EVE_API_N(N, __VA_ARGS__)
 #define IS_EVE_API(...)      _IS_EVE_API(NUM_ARGS(__VA_ARGS__), ## __VA_ARGS__)
 
 /** EVE API definitions. */

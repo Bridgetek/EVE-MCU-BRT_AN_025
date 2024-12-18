@@ -49,6 +49,9 @@
 
 // Guard against being used for incorrect platform or architecture.
 // USE_MPSSE holds the MPSSE channel to open.
+// In gcc compilers this is in the Makefile. -DUSE_MPSSE=0
+// In VisualStudio this is in Project Properties -> Configuration Properties -> 
+//     C/C++ -> Preprocessor -> Preprocessor Definitions.
 #if defined(USE_MPSSE)
 
 #pragma message ("Compiling " __FILE__ " for libMPSSE")
@@ -112,11 +115,25 @@ void MCU_Init(void)
 	for (channel = 0; channel < channels; channel++)
 	{
 		status = SPI_GetChannelInfo(channel, &devList);
-		printf("SPI_GetNumChannels returned %d for channel %d\n", status, channel);
-		/*print the dev info*/
-		printf("		VID/PID: 0x%04x/0x%04x\n", devList.ID >> 16, devList.ID & 0xffff);
-		printf("		SerialNumber: %s\n", devList.SerialNumber);
-		printf("		Description: %s\n", devList.Description);
+		if (status != FT_OK)
+		{
+			printf("SPI_GetChannelInfo returned %d for channel %d\n", status, channel);
+			continue;
+		}
+
+		printf("SPI channel % d: ", channel);
+		if (channel == USE_MPSSE)
+		{
+			printf("selected\n");
+			/*print the dev info*/
+			printf("		VID/PID: 0x%04x/0x%04x\n", devList.ID >> 16, devList.ID & 0xffff);
+			printf("		SerialNumber: %s\n", devList.SerialNumber);
+			printf("		Description: %s\n", devList.Description);
+		}
+		else
+		{
+			printf("ignored\n");
+		}
 	}
 
 	if (channels > USE_MPSSE)
@@ -175,7 +192,6 @@ void MCU_transmit_buffer(void)
 
 int MCU_append_buffer(const uint8_t *buffer, uint16_t length)
 {
-	FT_STATUS status;
 	int i = MCU_bufferLen;
 	int j = 0;
 	int plength;
