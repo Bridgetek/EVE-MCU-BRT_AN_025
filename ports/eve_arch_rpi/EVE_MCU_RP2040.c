@@ -215,6 +215,11 @@ void MCU_SPIWrite32(uint32_t DataToWrite)
 	spi_write_blocking(spi_port, (uint8_t *)&DataToWrite, 4);
 }
 
+void MCU_SPIRead(uint8_t *DataToRead, uint32_t length)
+{
+	spi_read_blocking(spi_port, 0, DataToRead, length);
+}
+
 void MCU_SPIWrite(const uint8_t *DataToWrite, uint32_t length)
 {
 	spi_write_blocking(spi_port, DataToWrite, length);
@@ -230,7 +235,7 @@ void MCU_Delay_500ms(void)
 	sleep_ms(500);
 }
 
-// RP2040 is Little Endian.
+// RP2040 is Little Endian. There is no sys/endian.h.
 // Use toolchain defined functions.
 uint16_t MCU_htobe16(uint16_t h)
 {
