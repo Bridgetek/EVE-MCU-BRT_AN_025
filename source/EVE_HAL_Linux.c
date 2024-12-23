@@ -87,6 +87,7 @@ static uint16_t writeCmdPointer = 0x0000;
 void HAL_EVE_Init(void)
 {
 	Platform_Init();
+
 	// Set Chip Select OFF
 	HAL_ChipSelect(0);
 
@@ -115,16 +116,15 @@ void HAL_EVE_Init(void)
 	HAL_HostCmdWrite(0x61, 0x46);
 #endif
 
-#if IS_EVE_API(2, 3,4,5)
+#if IS_EVE_API(2, 3, 4)
 	HAL_HostCmdWrite(0x68, 0x00); // Reset
 #endif
 
+#if IS_EVE_API(1, 2, 3, 4)
 	// Set active
 	info_printf("Activating...");
 	HAL_HostCmdWrite(0, 0x00);
 	info_printf("done\n");
-
-//	Platform_Delay_500ms();		// Optional delay can be commented so long as we check the REG_ID and REG_CPURESET
 
 	// Read REG_ID register (0x302000) until reads 0x7C
 	info_printf("Connecting to FT81X EVE display...");
@@ -141,9 +141,84 @@ void HAL_EVE_Init(void)
 		Platform_Delay_20ms();
 	}
 	info_printf("done\n");
+#endif
 
 #if IS_EVE_API(3,4)
 	HAL_MemWrite32(EVE_REG_FREQUENCY, 72000000);
+#endif
+
+#if IS_EVE_API(5)
+	HAL_ChipSelect(0);
+
+	while (1)
+	{
+		unsigned char bb[128];
+		int i;
+
+		memset(bb, 0, sizeof(bb));
+
+		Platform_Delay_20ms();
+		// Set System PLL NS = 15 for 576MHz
+		HAL_HostCmdWrite(0xFF, 0xE4, 0x0F, 0x00, 0x00);
+		// Set System clock divider to 0x17 for 72MHz
+		HAL_HostCmdWrite(0xFF, 0xE6, 0x17, 0x00, 0x00);
+		// Set bypass BOOT_BYPASS_OTP, DDRTYPT_BYPASS_OTP and set BootCfgEn
+		HAL_HostCmdWrite(0xFF, 0xE9, 0xe1, 0x00, 0x00);
+		// Set DDR Type - 1333, DDR3L, 4096
+		HAL_HostCmdWrite(0xFF, 0xEB, 0x08, 0x00, 0x00);
+		// Set DDR, JT and AUD in Boot Control
+		HAL_HostCmdWrite(0xFF, 0xE8, 0xE0, 0x00, 0x00);
+		// Clear BootCfgEn
+		HAL_HostCmdWrite(0xFF, 0xE9, 0xC0, 0x00, 0x00);
+		// Perform a reset pulse
+		HAL_HostCmdWrite(0xFF, 0xE7, 0x00, 0x00, 0x00) ; 
+		// Write 4 zeros
+		HAL_Write(bb, 4);
+		// Delay 100 mS
+		Platform_Delay_20ms();
+		Platform_Delay_20ms();
+		Platform_Delay_20ms();
+		Platform_Delay_20ms();
+		Platform_Delay_20ms();
+
+		HAL_ChipSelect(1);
+		HAL_Read(bb, 128);
+		HAL_ChipSelect(0);
+
+		for (i = 0; i < 128; i++)
+		{
+			if (bb[i] == 1)
+			{
+				uint32_t boot;
+
+				// Wait for the REG_ID register to be set to 0x7c
+				while (HAL_MemRead32(EVE_REG_ID) != 0x7c)
+				{
+                    dbg_printf("[Waiting for REG_ID...]\n");
+					Platform_Delay_20ms();
+				}
+
+                boot = HAL_MemRead32(EVE_BOOT_STATUS);
+				if (boot != 0x522e2e2e)
+				{
+                    dbg_printf("[Timeout waiting for BOOT_STATUS, stuck at 0x%08x, retrying...]\n", boot);
+                    continue;
+				}
+
+				if (HAL_MemRead32(EVE_REG_FREQUENCY) != 72000000)
+				{
+                    dbg_printf("[frequency %d, retrying...]\n", HAL_MemRead32(EVE_REG_FREQUENCY));
+					continue;
+				}
+				break;
+			}
+		}
+		if (i < 128) break;
+
+        info_printf("[Boot fail after reset, retrying...]\n");
+	}
+	info_printf("[Boot complete]\n");
+
 #endif
 
 	// This function will not return unless an EVE device is present.
@@ -175,6 +250,8 @@ void HAL_SetWriteAddress(uint32_t address)
 	// written. Ignore return values as this is an SPI write only.
 	// Send high byte of address with 'write' bits set.
 	struct spi_ioc_transfer xfer[1];
+
+#if IS_EVE_API(1, 2, 3, 4) // Different addressing on BT82x
 	uint32_t addr = Platform_htobe32((address << 8) | (1UL << 31));
 	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 
@@ -184,6 +261,17 @@ void HAL_SetWriteAddress(uint32_t address)
 	xfer[0].rx_buf = (uintptr_t)NULL;
 	xfer[0].len = 3;
 	xfer[0].cs_change = 0;
+#else
+	uint32_t addr = Platform_htobe32(address | (1UL << 31));
+	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
+
+	memset(xfer, 0, sizeof(xfer));
+
+	xfer[0].tx_buf = (uintptr_t)&addr;
+	xfer[0].rx_buf = (uintptr_t)NULL;
+	xfer[0].len = 4;
+	xfer[0].cs_change = 0;
+#endif
 
 	if (Platform_SPI_transfer(xfer, 1) < 0)
 	{
@@ -198,9 +286,14 @@ void HAL_SetReadAddress(uint32_t address)
 	// Ignore return values as this is an SPI write only.
 	// Send high byte of address with 'read' bits set.
 	struct spi_ioc_transfer xfer[1];
+
+#if IS_EVE_API(1, 2, 3, 4) // Different addressing on BT82x
 	uint32_t addr = Platform_htobe32((address << 8) | (0UL << 31));
 	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
-
+#else
+	uint32_t addr = Platform_htobe32(address | (0UL << 31));
+	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
+#endif
 	memset(xfer, 0, sizeof(xfer));
 
 	xfer[0].tx_buf = (uintptr_t)&addr;
@@ -258,6 +351,7 @@ void HAL_Write32(uint32_t val32)
 	}
 }
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Send a 16-bit data value --------------------------
 void HAL_Write16(uint16_t val16)
 {
@@ -279,7 +373,9 @@ void HAL_Write16(uint16_t val16)
 		err_printf("HAL_Write16: Transfer Failed \n");
 	}
 }
+#endif
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Send an 8-bit data value ---------------------------
 void HAL_Write8(uint8_t val8)
 {
@@ -300,17 +396,40 @@ void HAL_Write8(uint8_t val8)
 		err_printf("HAL_Write8: Transfer Failed \n");
 	}
 }
+#endif
+
+// ------------------------ Read a block of data --------------------------
+void HAL_Read(uint8_t *buffer, uint32_t length)
+{
+	// Send multiple bytes of data after previously sending address. Ignore return
+	// values as this is an SPI write only. Data must be the correct endianess
+	// for the SPI bus.
+	struct spi_ioc_transfer xfer[1];
+	dbg_printf("%s: %d \n", __FUNCTION__, length);
+
+	memset(xfer, 0, sizeof(xfer));
+
+	xfer[0].tx_buf = (uintptr_t)NULL;
+	xfer[0].rx_buf = (uintptr_t)buffer;
+	xfer[0].len = length;
+	xfer[0].cs_change = 0;
+
+	if (Platform_SPI_transfer(xfer, 1) < 0)
+	{
+		err_printf("HAL_Read: Transfer Failed \n");
+	}
+}
 
 // ------------------------ Read a 32-bit data value --------------------------
 uint32_t HAL_Read32(void)
 {
 	// Read 4 bytes from a register has been previously addressed. Send dummy
 	// 00 bytes as only the incoming value is important.
-	uint32_t val32;
+	uint32_t val32 = 0;
 	struct spi_ioc_transfer xfer[1];
 
 	memset(xfer, 0, sizeof(xfer));
-
+#if IS_EVE_API(1, 2, 3, 4)
 	xfer[0].tx_buf = (uintptr_t)NULL;
 	xfer[0].rx_buf = (uintptr_t)&val32;
 	xfer[0].len = 4;
@@ -322,10 +441,52 @@ uint32_t HAL_Read32(void)
 	}
 
 	dbg_printf("%s: 0x%x \n", __FUNCTION__, val32);
+#else
+		unsigned char bb[36];
+		int i;
+		do
+		{
+			xfer[0].tx_buf = (uintptr_t)NULL;
+			xfer[0].rx_buf = (uintptr_t)bb;
+			xfer[0].len = 36;
+			xfer[0].cs_change = 0;
+
+			if (Platform_SPI_transfer(xfer, 1) < 0)
+			{
+				err_printf("HAL_Read32: Transfer Failed \n");
+				break;
+			}
+			for (i = 0; i < 36; i++)
+			{
+				if (bb[i] == 1)
+				{
+					i++;
+					// read data in LE format
+#if MCU_UNALIGNED_ACCESSES 
+					// Data can be read unaligned.
+					val32 = *(uint32_t *)&bb[i];
+#else
+					// Read data byte-by-byte.
+					val32 = bb[i++];
+					val32 |= (bb[i++] << 8);
+					val32 |= (bb[i++] << 16);
+					val32 |= (bb[i++] << 24);
+#endif
+					break;
+				}
+			}
+			if (i < 36)
+			{
+				break;
+			}
+		} while (1);
+#endif
+
 	// Return combined 32-bit value
 	return Platform_le32toh(val32);
 }
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Read a 16-bit data value ---------------------------
 uint16_t HAL_Read16(void)
 {
@@ -350,7 +511,9 @@ uint16_t HAL_Read16(void)
 	// Return combined 16-bit value
 	return Platform_le16toh(val16);
 }
+#endif
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // ------------------------ Read an 8-bit data value ---------------------------
 uint8_t HAL_Read8(void)
 {
@@ -375,6 +538,7 @@ uint8_t HAL_Read8(void)
 	// Return 8-bit value read
 	return val8;
 }
+#endif
 
 // ################# COMBINED ADDRESSING AND DATA FUNCTIONS ####################
 
@@ -385,181 +549,95 @@ uint8_t HAL_Read8(void)
 // -------------- Write a 32-bit value to specified address --------------------
 void HAL_MemWrite32(uint32_t address, uint32_t val32)
 {
-	struct spi_ioc_transfer xfer[2];
-	uint32_t addr = Platform_htobe32((address << 8) | (1UL << 31));
-	uint32_t val = Platform_htole32(val32);
 	dbg_printf("%s: %0x%x 0x%x \n", __FUNCTION__, address, val32);
 
-	memset(xfer, 0, sizeof(xfer));
-
 	HAL_ChipSelect(1);
-
-	xfer[0].tx_buf = (uintptr_t)&addr;
-	xfer[0].rx_buf = (uintptr_t)NULL;
-	xfer[0].len = 3;
-	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uintptr_t)&val;
-	xfer[1].rx_buf = (uintptr_t)NULL;
-	xfer[1].len = 4;
-	xfer[1].cs_change = 0;
-
-	if (Platform_SPI_transfer(xfer, 2) < 0)
-	{
-		err_printf("HAL_MemWrite32: Transfer Failed \n");
-	}
+	HAL_SetWriteAddress(address);
+	HAL_Write32(val32);
 	HAL_ChipSelect(0);
 }
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Write a 16-bit value to specified address --------------------
 void HAL_MemWrite16(uint32_t address, uint16_t val16)
 {
-	struct spi_ioc_transfer xfer[2];
-	uint32_t addr = Platform_htobe32((address << 8) | (1UL << 31));
-	uint16_t val = Platform_htole16(val16);
 	dbg_printf("%s: %0x%x 0x%x \n", __FUNCTION__, address, val16);
 
-	memset(xfer, 0, sizeof(xfer));
-
 	HAL_ChipSelect(1);
-
-	xfer[0].tx_buf = (uintptr_t)&addr;
-	xfer[0].rx_buf = (uintptr_t)NULL;
-	xfer[0].len = 3;
-	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uintptr_t)&val;
-	xfer[1].rx_buf = (uintptr_t)NULL;
-	xfer[1].len = 2;
-	xfer[1].cs_change = 0;
-
-	if (Platform_SPI_transfer(xfer, 2) < 0)
-	{
-		err_printf("HAL_MemWrite16: Transfer Failed \n");
-	}
+	HAL_SetWriteAddress(address);
+	HAL_Write16(val16);
 	HAL_ChipSelect(0);
 }
+#endif
 
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Write an 8-bit value to specified address --------------------
 void HAL_MemWrite8(uint32_t address, uint8_t val8)
 {
-	struct spi_ioc_transfer xfer[2];
-	uint32_t addr = Platform_htobe32((address << 8) | (1UL << 31));
 	dbg_printf("%s: %0x%x 0x%x \n", __FUNCTION__, address, val8);
 
 	HAL_ChipSelect(1);
-
-	memset(xfer, 0, sizeof(xfer));
-
-	xfer[0].tx_buf = (uintptr_t)&addr;
-	xfer[0].rx_buf = (uintptr_t)NULL;
-	xfer[0].len = 3;
-	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uintptr_t)&val8;
-	xfer[1].rx_buf = (uintptr_t)NULL;
-	xfer[1].len = 1;
-	xfer[1].cs_change = 0;
-
-	if (Platform_SPI_transfer(xfer, 2) < 0)
-	{
-		err_printf("HAL_MemWrite8: Transfer Failed \n");
-	}
+	HAL_SetWriteAddress(address);
+	HAL_Write8(val8);
 	HAL_ChipSelect(0);
 }
+#endif
 
 // -------------- Read a 32-bit value from specified address --------------------
 uint32_t HAL_MemRead32(uint32_t address)
 {
 	uint32_t val32;
-	struct spi_ioc_transfer xfer[2];
-	uint32_t addr = Platform_htobe32((address << 8) | (0UL << 31));
 	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 
-	memset(xfer, 0, sizeof(xfer));
-
 	HAL_ChipSelect(1);
-
-	xfer[0].tx_buf = (uintptr_t)&addr;
-	xfer[0].rx_buf = (uintptr_t)NULL;
-	xfer[0].len = 4;
-	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uintptr_t)NULL;
-	xfer[1].rx_buf = (uintptr_t)&val32;
-	xfer[1].len = 4;
-	xfer[1].cs_change = 0;
-
-	if (Platform_SPI_transfer(xfer, 2) < 0)
-	{
-		err_printf("HAL_MemRead32: Transfer Failed \n");
-	}
-
+	HAL_SetReadAddress(address);
+	val32 = HAL_Read32();
 	HAL_ChipSelect(0);
+
 	dbg_printf("%s: 0x%x \n", __FUNCTION__, val32);
 	// Return 32-bit value read
 	return Platform_le32toh(val32);
 }
+
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Read a 16-bit value from specified address --------------------
 uint16_t HAL_MemRead16(uint32_t address)
 {
 	uint16_t val16;
-	struct spi_ioc_transfer xfer[2];
-	uint32_t addr = Platform_htobe32((address << 8) | (0UL << 31));
 	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 
 	HAL_ChipSelect(1);
-
-	memset(xfer, 0, sizeof(xfer));
-
-	xfer[0].tx_buf = (uintptr_t)&addr;
-	xfer[0].rx_buf = (uintptr_t)NULL;
-	xfer[0].len = 4;
-	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uintptr_t)NULL;
-	xfer[1].rx_buf = (uintptr_t)&val16;
-	xfer[1].len = 2;
-	xfer[1].cs_change = 0;
-
-	if (Platform_SPI_transfer(xfer, 2) < 0)
-	{
-		err_printf("HAL_MemRead16: Transfer Failed \n");
-	}
-
+	HAL_SetReadAddress(address);
+	val16 = HAL_Read16();
 	HAL_ChipSelect(0);
+
 	dbg_printf("%s: 0x%x \n", __FUNCTION__, val16);
 	// Return 16-bit value read
 	return Platform_le16toh(val16);
 }
+#endif
+
+#if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 // -------------- Read an 8-bit value from specified address --------------------
 uint8_t HAL_MemRead8(uint32_t address)
 {
 	uint8_t val8;
-	struct spi_ioc_transfer xfer[2];
-	uint32_t addr = Platform_htobe32((address << 8) | (0UL << 31));
 	dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 
 	HAL_ChipSelect(1);
-
-	memset(xfer, 0, sizeof(xfer));
-
-	xfer[0].tx_buf = (uintptr_t)&addr;
-	xfer[0].rx_buf = (uintptr_t)NULL;
-	xfer[0].len = 4;
-	xfer[0].cs_change = 0;
-	xfer[1].tx_buf = (uintptr_t)NULL;
-	xfer[1].rx_buf = (uintptr_t)&val8;
-	xfer[1].len = 1;
-	xfer[1].cs_change = 0;
-
-	if (Platform_SPI_transfer(xfer, 2) < 0)
-	{
-		err_printf("HAL_MemRead8: Transfer Failed \n");
-	}
-
+	HAL_SetReadAddress(address);
+	val8 = HAL_Read8();
 	HAL_ChipSelect(0);
+
 	dbg_printf("%s: 0x%x \n", __FUNCTION__, val8);
 	// Return 8-bit value read
 	return val8;
 }
+#endif
+
 // ############################# HOST COMMANDS #################################
 // -------------------------- Write a host command -----------------------------
+#if IS_EVE_API(1, 2, 3, 4) // Different host commands on BT82x
 void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
 {
 	struct spi_ioc_transfer xfer[3];
@@ -589,6 +667,35 @@ void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
 
 	HAL_ChipSelect(0);
 }
+#else
+void HAL_HostCmdWrite(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint8_t b5)
+{
+	struct spi_ioc_transfer xfer[1];
+	uint8_t command[5];
+
+	memset(xfer, 0, sizeof(xfer));
+	command[0] = b1;
+	command[1] = b2;
+	command[2] = b3;
+	command[3] = b4;
+	command[4] = b5;
+	
+	xfer[0].tx_buf = (uintptr_t)command;
+	xfer[0].rx_buf = (uintptr_t)NULL;
+	xfer[0].len = 5;
+	xfer[0].cs_change = 0;
+
+	// CS low begins the SPI transfer
+	HAL_ChipSelect(1);
+	// Send command
+	if (Platform_SPI_transfer(xfer, 1) < 0)
+	{
+		err_printf("HAL_HostCmdWrite: Transfer Failed \n");
+	}
+	// CS high terminates the SPI transfer
+	HAL_ChipSelect(0);
+}
+#endif
 
 // ######################## SUPPORTING FUNCTIONS ###############################
 

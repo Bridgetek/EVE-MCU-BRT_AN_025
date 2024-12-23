@@ -273,6 +273,14 @@ void HAL_Write8(uint8_t val8);
 #endif
 
 /**
+ @brief Reads a block of data to EVE
+ @details Reads a block of data using SPI to the EVE.
+   	   This function will not control chip select.
+ @param val32 - 32 bit value
+ */
+void HAL_Read(uint8_t *buffer, uint32_t length);
+
+/**
  @brief Reads a 32 bit value from EVE
  @details Sends a 32 bit dummy value using SPI to the EVE
  	 and receives the result.

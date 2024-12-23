@@ -169,7 +169,7 @@ void HAL_EVE_Init(void)
 		MCU_Delay_20ms();
 
 		HAL_ChipSelect(1);
-		MCU_SPIRead(bb, 128);
+		HAL_Read(bb, 128);
 		HAL_ChipSelect(0);
 
 		for (i = 0; i < 128; i++)
@@ -296,6 +296,15 @@ void HAL_Write8(uint8_t val8)
 }
 #endif
 
+// ------------------------ Read a block of data --------------------------
+void HAL_Read(uint8_t *buffer, uint32_t length)
+{
+	// Send multiple bytes of data after previously sending address. Ignore return
+	// values as this is an SPI write only. Data must be the correct endianess
+	// for the SPI bus.
+	MCU_SPIRead(buffer, length);
+}
+
 // ------------------------ Read a 32-bit data value --------------------------
 uint32_t HAL_Read32(void)
 {    
@@ -311,7 +320,7 @@ uint32_t HAL_Read32(void)
 		int i;
 		do
 		{
-			MCU_SPIRead(bb, 36);
+			HAL_Read(bb, 36);
 			for (i = 0; i < 36; i++)
 			{
 				if (bb[i] == 1)
