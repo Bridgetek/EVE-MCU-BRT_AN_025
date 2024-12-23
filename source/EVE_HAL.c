@@ -318,7 +318,16 @@ uint32_t HAL_Read32(void)
 				{
 					i++;
 					// read data in LE format
+#if MCU_UNALIGNED_ACCESSES 
+					// Data can be read unaligned.
 					val32 = *(uint32_t *)&bb[i];
+#else
+					// Read data byte-by-byte.
+					val32 = bb[i++];
+					val32 |= (bb[i++] << 8);
+					val32 |= (bb[i++] << 16);
+					val32 |= (bb[i++] << 24);
+#endif
 					break;
 				}
 			}

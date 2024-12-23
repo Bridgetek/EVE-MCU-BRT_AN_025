@@ -75,7 +75,8 @@
 
 // Coprocessor Method
 
-#undef EVE_USE_CMDB_METHOD             // Not supported on FT80x
+// Use REG_CMDB_WRITE not supported on FT80x.
+#undef EVE_USE_CMDB_METHOD
 
 // Chip ID Register
 

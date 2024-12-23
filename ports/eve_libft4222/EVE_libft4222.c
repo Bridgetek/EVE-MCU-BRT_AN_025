@@ -63,7 +63,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef _WIN32
+#ifndef _WIN32 // Windows is always little-endian (for now)
 #include <endian.h>
 #include <unistd.h>
 #endif // _WIN32
@@ -188,7 +188,7 @@ void MCU_Init(void)
 			exit(-4);
 		}
 
-		ftStatus = FT4222_SPIMaster_Init(ftHandleSPI, SPI_IO_SINGLE, CLK_DIV_8, CLK_IDLE_LOW, CLK_LEADING, FT8XX_CS_N_PIN);
+		ftStatus = FT4222_SPIMaster_Init(ftHandleSPI, SPI_IO_SINGLE, CLK_DIV_2, CLK_IDLE_LOW, CLK_LEADING, FT8XX_CS_N_PIN);
 		if (FT_OK != ftStatus)
 		{
 			fprintf(stderr, "Init FT4222 as SPI master device failed!\n");
@@ -452,7 +452,7 @@ void MCU_SPIWrite32(uint32_t DataToWrite)
 	MCU_append_buffer((uint8_t *)&DataToWrite, 4, 0);
 }
 
-void MCU_SPIRead(const uint8_t *DataToRead, uint32_t length)
+void MCU_SPIRead(uint8_t *DataToRead, uint32_t length)
 {
 	FT_STATUS status;
 	uint16_t transferred;

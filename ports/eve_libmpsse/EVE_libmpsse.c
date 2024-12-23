@@ -63,7 +63,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef _WIN32
+#ifndef _WIN32 // Windows is always little-endian (for now)
 #include <endian.h>
 #include <unistd.h>
 #endif // _WIN32
@@ -359,7 +359,7 @@ void MCU_SPIWrite32(uint32_t DataToWrite)
 	MCU_append_buffer((const uint8_t *)&DataToWrite, 4);
 }
 
-void MCU_SPIRead(const uint8_t *DataToRead, uint32_t length)
+void MCU_SPIRead(uint8_t *DataToRead, uint32_t length)
 {
 	FT_STATUS status;
 	DWORD transferred;

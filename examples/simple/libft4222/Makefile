@@ -63,10 +63,11 @@ DYNAMIC_LINK_OPTIONS := -Wl,-rpath /usr/local/lib
 STATIC_APP = $(APP)-static
 DYNAMIC_APP = $(APP)-dynamic
 
-C_SOURCES = $(wildcard Example/*.c) \
+C_SOURCES = $(wildcard ../common/*.c) \
 	$(wildcard ../../../ports/eve_libft4222/*.c) \
 	$(wildcard ../../../source/*.c) \
 	main.c
+
 OBJ_FILES = $(C_SOURCES:.c=.o)
 
 all: $(STATIC_APP) $(DYNAMIC_APP)

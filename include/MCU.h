@@ -53,6 +53,23 @@
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
 /**
+ @brief MCU allows unalligned accesses to memory.
+ @details Set to zero if unaligned accesses not allowed, e.g. on
+ microcontrolles. This has been added to support BT82x.
+ If a platform does support unaligned access please raise an 
+ issue in GitHub.
+ */
+#if defined (PLATFORM_STM32_CUBE) || defined(PLATFORM_FT9XX) \
+	|| defined(PLATFORM_STM32) ||  defined(PLATFORM_PIC) \
+	|| defined(PLATFORM_NXPK64) ||  defined(PLATFORM_MSP430) \
+	||  defined(PLATFORM_ESP32) || defined(PLATFORM_BEAGLEBONE) \
+	|| defined(PLATFORM_RASPBERRYPI) || defined(PLATFORM_RP2040)
+#define MCU_UNALLIGNED_ACCESSES 0
+#else
+#define MCU_UNALLIGNED_ACCESSES 1
+#endif
+
+/**
  @brief MCU specific initialisation
  @details Must contain any MCU-specific initialisation. This will typically be
  	 setting up the SPI bus, GPIOs and operating environment requirements.
@@ -116,7 +133,7 @@ void MCU_SPIWrite(const uint8_t *DataToWrite, uint32_t length);
  @param DataToWrite - pointer to buffer to read.
  @param length - number of bytes to read.
  */
-void MCU_SPIRead(const uint8_t *DataToRead, uint32_t length);
+void MCU_SPIRead(uint8_t *DataToRead, uint32_t length);
 
 /**
  @brief MCU specific SPI 8 bit read

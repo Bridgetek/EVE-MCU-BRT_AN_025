@@ -67,10 +67,16 @@ DYNAMIC_LINK_OPTIONS := -Wl,-rpath /usr/local/lib
 STATIC_APP = $(APP)-static
 DYNAMIC_APP = $(APP)-dynamic
 
-C_SOURCES = $(wildcard Example/*.c) \
-       $(wildcard Library/eve/eve_arch_libmpsse/*.c) \
-       $(wildcard Library/eve/source/*.c) \
-	   main.c
+# Add sources from the HAL and the example common code.
+C_SOURCES = $(wildcard ../common/*.c) \
+	$(wildcard ../../../ports/eve_libmpsse/*.c) \
+	$(wildcard ../../../source/*.c) \
+	release/source/ftdi_infra.c \
+	release/source/ftdi_spi.c \
+	release/source/ftdi_i2c.c \
+	release/source/ftdi_mid.c \
+	main.c
+
 OBJ_FILES = $(C_SOURCES:.c=.o)
 
 all: $(STATIC_APP) $(DYNAMIC_APP)

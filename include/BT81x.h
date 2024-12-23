@@ -75,6 +75,8 @@
 
 // Coprocessor Method
 
+// Use REG_CMDB_WRITE to fill coprocessor buffer.
+// Undefine to write directly to coprocessor buffer.
 #define EVE_USE_CMDB_METHOD
 
 // Chip ID Register

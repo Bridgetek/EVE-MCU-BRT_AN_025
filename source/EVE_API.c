@@ -411,8 +411,11 @@ void EVE_LIB_WriteDataToCMD(const uint8_t *ImgData, uint32_t DataSize)
 		HAL_ChipSelect(1);
 
 		// to the next location in the FIFO
+#ifndef EVE_USE_CMDB_METHOD
 		HAL_SetWriteAddress(EVE_RAM_CMD + HAL_GetCmdPointer());
-		
+#else
+		HAL_SetWriteAddress(EVE_REG_CMDB_WRITE);
+#endif
 		HAL_Write(ImgData, ChunkSize);
 		ImgData += ChunkSize;
 		CurrentIndex += ChunkSize;
@@ -422,7 +425,9 @@ void EVE_LIB_WriteDataToCMD(const uint8_t *ImgData, uint32_t DataSize)
 
 		// Calculate where end of data lies
 		HAL_IncCmdPointer(ChunkSize);
+#ifndef EVE_USE_CMDB_METHOD
 		HAL_WriteCmdPointer();
+#endif
 
 		// If this is the last chunk of the data,
 		if (IsLastChunk)
