@@ -3,7 +3,7 @@ PLATFORM?=RASPBERRYPI
 CC = gcc
 CFLAGS = -c -Wall -g -Os -DPLATFORM_RASPBERRYPI -DUSE_LINUX_SPI_DEV -I../../../include -I../common
 LD = $(CC)
-LDFLAGS = 
+LDFLAGS = -lgpiod
 
 TARGET = $(shell basename $(CURDIR))
 
