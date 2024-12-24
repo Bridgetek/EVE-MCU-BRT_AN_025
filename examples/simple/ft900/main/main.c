@@ -174,7 +174,7 @@ void setup(void)
 	// UART initialisation
 	debug_uart_init();
 
-#ifdef DEBUG
+#if DEBUG_LEVEL > 0
 	/* Print out a welcome message... */
 	printf ("(C) Copyright, Bridgetek Pte. Ltd. \r\n \r\n");
 	printf ("---------------------------------------------------------------- \r\n");
@@ -207,7 +207,7 @@ void debug_uart_init(void)
 			uart_parity_none,         /* Parity */
 			uart_stop_bits_1);        /* No. Stop Bits */
 
-#ifdef DEBUG
+#if DEBUG_LEVEL > 0
 	uart_puts(UART0,
 			"\x1B[2J" /* ANSI/VT100 - Clear the Screen */
 			"\x1B[H\r\n"  /* ANSI/VT100 - Move Cursor to Home */

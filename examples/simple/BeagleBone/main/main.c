@@ -180,7 +180,7 @@ int main(void)
 
 void setup(void)
 {
-#ifdef DEBUG
+#ifdef DEBUG_PRINT
     /* Print out a welcome message... */
     printf ("(C) Copyright, Bridgetek Pte. Ltd. \n\n");
     printf ("---------------------------------------------------------------- \n");

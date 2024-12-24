@@ -71,8 +71,6 @@
 
 /* CONSTANTS ***********************************************************************/
 
-#define DEBUG
-
 /**
  * @brief Location in flash to store touchscreen configuration.
  */
@@ -142,7 +140,7 @@ void setup(void)
 {
     int ch = 0;
 
-#ifdef DEBUG
+#if DEBUG_LEVEL > 0
     // Initialise stdio ports as configured in CMakeLists.txt
     stdio_init_all();
 #endif
@@ -153,7 +151,7 @@ void setup(void)
     gpio_set_dir(LED_PIN, GPIO_OUT);
     gpio_put(LED_PIN, 1);
     
-#ifdef DEBUG
+#if DEBUG_LEVEL > 0
     /* Print out a welcome message... */
     printf ("(C) Copyright, Bridgetek Pte. Ltd. \r\n \r\n");
     printf ("---------------------------------------------------------------- \r\n");

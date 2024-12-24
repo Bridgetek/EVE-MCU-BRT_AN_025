@@ -123,7 +123,7 @@ int main(void)
 
 void setup(void)
 {
-#ifdef DEBUG
+#if DEBUG_LEVEL > 0
     /* Print out a welcome message... */
     printf ("(C) Copyright, Bridgetek Pte. Ltd. \r\n \r\n");
     printf ("---------------------------------------------------------------- \r\n");
