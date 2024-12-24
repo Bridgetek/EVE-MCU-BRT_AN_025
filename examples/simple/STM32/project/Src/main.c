@@ -270,12 +270,12 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 
-	/* Must match above. If this has been changed by STM32CubeMX then update. */
-	/* This is extern from the EVE_MCU_STM32.c file. */
-	config_gpio = GPIOB;
-	config_pin_cs = GPIO_PIN_6;
-	config_pin_pd = GPIO_PIN_7;
-	
+  /* Must match above. If this has been changed by STM32CubeMX then update. */
+  /* This is extern from the EVE_MCU_STM32.c file. */
+  config_gpio = GPIOB;
+  config_pin_cs = GPIO_PIN_6;
+  config_pin_pd = GPIO_PIN_7;
+  
 /* USER CODE END MX_GPIO_Init_2 */
 }
 

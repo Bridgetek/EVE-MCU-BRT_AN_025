@@ -74,55 +74,20 @@
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 #include <sys/endian.h>
 
-#define CS_PD_GPIO_Port GPIOB
-#define CS_PD_GPIO_ENABLE __HAL_RCC_GPIOB_CLK_ENABLE
-#define CS_Pin GPIO_PIN_6
-#define PD_Pin GPIO_PIN_7
+extern GPIO_TypeDef *config_gpio;
+extern uint16_t config_pin_pd;
+extern uint16_t config_pin_cs;
 
 /* SPI handler declaration */
-SPI_HandleTypeDef SpiHandle;
+extern SPI_HandleTypeDef hspi1;
 
 /* Forward declaration */
+#if 0
 static void Error_Handler(void);
+#endif
 
 void MCU_Init(void)
 {
-    // GPIO Initialization Function
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    /* GPIO Ports Clock Enable */
-    CS_PD_GPIO_ENABLE();
-
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOB, CS_Pin|PD_Pin, GPIO_PIN_RESET);
-
-    /*Configure GPIO pins : CS_Pin PD_Pin */
-    GPIO_InitStruct.Pin = CS_Pin|PD_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    /* SPI1 parameter configuration*/
-    SpiHandle.Instance = SPI1;
-    SpiHandle.Init.Mode = SPI_MODE_MASTER;
-    SpiHandle.Init.Direction = SPI_DIRECTION_2LINES;
-    SpiHandle.Init.DataSize = SPI_DATASIZE_8BIT;
-    SpiHandle.Init.CLKPolarity = SPI_POLARITY_LOW;
-    SpiHandle.Init.CLKPhase = SPI_PHASE_1EDGE;
-    SpiHandle.Init.NSS = SPI_NSS_SOFT;
-    SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-    SpiHandle.Init.FirstBit = SPI_FIRSTBIT_MSB;
-    SpiHandle.Init.TIMode = SPI_TIMODE_DISABLE;
-    SpiHandle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    SpiHandle.Init.CRCPolynomial = 7;
-    SpiHandle.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-    SpiHandle.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-    if (HAL_SPI_Init(&SpiHandle) != HAL_OK)
-    {
-        /* Initialization Error */
-        Error_Handler();
-    }
 }
 
 void MCU_Setup(void)
@@ -136,27 +101,27 @@ void MCU_Setup(void)
 // --------------------- Chip Select line low ----------------------------------
 inline void MCU_CSlow(void)
 {
-    HAL_GPIO_WritePin(CS_PD_GPIO_Port, CS_Pin, GPIO_PIN_RESET); //lo
+    HAL_GPIO_WritePin(config_gpio, config_pin_cs, GPIO_PIN_RESET); //lo
     //Nop();
 }
 
 // --------------------- Chip Select line high ---------------------------------
 inline void MCU_CShigh(void)
 {
-    HAL_GPIO_WritePin(CS_PD_GPIO_Port, CS_Pin, GPIO_PIN_SET); //hi
+    HAL_GPIO_WritePin(config_gpio, config_pin_cs, GPIO_PIN_SET); //hi
     //Nop();
 }
 
 // -------------------------- PD line low --------------------------------------
 inline void MCU_PDlow(void)
 {
-    HAL_GPIO_WritePin(CS_PD_GPIO_Port, PD_Pin, GPIO_PIN_RESET); //lo                                                     // PD# line low
+    HAL_GPIO_WritePin(config_gpio, config_pin_pd, GPIO_PIN_RESET); //lo                                                     // PD# line low
 }
 
 // ------------------------- PD line high --------------------------------------
 inline void MCU_PDhigh(void)
 {
-    HAL_GPIO_WritePin(CS_PD_GPIO_Port, PD_Pin, GPIO_PIN_SET); //hi                                                      // PD# line high
+    HAL_GPIO_WritePin(config_gpio, config_pin_pd, GPIO_PIN_SET); //hi                                                      // PD# line high
 }
 
 // --------------------- SPI Send and Receive ----------------------------------
@@ -167,12 +132,12 @@ uint8_t MCU_SPIReadWrite8(uint8_t DataToWrite)
     
     TxBuffer = DataToWrite;
         
-    HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 1, 5000);
+    HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 1, 5000);
 
     // Note that this call to the STM32 HAL returns a status value which can be checked as shown below in order
     // to make the application more robust
 #if 0
-    switch(HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)TxBuffer, (uint8_t *)DataRead, 1, 5000))
+    switch(HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)TxBuffer, (uint8_t *)DataRead, 1, 5000))
     {
     case HAL_OK:
       /* Communication is completed ___________________________________________ */
@@ -199,7 +164,7 @@ uint16_t MCU_SPIReadWrite16(uint16_t DataToWrite)
     uint16_t DataRead;
     uint16_t TxBuffer = DataToWrite;
 
-    HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 2, 5000);
+    HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 2, 5000);
 
     return MCU_be16toh(DataRead);
 }
@@ -209,7 +174,7 @@ uint32_t MCU_SPIReadWrite24(uint32_t DataToWrite)
     uint32_t DataRead;
     uint32_t TxBuffer = DataToWrite;
     
-    HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 3, 5000);
+    HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 3, 5000);
 
     return MCU_be32toh(DataRead);
 }
@@ -219,7 +184,7 @@ uint32_t MCU_SPIReadWrite32(uint32_t DataToWrite)
     uint32_t DataRead;
     uint32_t TxBuffer = DataToWrite;
 
-    HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 4, 5000);
+    HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&TxBuffer, (uint8_t *)&DataRead, 4, 5000);
 
     return MCU_be32toh(DataRead);
 }
@@ -380,6 +345,7 @@ static void Timeout_Error_Handler(void)
 }
 #endif
 
+#if 0
 /**
   * @brief  This function is executed in case of error occurrence.
   * @param  None
@@ -393,5 +359,6 @@ static void Error_Handler(void)
   {
   }
 }
+#endif
 
 #endif /* defined (PLATFORM_STM32_CUBE) */

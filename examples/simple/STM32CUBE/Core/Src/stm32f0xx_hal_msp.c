@@ -62,6 +62,7 @@
   */
 void HAL_MspInit(void)
 {
+
   /* USER CODE BEGIN MspInit 0 */
 
   /* USER CODE END MspInit 0 */
@@ -109,6 +110,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
   /* USER CODE BEGIN SPI1_MspInit 1 */
 
   /* USER CODE END SPI1_MspInit 1 */
+
   }
 
 }

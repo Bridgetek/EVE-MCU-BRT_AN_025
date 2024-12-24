@@ -1,3 +1,5 @@
 # STM32 Cube distribution directory
 Release/
 Debug/
+*.ld
+Drivers/
