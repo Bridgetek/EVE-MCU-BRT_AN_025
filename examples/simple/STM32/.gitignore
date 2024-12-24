@@ -1,0 +1,6 @@
+# STM32 Cube distribution directory
+project/Drivers/
+Projects/
+
+*.lst
+
