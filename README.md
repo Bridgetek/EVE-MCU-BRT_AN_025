@@ -162,6 +162,8 @@ Extension-specific functionality is separated from the common EVE API source and
 * `/include/extensions/bt82x_patch.h` Definitions and function declarations for the BT82x base patch functionality.
 * `/source/extensions/custom_touch_fw.c` Implementation for loading custom touch firmware into supported EVE devices when the `EVE_CUSTOM_TOUCH` define is enabled.
 * `/include/extensions/custom_touch_fw.h` Function declarations for the custom touch firmware extension.
+* `/source/extensions/lcd_panel_init.c` Implementation for optional LCD panel driver initialisation when the `EVE_LCD_INIT` define is enabled. MCU-specific functionality is required to provide the interface to the LCD panel driver.
+* `/include/extensions/lcd_panel_init.h` Function declarations for the LCD panel initialisation extension.
 
 The extension source files are included in the build only where required for the selected EVE API or configuration. Extension headers are referenced through the main `include` directory, for example `#include <extensions/bt82x_patch.h>`.
 
