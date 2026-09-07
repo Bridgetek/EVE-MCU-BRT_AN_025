@@ -26,6 +26,8 @@ This library is intended to provide a **C** library for embedded designs.
   - [Header 1x10 Pins](#header-1x10-pins)
 - [Library Usage](#library-usage)
   - [Initialising EVE](#initialising-eve)
+  - [Co-Processor Lists](#co-processor-lists)
+  - [Co-Processor Profiling](#co-processor-profiling)
   - [Co-Processor Helpers](#co-processor-helpers)
   - [EVE Display List Commands](#eve-display-list-commands)
   - [EVE Co-processor Commands](#eve-co-processor-commands)
@@ -34,7 +36,7 @@ This library is intended to provide a **C** library for embedded designs.
     - [Beginning and Ending Co-Processor Lists](#beginning-and-ending-co-processor-lists)
     - [Simple Co-Processor List](#simple-co-processor-list)
     - [Executing a Single Co-Processor Command](#executing-a-single-co-processor-command)
-    - [Co-Processor Lists of more than 4K Size](#co-processor-helpers)
+    - [Large Co-Processor Lists](#large-co-processor-lists)
     - [Profiling the Co-processor List](#profiling-the-co-processor-list)
     - [Limitations in RAM_DL and RAM_CMD](#limitations-in-ram_dl-and-ram_cmd)
     - [Writing RAM_G and RAM_CMD](#writing-ram_g-and-ram_cmd)
@@ -416,7 +418,7 @@ Initialise EVE API.
 
 Initialise the EVE API layer, HAL layer and MCU-specific hardware layer.
 
-Before using the library to send instructions to the EVE device the `EVE_Init()` function **must** be called.
+Before using the library to send instructions to the EVE device the `EVE_Init` function **must** be called.
 
 This function will initialise the GPIO and SPI interface through the port file for the target MCU specific library. It will also write the display settings registers to the values defined in `EVE_config.h`. Note that these **must** be adjusted to suit your display. It then sets up the GPIO and other registers such as PWM (for the backlight) and sound on the EVE device.
 
@@ -448,7 +450,7 @@ This will call the HAL layer and MCU-specific de-initialisation routines.
 
 `int EVE_Deinit(void)`
 
-### Co-Processor Helpers
+### Co-Processor Lists
 
 These functions perform the necessary tasks to begin and execute co-processor lists.
 
@@ -464,8 +466,16 @@ Begin co-processor list.
 
 Starts a co-processor list. Initialises the API and HAL ready to start
 transmitting a co-processor list to the EVE.
+
 This will typically assert chip select to allow the SPI interface to
 send data to the EVE.
+
+This must be called before any co-processor commands, display list commands,
+and command buffer data is sent to the EVE device.
+
+Certain API commands cannot be sent during a co-processor list as they 
+perform standalone functions with EVE RAM_G or registers. These are clearly
+marked in "details" section.
 
 **Format:**
 
@@ -482,9 +492,13 @@ End co-processor list.
 **Detailed Description:** 
 
 Ends a co-processor list. This will perform any operations in the API
-and HAL to finish a co-processor list. 
+and HAL to finish a co-processor list.
+
 This will typically deasserts chip select after updating any registers
 on the EVE device that will signal the end of the co-processor list.
+
+This must be called after a call to `EVE_LIB_BeginCoProList` followed by
+the co-processor command buffer data.
 
 **Format:**
 
@@ -501,7 +515,10 @@ Waits for co-processor list to end.
 **Detailed Description:**
 
 Will poll the co-processor command list until it has been completed.
-If configured then it will wait for an interrupt signal on the INT# line before testing for correct completion.
+
+This must be called after `EVE_LIB_EndCoProList` for the program to wait for the completion of the co-processor actions.
+
+If the co-processor method is set to `EVE_COPROC_INT` then it will wait for an interrupt signal on the INT# line before testing for correct completion.
 
 **Returns:** 
 
@@ -525,7 +542,10 @@ Waits for co-processor list to end with a millisecond timeout.
 **Detailed Description:**
 
 Will poll the co-processor command list until it has been completed or a timeout has occurred.
-If configured then it will wait for an interrupt signal on the INT# line before testing for correct completion.
+
+This must be called after `EVE_LIB_EndCoProList` for the program to wait for the completion of the co-processor actions.
+
+If the co-processor method is set to `EVE_COPROC_INT` then it will wait for an interrupt signal on the INT# line before testing for correct completion.
 
 **Returns:** 
 
@@ -551,7 +571,7 @@ Recovers the co-processor in the event of an exception.
 
 **Detailed Description:**
 
-Will reset the co-processor after an exception is reported by EVE_LIB_AwaitCoProEmpty.
+Will reset the co-processor after an exception is reported by `EVE_LIB_AwaitCoProEmpty` or `EVE_LIB_AwaitCoProEmptyTimeout`.
 
 **Format:** 
 
@@ -570,6 +590,10 @@ Returns the space remaining for further commands to be sent to the co-processor.
 Obtains the free space in the co-processor circular buffer. 
 This operation may have an effect on the performance of the device.
 
+This must be called during a co-processor list:
+after a call to `EVE_LIB_BeginCoProList` and before a call to 
+`EVE_LIB_EndCoProList`.
+
 **Returns:**
 
 The number of free bytes in the co-processor circular buffer.
@@ -577,6 +601,8 @@ The number of free bytes in the co-processor circular buffer.
 **Format:** 
 
 `uint16_t EVE_LIB_GetCoProSpace(void)`
+
+### Co-Processor Profiling
 
 #### EVE_LIB_BeginCoProProfile
 
@@ -591,6 +617,8 @@ Resets the co-processor list profiling length.
 **Detailed Description:**
 
 Sets the profiling pointer to zero to restart profiling.
+
+This function can be called at any time.
 
 **Format:** 
 
@@ -609,6 +637,8 @@ Size of co-processor list since last reset.
 **Detailed Description:**
 
 Obtains the current profiling pointer for the co-processor list.
+
+This function can be called at any time.
 
 **Returns:** The number of instructions added to the co-processor list since 
 the last reset of the profiling pointer.
@@ -631,11 +661,15 @@ Size of display list.
 
 Obtains the current size of the display list.
 
+This function cannot be used within a co-processor list.
+
 **Returns:** The number of instructions instructions currently in the display list.
 
 **Format:** 
 
 `uint16_t EVE_LIB_GetDlProfile(void)`
+
+### Co-Processor Helpers
 
 #### EVE_LIB_Int
 
@@ -647,11 +681,10 @@ Test interrupt input line.
 
  **Detailed Description:**
  
- This function will check the interrupt input INT# from
- the EVE device. If Quad SPI is enabled then the interrupt line
- is used as a data line for SPI and therefore cannot be used for
- an interrupt input.
+ This function will check the interrupt input INT# from the EVE device.
  
+This function can be called at any time.
+
 **Returns:**
 
 - zero if there is no interrupt.
@@ -674,10 +707,12 @@ Test if an interrupt flag is set.
 
 **Detailed Description:**
 
-Will read the interrupt flag register and add any newly pending to
+Will read the interrupt flag register `REG_INT_FLAGS` and add any newly pending to
 a status value. The flag register will clear any pending interrupt
 when read so the cumulative flagged bits are kept until they are
 cleared by the mask in this function.
+
+This function cannot be used within a co-processor list.
 
 **Returns:**
 
@@ -706,6 +741,8 @@ Will return a result value from "offset" words back in the command buffer.
 If the value of offset is 1 then the previous value from the co-processor
 command buffer is returned.
 
+This function cannot be used within a co-processor list.
+
 **Returns:**
 
 Result of a previous co-processor command.
@@ -729,6 +766,8 @@ Get co-processor exception description.
 **Detailed Description:**
 
 Will query the co-processor exception description to a string.
+
+This function cannot be used within a co-processor list.
 
 **Returns:**
 
@@ -755,6 +794,8 @@ Write a buffer to memory mapped RAM.
 
 Writes a block of data via SPI to the EVE.
 
+This function cannot be used within a co-processor list.
+
 **Format:** 
 
 `void EVE_LIB_WriteDataToRAMG(const uint8_t *ImgData, uint32_t DataSize, uint32_t DestAddress)`
@@ -776,6 +817,8 @@ Read a buffer from memory mapped RAM.
 **Detailed Description:**
 
 Reads a block of data via SPI from the EVE.
+
+This function cannot be used within a co-processor list.
 
 **Format:** 
 
@@ -857,6 +900,8 @@ Obtains the details of an image decoded by the CMD_LOADIMAGE
 co-processor command. The properties of the image are taken from
 the co-processor command list.
 
+This function cannot be used within a co-processor list.
+
 **Format:** 
 
 `void EVE_LIB_GetProps(uint32_t *addr, uint32_t *width, uint32_t *height)`
@@ -880,6 +925,8 @@ Get current allocation pointer.
 Obtains the automatic allocation pointer of the last address
 used for certain co-processor operations.
 
+This function cannot be used within a co-processor list.
+
 **Format:** 
 
 `void EVE_LIB_GetPtr(uint32_t *addr)`
@@ -900,6 +947,8 @@ Get the touchscreen transformation matrix.
 **Detailed Description:**
 
 Obtains the transformation matrix from a CMD_CALIBRATE operation.
+
+This function cannot be used within a co-processor list.
 
 **Format:** 
 
@@ -926,6 +975,8 @@ Calculate the CRC of a memory area.
 
 Obtains the CRC of a memory area.
 
+This function cannot be used within a co-processor list.
+
 **Format:** 
 
 `void EVE_LIB_MemCrc(uint32_t ptr, uint32_t num, uint32_t *result)`
@@ -947,6 +998,8 @@ Computes a bitmap transformation matrix.
 **Detailed Description:**
 
 It computes the transform given three corresponding points in screen space and bitmap space.
+
+This function cannot be used within a co-processor list.
 
 **Format:** 
 
@@ -974,6 +1027,8 @@ Get image properties.
 
 From the last CMD_LOADIMAGE get the address, size, format and palette of the loaded image.
 
+This function cannot be used within a co-processor list.
+
 **Format:**
 
 `void EVE_LIB_GetImage(uint32_t *addr, uint32_t *fmt, uint32_t *width, uint32_t *height, uint32_t *palette)`
@@ -998,6 +1053,8 @@ Read a register.
 
 Reads a register value.
 
+This function cannot be used within a co-processor list.
+
 **Format:**
 
 `void EVE_LIB_RegRead(uint32_t addr, uint32_t *value)`
@@ -1019,6 +1076,8 @@ Write an 8-bit memory location.
 
 Writes a memory location value.
 
+This function cannot be used within a co-processor list.
+
 **Format:**
 
 `void EVE_LIB_MemWrite8(uint32_t addr, uint8_t value)`
@@ -1039,6 +1098,8 @@ Write a 16-bit memory location.
 **Detailed Description:**
 
 Writes a memory location value.
+
+This function cannot be used within a co-processor list.
 
 **Format:**
 
@@ -1063,6 +1124,8 @@ Write a 32-bit memory location.
 
 Writes a memory location value.
 
+This function cannot be used within a co-processor list.
+
 **Format:**
 
 `void EVE_LIB_MemWrite32(uint32_t addr, uint32_t value)`
@@ -1083,6 +1146,8 @@ Read an 8-bit memory location.
 **Detailed Description:**
 
 Reads a memory location value.
+
+This function cannot be used within a co-processor list.
 
 **Returns:**
 
@@ -1107,6 +1172,8 @@ Read a 16-bit memory location.
 **Detailed Description:**
 
 Reads a memory location value.
+
+This function cannot be used within a co-processor list.
 
 **Returns:**
 
@@ -1135,6 +1202,8 @@ Read a 32-bit memory location.
 
 Reads a memory location value.
 
+This function cannot be used within a co-processor list.
+
 **Returns:**
 
 - *value* - value read from memory.
@@ -1156,6 +1225,8 @@ Send a single 32-bit value to the command buffer.
 
 Sends a command or word of data to the co-processor command buffer.
 
+This function must be used within a co-processor list.
+
 **Format:**
 
 `void EVE_CMD(uint32_t c)`
@@ -1164,16 +1235,12 @@ Sends a command or word of data to the co-processor command buffer.
 
 - `c` - 32-bit command or data to send to the command buffer.
 
-#### 
-**Detailed Description:**
-**Returns:**
-**Format:**
-**Parameters:**
-
 ### EVE Display List Commands
 
-The EVE Display List commands are available in the EVE API. 
+The EVE display list commands are available in the EVE API. 
 They are generally renamed with the prefix of `EVE_`. 
+
+Display list commands must be used within a co-processor list.
 
 The following table shows the display list commands which are supported by each generation of EVE with the API name and the "Command Name" used in the Programming Guide for the EVE device. The format and implementation of the commands are described only in the [Programming Guide](#programming-guides). This list is grouped alphabetically.
 
@@ -1240,7 +1307,7 @@ The following table shows the display list commands which are supported by each 
 ### EVE Co-processor Commands
 
 The EVE co-processor commands are available in the EVE API. 
-Like the display list commands they are generally renamed with the prefix of `EVE_`. 
+Like the display list commands they are generally renamed with the prefix of `EVE_` and must be used within a co-processor list.
 
 The following table shows the co-processor commands which are supported by each generation of EVE with the API name and the "Command Name" used in the Programming Guide for the EVE device. The format and implementation of the commands are described only in the [Programming Guide](#programming-guides). This list is grouped by function and API support.
 
@@ -1386,10 +1453,10 @@ Using EVE commands via the co-processor requires some data formatting to convert
 
 #### Beginning and Ending Co-Processor Lists
 
-All co-processor lists must begin with a call to `EVE_LIB_BeginCoProList()`. 
-If any display list items or co-processor commands which use the display list are to be added then a call to `EVE_CMD_DLSTART()` is required immediately after this.
+All co-processor lists must begin with a call to `EVE_LIB_BeginCoProList`. 
+If any display list items or co-processor commands which use the display list are to be added then a call to `EVE_CMD_DLSTART` is required immediately after this.
 
-For the avoidance of doubt, commands that only read or write registers, read or write memory, access flash or access the SD card do not require the `EVE_CMD_DLSTART()` call.
+For the avoidance of doubt, commands that only read or write registers, read or write memory, access flash or access the SD card do not require the `EVE_CMD_DLSTART` call.
 
 All co-processor lists displaying graphics would be preceded by:
 ```c
@@ -1401,12 +1468,12 @@ And followed by:
     EVE_LIB_EndCoProList(); // CS high
     EVE_LIB_AwaitCoProEmpty(); // Wait for FIFO to be finish
 ```
-A call to `EVE_LIB_AwaitCoProEmpty()` is implied in the call to `EVE_LIB_BeginCoProList()`. Therefore it is not necessary to wait at the end of the co-processor
+A call to `EVE_LIB_AwaitCoProEmpty` is implied in the call to `EVE_LIB_BeginCoProList`. Therefore it is not necessary to wait at the end of the co-processor
 list for the completion of the commands allowing program to perform other tasks not related to programming the EVE device.
 
-The `EVE_LIB_AwaitCoProEmpty()` function will return zero if the co-processor commands have run successfully. If there was an error with a co-processor command or data used by the co-processor then an exception can be raised which will require the application to handle. The Programming Guide for each generation details the actions required when this occurs. See the section called "Coprocessor Faults" or "Fault Scenarios". 
+The `EVE_LIB_AwaitCoProEmpty` function will return zero if the co-processor commands have run successfully. If there was an error with a co-processor command or data used by the co-processor then an exception can be raised which will require the application to handle. The Programming Guide for each generation details the actions required when this occurs. See the section called "Coprocessor Faults" or "Fault Scenarios". 
 
-On EVE API 3, 4 and 5 there is a text message generated by the co-processor with a brief description of the fault. This message can be obtained with the `EVE_LIB_GetCoProException()` function.
+On EVE API 3, 4 and 5 there is a text message generated by the co-processor with a brief description of the fault. This message can be obtained with the `EVE_LIB_GetCoProException` function.
 
 #### Simple Co-Processor List
 
@@ -1429,13 +1496,16 @@ The following is a simple list to write text on the screen in white letters:
     // (commands executed) 
 ```
 
+To send a display list to the screen the commands `EVE_CMD_DLSTART` is required at the beginning of a co-processor list before any display list items are added.
+
+To finish the `EVE_DISPLAY` command is sent to the display list then the `EVE_CMD_SWAP` co-processor command is used to effect the change of display list being rendered on the screen.
+
 #### Executing a Single Co-Processor Command
 
 When just executing a co-processor command (for example calling CMD_SETROTATE during set-up of the application to set the screen orientation) then the following can be used:
 
 ```c
     EVE_LIB_BeginCoProList(); // CS low and send address in RAM_CMD 
-    EVE_CMD_DLSTART(); // When executed, EVE will begin a new DL
 
     EVE_CMD_SETROTATE(2);
 
@@ -1443,11 +1513,20 @@ When just executing a co-processor command (for example calling CMD_SETROTATE du
     EVE_LIB_AwaitCoProEmpty(); // Wait for FIFO to be finish
 ```
 
-#### Co-Processor Lists of more than 4K Size
+If there is no display list created for a set of co-processor commands then there is no need for the `EVE_CMD_DLSTART`, `EVE_DISPLAY` or `EVE_CMD_SWAP`.
 
-The examples above use burst writes (CS low, write address, stream data holding CS low, CS high). 
+#### Large Co-Processor Lists
 
-Therefore, no register writes should be carried out in the middle as this would interrupt the burst. A list can however be created in more than one section as shown below. This is also useful if a list consists of more than (4K-4) bytes. In this latter case the list would be written in smaller sections, each section being executed to create more space in the RAM_CMD FIFO before the next section is sent.
+On EVE1, EVE2, EVE3 and EVE4 there is 4 kB of co-processor list buffer space, on EVE5 there is 16 kB. A large co-processor list can use the whole buffer space many times over.
+If an image is being decoded with `EVE_CMD_LOADIMAGE` then wrapping around the buffer space is a common occurrance.
+
+The simpler examples above are small and do not need to check how much space is remaining in the co-processor list buffer. Large lists that potentially wrap the buffer space need a better stategy.
+
+Register reads are not allowed within a co-processor list. However, a co-processor list can be created in more than one section as shown below. For tasks sending long lists, the data can be divided into smaller chunks and sent with the program waiting for sufficient buffer space before continuing with the next chunk.
+
+The `EVE_LIB_WriteDataToCMD` implements an efficient strategy to do this.
+
+This example below shows how to split a co-processor list to generate a display list correctly. Note the position of the `EVE_CMD_DLSTART`, `EVE_DISPLAY` or `EVE_CMD_SWAP` commands.
 
 ```c
   // FIRST SECTION OF LIST
@@ -1485,15 +1564,15 @@ The above sequence will create the same set of commands in RAM_DL as the code be
 ```
 The usage is fundamentally the same as the library and examples described in BRT_AN_008 (FT81x Creating a Simple Library For PIC MCU) and BRT_AN_014 (FT81X Simple PIC Library Examples) and so these can be used as a reference when using this library. 
 
-The API function `EVE_LIB_GetCoProSpace()` can be used to check if there is sufficient space available in the co-processor for further commands to be sent. The command will not stop and restart the co-processor lists as in the example above but will pause the SPI transfer to perform a register read before resuming another transfer.
+The API function `EVE_LIB_GetCoProSpace` can be used to check if there is sufficient space available in the co-processor for further commands to be sent. The command will not stop and restart the co-processor lists as in the example above but will pause the co-processor list to perform a register read before resuming another transfer without interrupting the program flow.
 
 #### Profiling the Co-processor List
 
 Setting the `EVE_COPROC_PROFILE` macro will enable code that can count the number of bytes sent to the co-processor. This is useful to find out the size of each co-processor list.
 
-It is initilised using `EVE_LIB_BeginCoProProfile()` at the beginning of a list to measure. The call to `EVE_LIB_GetCoProProfile()` will return the number of bytes written since the list profiling was initialised.
+It is initilised using `EVE_LIB_BeginCoProProfile` at the beginning of a list to measure. The call to `EVE_LIB_GetCoProProfile` will return the number of bytes written since the list profiling was initialised.
 
-This feature can be used in conjunction with `EVE_LIB_GetCoProSpace()` to predict the size of the co-processor fullness.
+This feature can be used in conjunction with `EVE_LIB_GetCoProSpace` to predict the size of the co-processor fullness.
 
 Enabling the macro will add one 16-bit storage variable to the compiled project.
 
@@ -1505,7 +1584,7 @@ For example, the CMD_BUTTON uses 16 bytes of RAM_CMD plus the size of the string
 
 REG_CMD_DL indicates the next available location in RAM_DL and so after executing a list commands (but before the swap) this register can be used to check how full RAM_DL is. The value read will be between 0 and 8191 with 8191 indicating the RAM_DL is full. 
 
-The value of REG_CMD_DL is read after executing the commands above but before the swap is executed. The swap is sent using a separate transaction (beginning with `EVE_LIB_BeginCoProList()` and ending with `EVE_LIB_EndCoProList()` and `EVE_LIB_AwaitCoProEmpty()` ) because a register read or write cannot take place whilst an existing SPI transaction (burst write or read) is in progress.  Note that in this example the `EVE_LIB_Read16` is used and will work on EVE APIs 1 to 4, on EVE 5 only 32-bit reads and writes are supported.
+The value of REG_CMD_DL is read after executing the commands above but before the swap is executed. The swap is sent using a separate transaction (beginning with `EVE_LIB_BeginCoProList` and ending with `EVE_LIB_EndCoProList` and `EVE_LIB_AwaitCoProEmpty` ) because a register read or write cannot take place whilst an existing SPI transaction (burst write or read) is in progress.  Note that in this example the `EVE_LIB_Read16` is used and will work on EVE APIs 1 to 4, on EVE 5 only 32-bit reads and writes are supported.
 
 ```c
   EVE_LIB_BeginCoProList(); // CS low and send address in RAM_CMD
@@ -1542,13 +1621,13 @@ Other helper functions are provided such as for writing strings and for retrievi
 ```c
 uint16_t EVE_LIB_SendString(const char* string)
 ```
-This function sends a string of characters and is used by commands such as CMD_TEXT, CMD_BUTTON and CMD_TOGGLE which all use text strings. This function takes care of the extra padding which is required as all EVE commands must be 32-bit aligned. Therefore, depending on the length of the string (plus the necessary null character to terminate it) then between one and three extra 00 bytes are added to pad the command to be a multiple of 4 bytes. The main application can therefore send strings without needing to consider the padding. 
+This function sends a string of characters and is used by commands such as CMD_TEXT, CMD_BUTTON and CMD_TOGGLE which all use text strings. This function takes care of the extra padding which is required as all EVE commands must be 32-bit aligned. Therefore, depending on the length of the string (plus the necessary null character to terminate it) then between one and three extra "\0" (NUL) bytes are added to pad the command to be a multiple of 4 bytes. The main application can therefore send strings without needing to consider the padding. 
 
 #### Handling Interrupts
 
 The interrupt register `REG_INT_FLAGS` is provided to allow an application to see if one of several interrupt events are flagged. These can be polled by reading the register. However, the register is automatically cleared on each read. 
 
-The API provides a method for accessing the register and preserving any tested flags for later testing. The `EVE_LIB_GetInterrupt()` function is provided to load and store the current bits set to keep a set of flags set in a global variable. There is a mask value as a parameter to the function which is used to test the set bits. Once the bits have been tested in the global variable they can be cleared.
+The API provides a method for accessing the register and preserving any tested flags for later testing. The `EVE_LIB_GetInterrupt` function is provided to load and store the current bits set to keep a set of flags set in a global variable. There is a mask value as a parameter to the function which is used to test the set bits. Once the bits have been tested in the global variable they can be cleared.
 
 For example, if a key press was detected and the bit set in the register during the period the application was waiting for a command buffer empty event the API can be queried with `EVE_LIB_GetInterrupt(EVE_INT_CMD_EMPTY)`. The `EVE_INT_TOUCH` bit would be unaffected and the application could later independently test the command for that event.
 
@@ -1556,9 +1635,9 @@ Enabling the macro will add one 8-bit storage variable to the compiled project.
 
 #### Accessing the INT# line
 
-The optional INT# line is provided for the EVE device to signal to the host MCU that an event has occurred. The `REG_INT_FLAGS` register holds a flag of all interrupts that are pending. If the corresponding bit in the `REG_INT_MASK` register is set then the EVE device will set the INT# line low (active). This signal can be used when single-channel SPI is in use. If Quad SPI is being used then this signal is used as a data line instead.
+The optional INT# line is provided for the EVE device to signal to the host MCU that an event has occurred. 
 
-This status can be accessed from the EVE API with the `EVE_LIB_Int()` function. A non-zero value indicates that the INT# line is asserted.
+This status can be accessed from the EVE API with the `EVE_LIB_Int` function. A value greater than zero indicates that the INT# line is asserted. On MCUs and Platforms that do not support reading the INT# line the return value will be -1.
 
 ## Programming Guides
 
