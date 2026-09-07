@@ -92,6 +92,11 @@ int HAL_EVE_Init(void)
 #endif /* defined(EVE_LCD_INIT) */
 
     // Initialise the MCU interface used to communicate with EVE.
+    if (MCU_Init() != 0)
+    {
+        EVE_DEBUG_ERROR("MCU_Init() Failed.\n");
+        return -1;
+    }
 
 #if IS_EVE_API(1, 2, 3, 4)
     // Set Chip Select OFF.
