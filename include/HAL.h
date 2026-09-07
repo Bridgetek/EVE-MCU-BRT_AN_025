@@ -1,5 +1,6 @@
 /**
  * @file HAL.h
+ * @brief Definitions for accessing the abstraction layer from the API layer.
  */
 /*
  * ============================================================================

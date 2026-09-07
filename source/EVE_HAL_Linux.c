@@ -1,5 +1,6 @@
 /**
  * @file EVE_HAL_Linux.c
+ * @brief The abstraction layer between the programming interface and the Linux SPI character device.
  * @details Function implementations for EVE-MCU-Dev library HAL_Linux layer.
  */
 /*

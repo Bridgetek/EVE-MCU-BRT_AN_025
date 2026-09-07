@@ -1,6 +1,6 @@
 /**
  * @file EVE_commands.h 
- * @brief Cross-generation EVE command definitions.
+ * @brief Header file which provides cross-generation EVE command and option definitions.
  * @details Provides a single unified set of EVE_ display list commands and
  *      EVE_CMD_ co-processor commands that correct command codes for the selected 
  *      generation at compile time.

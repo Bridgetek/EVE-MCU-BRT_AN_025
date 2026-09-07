@@ -1,5 +1,6 @@
 /**
  * @file EVE_HAL.c
+ * @brief The abstraction layer between the programming interface and the MCU specific layer.
  * @details Function implementations for EVE-MCU-Dev library HAL layer.
  */
 /*

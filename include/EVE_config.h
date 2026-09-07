@@ -1,5 +1,6 @@
 /**
  * @file EVE_config.h
+ * @brief Overridable configuration file for target application.
  */
 /*
  * ============================================================================
@@ -68,7 +69,7 @@
  */
 //@{
 #ifndef EVE_MODULE
-#define EVE_MODULE EVE_IDM204021R 
+#define EVE_MODULE EVE_NO_MODULE 
 #endif
 //@}
 

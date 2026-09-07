@@ -1,5 +1,6 @@
 /**
  * @file EVE_API.c
+ * @brief The programming interface to the library.
  * @details Function implementations for EVE-MCU-Dev library API layer.
  */
 /*

@@ -1,5 +1,6 @@
 /**
  * @file EVE_defs.h
+ * @brief Header file with preset definitions use in configuring the target application in EVE_config.h.
  */
 /*
  * ============================================================================

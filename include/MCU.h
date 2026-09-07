@@ -1,5 +1,6 @@
 /**
  * @file MCU.h
+ * @brief Embedded header file for access to the MCU layer from the abstraction layer.
  */
 /*
  * ============================================================================

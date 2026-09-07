@@ -1,5 +1,6 @@
 /**
  * @file EVE.h
+ * @brief Header file to include to access all required programming interface entry points and definitions.
  */
 /*
  * ============================================================================

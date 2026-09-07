@@ -150,6 +150,7 @@ Contents of the `include` directory:
 - `EVE_commands.h` Header file which provides cross-generation EVE command and option definitions.
 - `EVE_debug.h` Header file which provides platform specific macro definitions for debug messaging.
 - `EVE_registers.h` Header file which provides cross-generation EVE register address map.
+- `EVE_defs.h` Header file with preset definitions use in configuring the target application in EVE_config.h.
 - `HAL.h` Definitions for accessing the abstraction layer from the API layer.
 - `MCU.h` Embedded header file for access to the MCU layer from the abstraction layer.
 - `Platform.h` _Linux-like_ header file for access to the MCU layer from the abstraction layer.
