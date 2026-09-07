@@ -875,6 +875,11 @@ int EVE_Deinit(void);
  *      transmitting a co-processor list to the EVE.
  *      This will typically assert chip select to allow the SPI interface to
  *      send data to the EVE.
+ *      This must be called before any co-processor commands, display list commands,
+ *      and command buffer data is sent to the EVE device.
+ *      Certain API commands cannot be sent during a co-processor list as they 
+ *      perform standalone functions with EVE RAM_G or registers. These are clearly
+ *      marked in "details" section.
  */
 void EVE_LIB_BeginCoProList(void);
 
@@ -884,12 +889,17 @@ void EVE_LIB_BeginCoProList(void);
  *      and HAL to finish a co-processor list. 
  *      This will typically deasserts chip select after updating any registers
  *      on the EVE device that will signal the end of the co-processor list.
+ *      This must be called after a call to `EVE_LIB_BeginCoProList`.
  */
 void EVE_LIB_EndCoProList(void);
 
 /**
  * @brief EVE API: Waits for co-processor list to end
  * @details Will poll the co-processor command list until it has been completed.
+ *      This must be called after `EVE_LIB_EndCoProList` for the program to wait
+ *      for the completion of the co-processor actions.
+ *      If the co-processor method is set to `EVE_COPROC_INT` then it will wait 
+ *      for an interrupt signal on the INT# line before testing for correct completion.
  * @returns 0 for successful completion, 0xff for co-processor exception.
  */
 int EVE_LIB_AwaitCoProEmpty(void);
@@ -897,6 +907,10 @@ int EVE_LIB_AwaitCoProEmpty(void);
 /**
  * @brief EVE API: Waits for co-processor list to end with a timeout value
  * @details Will poll the co-processor command list until it has been completed.
+ *      This must be called after `EVE_LIB_EndCoProList` for the program to wait
+ *      for the completion of the co-processor actions.
+ *      If the co-processor method is set to `EVE_COPROC_INT` then it will wait 
+ *      for an interrupt signal on the INT# line before testing for correct completion.
  * @param timeout - timeout in milliseconds (zero for NO timeout)
  * @returns 0 for successful completion, 0xff for co-processor exception, 0xfe for a timeout.
  */
@@ -904,7 +918,8 @@ int EVE_LIB_AwaitCoProEmptyTimeout(uint32_t timeout);
 
 /**
  * @brief EVE API: Recovers the co-processor in the event of an exception
- * @details Will reset the co-processor after an exception is reported by EVE_LIB_AwaitCoProEmpty.
+ * @details Will reset the co-processor after an exception is reported by 
+ *      EVE_LIB_AwaitCoProEmpty or EVE_LIB_AwaitCoProEmptyTimeout.
  */
 void EVE_LIB_RecoverCoPro(void);
 
@@ -912,6 +927,9 @@ void EVE_LIB_RecoverCoPro(void);
  * @brief EVE API: Free space in of co-processor list 
  * @details Obtains the free space in the co-processor circular buffer. 
  *      This operation may have an effect on the performance of the device.
+ *      This must be called during a co-processor list:
+ *      after a call to `EVE_LIB_BeginCoProList` and before a call to 
+ *      `EVE_LIB_EndCoProList`.
  * @returns The number of free instructions in the co-processor circular buffer.
  */
 uint16_t EVE_LIB_GetCoProSpace(void);
@@ -920,6 +938,7 @@ uint16_t EVE_LIB_GetCoProSpace(void);
 /**
  * @brief EVE API: Resets the co-processor list profiling length
  * @details Sets the profiling pointer to zero to restart profiling.
+ *      This function can be called at any time.
  */
 void EVE_LIB_BeginCoProProfile(void);
 #endif
@@ -930,6 +949,7 @@ void EVE_LIB_BeginCoProProfile(void);
  * @details Obtains the current profiling pointer for the co-processor list.
  * @returns The number of instructions added to the co-processor list since 
  *      the last reset of the profiling pointer.
+ *      This function can be called at any time.
  */
 uint16_t EVE_LIB_GetCoProProfile(void);
 #endif
@@ -938,6 +958,7 @@ uint16_t EVE_LIB_GetCoProProfile(void);
 /**
  * @brief EVE API: Size of display list
  * @details Obtains the current size of the display list.
+ *      This function cannot be used within a co-processor list.
  * @returns The number of instructions instructions currently in the display list.
  */
 uint16_t EVE_LIB_GetDlProfile(void);
@@ -946,11 +967,10 @@ uint16_t EVE_LIB_GetDlProfile(void);
 /**
  * @brief Test interrupt input line
  * @details This function will check the interrupt input INT# from
- *      the EVE device. If Quad SPI is enabled then the interrupt line
- *      is used as a data line for SPI and therefore cannot be used for
- *      an interrupt input.
- * @returns zero if there is no interrupt, non-zero if the EVE device is
- *      asserting an interrupt.
+ *      the EVE device.
+ *      This function can be called at any time.
+ * @returns zero if there is no interrupt; >0 if the EVE device is
+ *      asserting an interrupt; or -1 if the MCU or Platform does not support reading the interrupt line.
  */
 int EVE_LIB_Int(void);
 
@@ -961,6 +981,7 @@ int EVE_LIB_Int(void);
  *      a status value. The flag register will clear any pending interrupt
  *      when read so the cumulative flagged bits are kept until they are
  *      cleared by the mask in this function.
+ *      This function cannot be used within a co-processor list.
  * @param mask - Bit mask of interrupts to query (and clear).
  * @returns 0 for no interrupts in the mask being set, if any interrupts are
  *      set then the return value will contain bits set from the mask parameter.
@@ -973,6 +994,7 @@ uint8_t EVE_LIB_GetInterrupt(uint8_t mask);
  * @details Will return a result value from "offset" words back in the command buffer.
  *      If the value of offset is 1 then the previous value from the co-processor
  *      command buffer is returned.
+ *      This function cannot be used within a co-processor list.
  * @param offset - Number of 32-bit words to go back in the command buffer for
  *      the result.
  * @returns result of a previous co-processor command.
@@ -983,6 +1005,7 @@ uint32_t EVE_LIB_GetResult(int offset);
 /**
  * @brief EVE API: Get co-processor exception description
  * @details Will query the co-processor exception description to a string.
+ *      This function cannot be used within a co-processor list.
  * @param desc - Buffer to receive the text of the exception description.
  * @returns Co-processor exception description. This is a pointer to a string
  *      and must be sufficient to hold 128 characters.
@@ -993,6 +1016,7 @@ void EVE_LIB_GetCoProException(char *desc);
 /**
  * @brief EVE API: Write a buffer to memory mapped RAM
  * @details Writes a block of data via SPI to the EVE.
+ *      This function cannot be used within a co-processor list.
  * @param ImgData - Pointer to start of data buffer.
  * @param DataSize - Number of bytes in buffer.
  * @param DestAddress - 24-bit/32-bit memory mapped address on EVE.
@@ -1002,6 +1026,7 @@ void EVE_LIB_WriteDataToRAMG(const uint8_t *ImgData, uint32_t DataSize, uint32_t
 /**
  * @brief EVE API: Read a buffer from memory mapped RAM
  * @details Reads a block of data via SPI from the EVE.
+ *      This function cannot be used within a co-processor list.
  * @param ImgData - Pointer to start of receive data buffer.
  * @param DataSize - Number of bytes to read (rounded up to be 32-bit aligned).
  * @param SrcAddress - 24-bit/32-bit memory mapped address on EVE.
@@ -1037,6 +1062,7 @@ uint16_t EVE_LIB_SendString(const char* string);
  * @details Obtains the details of an image decoded by the CMD_LOADIMAGE
  *      co-processor command. The properties of the image are taken from
  *      the co-processor command list.
+ *      This function cannot be used within a co-processor list.
  * @param addr - Pointer to variable to receive the image start address.
  * @param width - Pointer to variable to receive the image width.
  * @param height - Pointer to variable to receive the image height.
@@ -1047,7 +1073,8 @@ void EVE_LIB_GetProps(uint32_t *addr, uint32_t *width, uint32_t *height);
  * @brief EVE API: Get current allocation pointer
  * @details Obtains the automatic allocation pointer of the last address
  *      used for certain co-processor operations.
- * @param addr - Last allocation address rounded up to the next 32-bit 
+*      This function cannot be used within a co-processor list.
+  * @param addr - Last allocation address rounded up to the next 32-bit 
  *      boundary.
  */
 void EVE_LIB_GetPtr(uint32_t *addr);
@@ -1055,7 +1082,8 @@ void EVE_LIB_GetPtr(uint32_t *addr);
 /**
  * @brief EVE API: Get the touchscreen transformation matrix.
  * @details Obtains the transformation matrix from a CMD_CALIBRATE operation.
- * @param a -  pointer of variable to receive matrix a.
+*      This function cannot be used within a co-processor list.
+  * @param a -  pointer of variable to receive matrix a.
  * @param b -  pointer of variable to receive matrix b.
  * @param c -  pointer of variable to receive matrix c.
  * @param d -  pointer of variable to receive matrix d.
@@ -1067,6 +1095,7 @@ void EVE_LIB_GetMatrix(uint32_t *a, uint32_t *b, uint32_t *c, uint32_t *d, uint3
 /**
  * @brief EVE API: Calculate the CRC of a memory area.
  * @details Obtains the CRC of a memory area.
+ *      This function cannot be used within a co-processor list.
  * @param ptr - Start of memory area.
  * @param num - Number of bytes to CRC.
  * @param result - pointer to receive the CRC.
@@ -1077,6 +1106,7 @@ void EVE_LIB_MemCrc(uint32_t ptr, uint32_t num, uint32_t *result);
 /**
  * @brief EVE API: Computes a bitmap transformation matrix.
  * @details  It computes the transform given three corresponding points in screen space and bitmap space.
+ *      This function cannot be used within a co-processor list.
  * @param x0, y0 - Point 0 screen coordinate, in pixels.
  * @param x1, y1 - Point 1 screen coordinate, in pixels.
  * @param x2, y2 - Point 2 screen coordinate, in pixels.
@@ -1094,6 +1124,7 @@ void EVE_LIB_BitmapTransform( int32_t x0, int32_t y0, int32_t x1, int32_t y1, in
 /**
  * @brief EVE API: Get image properties.
  * @details From the last CMD_LOADIMAGE get the address, size, format and palette of the loaded image.
+ *      This function cannot be used within a co-processor list.
  * @param *addr - pointer to variable to receive the address the image was loaded to.
  * @param *fmt - pointer to variable to receive the format of the loaded image.
  * @param *width - pointer to variable to receive the width of the loaded image.
@@ -1107,6 +1138,7 @@ void EVE_LIB_GetImage(uint32_t *addr, uint32_t *fmt, uint32_t *width, uint32_t *
 /**
  * @brief EVE API: Read a register.
  * @details Reads a register value.
+ *      This function cannot be used within a co-processor list.
  * @param addr - Address of register to read.
  * @param value - pointer to receive the contents of the register.
  */
@@ -1116,6 +1148,7 @@ void EVE_LIB_RegRead(uint32_t addr, uint32_t *value);
 /**
  * @brief EVE API: Write a memory location.
  * @details Writes a memory location value.
+ *      This function cannot be used within a co-processor list.
  * @param addr - Address of memory lcoation to write.
  * @param value - Value to write to memory.
  */
@@ -1130,6 +1163,7 @@ void EVE_LIB_MemWrite8(uint32_t addr, uint8_t value);
 /**
  * @brief EVE API: Read a memory location.
  * @details Reads a memory location value.
+ *      This function cannot be used within a co-processor list.
  * @param addr - Address of memory location to read.
  * @return - Value read from memory.
  */
