@@ -118,6 +118,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${API_DIRECTORY}/ports/eve_arch_stm32/EVE_MCU_STM32CUBE_QUADSPI.c
     ${API_DIRECTORY}/source/extensions/bt82x_patch.c # Only applicable to BT82x
     ${API_DIRECTORY}/source/extensions/custom_touch_fw.c # Only applicable to FT81x/BT88x/BT81x
+    ${API_DIRECTORY}/source/extensions/lcd_panel_init.c # Only applicable LCD panels that require driver initialisation
     # Source files for example code library
     ${EXAMPLE_COMMON}/eve_example.c
     ${EXAMPLE_COMMON}/eve_fonts.c

@@ -12,5 +12,7 @@ idf_component_register(SRCS
                         "../../source/extensions/bt82x_patch.c"
                         # Add custom touch code FT81x/BT88x/BT81x only
                         "../../source/extensions/custom_touch_fw.c"
+                        # Only applicable LCD panels that require driver initialisation
+                        "../../source/extensions/lcd_panel_init.c"
                        INCLUDE_DIRS "../../include"
                        REQUIRES driver soc)

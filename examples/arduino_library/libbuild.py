@@ -160,6 +160,8 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
                     line = '#include "bt82x_patch.h"'
                 elif line.strip() == "#include <extensions/custom_touch_fw.h>":
                     line = '#include "custom_touch_fw.h"'
+                elif line.strip() == "#include <extensions/lcd_panel_init.h>":
+                    line = '#include "lcd_panel_init.h"'
 
                 # Change code to use C++ class instead of C library
                 if apirefactor:
@@ -498,6 +500,14 @@ if eve_api == 5:
         os.path.join(src_api, "include", "extensions", "bt82x_patch.h"),
         os.path.join(dest_lib, "bt82x_patch.h")
     ))
+dist_source_files.append((
+    os.path.join(src_api, "include", "extensions", "lcd_panel_init.h"),
+    os.path.join(dest_lib, "lcd_panel_init.h")
+))
+dist_source_files.append((
+    os.path.join(src_api, "source", "extensions", "lcd_panel_init.c"),
+    os.path.join(dest_lib, "lcd_panel_init.c")
+))
 dist_source_files.append((os.path.join(src_api,"LICENSE"), os.path.join(dest_lib,"LICENSE.txt")))
 
 # Copy API source and header files

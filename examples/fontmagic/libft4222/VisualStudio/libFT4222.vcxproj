@@ -92,6 +92,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\source\extensions\bt82x_patch.c" />
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c" />
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c" />
     <ClCompile Include="..\..\..\..\ports\eve_libft4222\EVE_libft4222.c" />
     <ClCompile Include="..\..\..\snippets\controls\fonts.c" />
     <ClCompile Include="..\..\..\snippets\touch.c" />
@@ -109,6 +110,7 @@
     <ClInclude Include="..\..\..\..\include\HAL.h" />
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h" />
     <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h" />
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h" />
     <ClInclude Include="..\..\..\snippets\controls\fonts.h" />
     <ClInclude Include="..\..\common\eve_example.h" />
     <ClInclude Include="..\..\..\snippets\touch.h" />

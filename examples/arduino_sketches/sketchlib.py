@@ -38,6 +38,7 @@ def copy_norm(src_file, dest_file, flatten_filter):
                 line = line.replace("<EVE_defs.h>", "\"EVE_defs.h\"")
                 line = line.replace("<extensions/bt82x_patch.h>", "\"bt82x_patch.h\"")
                 line = line.replace("<extensions/custom_touch_fw.h>", "\"custom_touch_fw.h\"")
+                line = line.replace("<extensions/lcd_panel_init.h>", "\"lcd_panel_init.h\"")
                 # Remove directory paths in the files that need flattened for the sketch
                 for fl in flatten_filter:
                     line = line.replace(f"\"{fl}/", "\"")

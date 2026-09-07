@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\..\..\source\EVE_API.c" />
     <ClCompile Include="..\..\..\..\source\EVE_HAL.c" />
     <ClCompile Include="..\..\common\patch_lvds.c" />
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c" />
     <ClCompile Include="..\main.c" />
     <ClInclude Include="..\..\..\..\include\EVE.h" />
     <ClInclude Include="..\..\..\..\include\EVE_commands.h" />
@@ -108,6 +109,7 @@
     <ClInclude Include="..\..\..\..\include\EVE_registers.h" />
     <ClInclude Include="..\..\..\..\include\HAL.h" />
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h" />
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h" />
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftd2xx.h" />
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftdi_common.h" />
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftdi_infra.h" />

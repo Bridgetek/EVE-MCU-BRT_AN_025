@@ -240,6 +240,28 @@ uint32_t EVE_RAM_G_CONFIG_SIZE
 ```
 #endif
 
+#### Configuration Options
+
+The following optional features are controlled by macros in `EVE_config.h`.
+
+#if IS_EVE_API(2,3,4)
+
+##### Custom Touch Firmware
+
+`EVE_CUSTOM_TOUCH` enables loading of custom touch firmware on supported EVE devices.
+
+The required firmware data and loading functions are provided by the custom touch firmware extension.
+
+#endif
+
+##### LCD Panel Initialisation
+
+`EVE_LCD_INIT` enables optional LCD panel controller initialisation before EVE is initialised.
+
+LCD panel initialisation requires MCU-specific functionality to provide the interface between the host MCU and the LCD panel controller. This interface may share the SPI bus used by EVE with a separate CS# signal, use a separate SPI interface, or use GPIO bit-banging where appropriate.
+
+LCD panel initialisation is disabled by default in the Arduino library and requires a suitable Arduino-specific implementation before it can be enabled.
+
 ### Library Constants
 
 In a similar way to the API functions, the library provides a set of constant values used in 

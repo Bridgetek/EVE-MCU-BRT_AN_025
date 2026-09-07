@@ -472,6 +472,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>LCD Driver Initialisation</GroupName>
+          <Files>
+            <File>
+              <FileName>lcd_panel_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\source\extensions\lcd_panel_init.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Header Files</GroupName>
           <Files>
             <File>

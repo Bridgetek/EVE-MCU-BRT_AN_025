@@ -55,6 +55,11 @@
 /* Include the EVE debug-output macro definitions */
 #include <EVE_debug.h>
 
+// Used to run LCD initialisation where required 
+#if defined(EVE_LCD_INIT)
+#include <extensions/lcd_panel_inith>
+#endif
+
 /* EVE HAL INCLUDES END */
 
 /* EVE HAL */
@@ -76,11 +81,16 @@ static uint16_t profileCmdPointer = 0x0000;
 // Initialise EVE HAL Layer.
 int HAL_EVE_Init(void)
 {
-    if (MCU_Init() != 0)
+    // Initialise the LCD panel driver before the MCU/EVE interface, where required.
+#if defined(EVE_LCD_INIT)
+    if (lcd_panel_init() != 0)
     {
-        EVE_DEBUG_ERROR("MCU_Init() Failed.\n");
+        EVE_DEBUG_ERROR("LCD panel initialisation failed.\n");
         return -1;
     }
+#endif /* defined(EVE_LCD_INIT) */
+
+    // Initialise the MCU interface used to communicate with EVE.
 
 #if IS_EVE_API(1, 2, 3, 4)
     // Set Chip Select OFF.

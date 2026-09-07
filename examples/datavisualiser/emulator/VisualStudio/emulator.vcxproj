@@ -100,6 +100,7 @@ copy /Y ..\..\..\..\ports\eve_emulator\EVE_Emulator\bin\zlib.dll "$(OutDir)zlib.
   <ItemGroup>
     <ClCompile Include="..\..\..\..\source\extensions\bt82x_patch.c" />
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c" />
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c" />
     <ClCompile Include="..\..\..\..\ports\eve_emulator\EVE_emulator.c" />
     <ClCompile Include="..\..\..\snippets\controls\arcs.c" />
     <ClCompile Include="..\..\..\snippets\controls\sound.c" />
@@ -114,6 +115,7 @@ copy /Y ..\..\..\..\ports\eve_emulator\EVE_Emulator\bin\zlib.dll "$(OutDir)zlib.
     <ClInclude Include="..\..\..\..\include\EVE_registers.h" />
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h" />
     <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h" />
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h" />
     <ClInclude Include="..\..\..\..\ports\eve_emulator\EVE_Emulator\include\bt8xxemu.h" />
     <ClInclude Include="..\..\..\..\ports\eve_emulator\EVE_Emulator\include\bt8xxemu_inttypes.h" />
     <ClInclude Include="..\..\..\snippets\controls\arcs.h" />

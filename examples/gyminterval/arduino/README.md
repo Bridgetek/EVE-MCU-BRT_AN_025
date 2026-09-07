@@ -45,6 +45,8 @@ Sketch name is gyminterval_arduino
 ..\..\..\source\extensions\bt82x_patch.h -> gyminterval_arduino\bt82x_patch.h
 ..\..\..\source\extensions\custom_touch_fw.h -> gyminterval_arduino\custom_touch_fw.h
 ..\..\..\source\extensions\custom_touch_fw.c -> gyminterval_arduino\custom_touch_fw.c
+..\..\..\source\extensions\lcd_panel_init.h -> gyminterval_arduino\lcd_panel_init.h
+..\..\..\source\extensions\lcd_panel_init.c -> gyminterval_arduino\lcd_panel_init.c
 ```
 
 ### Copy Files Manually
@@ -83,11 +85,13 @@ source tree:
 
   - `custom_touch_fw.h` - EVE API 2, 3 and 4
   - `bt82x_patch.h` - EVE API 5
+  - `lcd_panel_init.h` - EVE API 1, 2, 3, 4, and 5
 
   From `source/extensions`:
 
   - `custom_touch_fw.c` - EVE API 2, 3 and 4
   - `bt82x_patch.c` - EVE API 5
+  - `lcd_panel_init.c` - EVE API 1, 2, 3, 4, and 5
 
 When the Arduino library is generated, these files are copied into the
 library root directory. The `extensions` directory structure is not retained
@@ -104,6 +108,7 @@ All files with a ".c" extension must be renamed to have the extension ".ino". In
 - `#include <EVE_registers.h>` --> `#include "EVE_registers.h"`
 - `#include <extensions/bt82x_patch.h>` --> `#include "bt82x_patch.h"`
 - `#include <extensions/custom_touch_fw.h>` --> `#include "custom_touch_fw.h"`
+- `#include <extensions/lcd_panel_init.h>` --> `#include "lcd_panel_init.h"`
 
 ## Sketch Directory
 
@@ -126,6 +131,8 @@ bt82x_patch.ino
 bt82x_patch.h    
 custom_touch_fw.ino      
 custom_touch_fw.h 
+lcd_panel_init.ino      
+lcd_panel_init.h
 eve_arch_arduino.ino  
 README.md  
 eve_example.ino       

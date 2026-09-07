@@ -122,6 +122,8 @@
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c" />
     <ClCompile Include="..\..\..\..\include\extensions\custom_touch_fw.h" />
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c" />
+    <ClCompile Include="..\..\..\..\include\extensions\lcd_panel_init.h" />
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h" />
     <ClInclude Include="..\..\..\..\include\EVE.h" />
     <ClInclude Include="..\..\..\..\include\EVE_commands.h" />

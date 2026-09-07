@@ -98,11 +98,13 @@ source tree:
 
   - `custom_touch_fw.h` - EVE API 2, 3 and 4
   - `bt82x_patch.h` - EVE API 5
+  - `lcd_panel_init.h` - EVE API 1, 2, 3, 4 and 5
 
   From `source/extensions`:
 
   - `custom_touch_fw.c` - EVE API 2, 3 and 4
   - `bt82x_patch.c` - EVE API 5
+  - `lcd_panel_init.c` - EVE API 1, 2, 3, 4 and 5
 
 When the Arduino library is generated, these files are copied into the
 library root directory. The `extensions` directory structure is not retained

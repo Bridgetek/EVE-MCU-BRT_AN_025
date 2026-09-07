@@ -25,6 +25,9 @@
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c">
       <Filter>Library\source\extensions</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c">
+      <Filter>Library\source\extensions</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\snippets\widgets\sevenseg.c">
       <Filter>Example\snippets</Filter>
     </ClCompile>
@@ -53,6 +56,12 @@
       <Filter>Example</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h">
+      <Filter>Library\include\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h">
+      <Filter>Library\include\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h">
       <Filter>Library\include\extensions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\eve_example.h">
@@ -111,10 +120,5 @@
     <Filter Include="Library\include\extensions">
       <UniqueIdentifier>{823da6a4-a341-42d0-9338-57deee70fc6b}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h">
-      <Filter>Library\include\extensions</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

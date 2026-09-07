@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\source\extensions\bt82x_patch.c" />
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c" />
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c" />
     <ClCompile Include="..\..\..\..\ports\eve_libmpsse\ftdi_infra.c" />
     <ClCompile Include="..\..\..\..\ports\eve_libmpsse\ftdi_mid.c" />
     <ClCompile Include="..\..\..\..\ports\eve_libmpsse\ftdi_spi.c" />
@@ -106,6 +107,7 @@
     <ClInclude Include="..\..\..\..\include\HAL.h" />
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h" />
     <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h" />
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h" />
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftd2xx.h" />
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftdi_infra.h" />
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftdi_mid.h" />

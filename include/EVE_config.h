@@ -48,6 +48,7 @@
  *      For BT82x the EVE_RAM_G_CONFIG_SIZE macro must also be configured.
  *      Values from the macros defined in this file can be used in code 
  *      based on this library. 
+ * 
  *      To make a custom configuration file, edit this file as required as 
  *      long as the macros listed above are correctly defined.
  *      This file is included with angle brackets in EVE.h and can therefore 
@@ -61,12 +62,13 @@
  *      EVE_DISPLAY_RES values will be set accordingly.
  *      This selection will override any EVE_PANEL, EVE_DEVICE and EVE_DISPLAY_RES
  *      settings.
+ * 
  * @note The MODULE_TYPE macro has been deprecated in favour of EVE_MODULE.
  *      Please update references accordingly.
  */
 //@{
 #ifndef EVE_MODULE
-#define EVE_MODULE EVE_NO_MODULE
+#define EVE_MODULE EVE_IDM204021R 
 #endif
 //@}
 
@@ -77,6 +79,7 @@
  *      value depends on the level of the EVE device support. 
  *      Alternatively, to override this directly set the EVE_API and 
  *      EVE_SUB_API macro as required.
+ * 
  * @note The FT8XX_TYPE macro has been deprecated in favour of EVE_DEVICE.
  *      Please update references accordingly.
  */
@@ -92,6 +95,7 @@
  *      selection of the EVE panel which in turn will select a valid 
  *      EVE_DISPLAY_RES setting.
  *      This setting will override the EVE_DISPLAY_RES setting.
+ * 
  * @note The PANEL_TYPE macro has been deprecated in favour of EVE_PANEL.
  *      Please update references accordingly.
  */
@@ -104,6 +108,7 @@
 /**
  * @brief Match display resolution to panel type.
  * @details The distribution default is WVGA (800x480).
+ * 
  * @note The DISPLAY_RES macro has been deprecated in favour of EVE_DISPLAY_RES.
  *      Please update references accordingly.
  */
@@ -119,6 +124,7 @@
  *      on the EVE device (using HAL_SetSPIMode) if  is supported by the platform.
  *      EVE_QSPI_ENABLE may be defined externally to enable QSPI, otherwise it
  *      remains undefined.
+ * 
  * @note QSPI is only supported on devices from EVE API 2 onwards. It is not
  *      supported on FT80x devices. For default set this to disabled.
  * @note The QUADSPI_ENABLE macro has been deprecated in favour of EVE_QSPI_ENABLE.
@@ -152,15 +158,15 @@
 /**
  * @brief Enable or Disable custom couch FW load.
  * @details If the macro is set then custom touch FW will be loaded during IC
- *			  initialisation from the binary data array in the "custom_touch_fw.c" file.
- *			  Applicable for FT81X/BT88X/BT81X devices only.
+ *      initialisation from the binary data array in the "custom_touch_fw.c" file.
+ *			Applicable for FT81X/BT88X/BT81X devices only.
  *
- *       EVE_CUSTOM_TOUCH may be defined externally to enable custom touch.
- *       It is also enabled automatically for panels which require it.
- *       Otherwise it remains undefined.
+ *      EVE_CUSTOM_TOUCH may be defined externally to enable custom touch.
+ *      It is also enabled automatically for panels which require it.
+ *      Otherwise it remains undefined.
  *
- * NOTE: EVE_TOUCH_ADDR settings will be overridden when using EVE_CUSTOM_TOUCH.
- * NOTE: Custom touch for the BT82X series is implemented in extension patches.
+ * @note EVE_TOUCH_ADDR settings will be overridden when using EVE_CUSTOM_TOUCH.
+ * @note Custom touch for the BT82X series is implemented in extension patches.
  *
  */
 //@{
@@ -170,22 +176,39 @@
 //@}
 
 /**
-  * @brief Specify method to write to the co-processor circular buffer.
-  * @details If the macro is set then the appropriate method of writing to
-  *   the co-processor is used.
-  *   If this is undefined then EVE_COPRO_CMD_WRITE is used for EVE1
-  *   and EVE_COPRO_CMDB_WRITE is used for EVE2 onwards.
-  *   If this is set for EVE_COPRO_CMDB_WRITE on EVE1 then the setting
-  *   will be modified to EVE_COPRO_CMD_WRITE.
-  *   The EVE_COPRO_INT can be used to modify the EVE_COPRO_CMD_WRITE
-  *   method to use the hardware INT# line as well. This requires support
-  *   from the port in the MCU layer.
-  */
+ * @brief Specify method to write to the co-processor circular buffer.
+ * @details If the macro is set then the appropriate method of writing to
+ *      the co-processor is used.
+ * 
+ *      If this is undefined then EVE_COPRO_CMD_WRITE is used for EVE1
+ *      and EVE_COPRO_CMDB_WRITE is used for EVE2 onwards.
+ *      If this is set for EVE_COPRO_CMDB_WRITE on EVE1 then the setting
+ *      will be modified to EVE_COPRO_CMD_WRITE.
+ *      The EVE_COPRO_INT can be used to modify the EVE_COPRO_CMD_WRITE
+ *      method to use the hardware INT# line as well. This requires support
+ *      from the port in the MCU layer.
+ */
 //@{
 #ifndef EVE_COPRO_METHOD
 #define EVE_COPRO_METHOD EVE_COPRO_CMDB_WRITE
 #endif
 //@}
 
+/**
+ * @brief Enable optional LCD panel controller initialisation.
+ * @details If this macro is defined then lcd_panel_init() from the
+ *      "lcd_panel_init.c" file is called before EVE is initialised in EVE_Hal.c.
+ * 
+ *      The LCD panel controller interface requires MCU-specific support
+ *      and may use the SPI interface shared with EVE using a separate CS#
+ *      signal, a separate SPI interface, or GPIO bit-banging.
+ *      If this macro is undefined then no LCD panel controller
+ *      initialisation is performed.
+ */
+//@{
+#ifndef EVE_LCD_INIT
+#undef EVE_LCD_INIT
+#endif
+//@}
 
 #endif /* _EVE_CONFIG_H */

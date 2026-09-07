@@ -49,6 +49,9 @@
     <ClCompile Include="..\..\..\snippets\maths\trig_furman.c">
       <Filter>Example\Snippets</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c">
+      <Filter>Library\source\extensions</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\..\..\include\Platform.h">
       <Filter>Library\include</Filter>
     </ClInclude>
@@ -59,6 +62,9 @@
       <Filter>Example</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h">
+      <Filter>Library\include\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h">
       <Filter>Library\include\extensions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\ports\eve_libmpsse\ftdi_common.h">
@@ -149,6 +155,9 @@
     </Filter>
     <Filter Include="Library\include\extensions">
       <UniqueIdentifier>{823da6a4-a341-42d0-9338-57deee70fc6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\source\extensions">
+      <UniqueIdentifier>{39816ed1-6707-490c-91cf-c887d49b5516}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

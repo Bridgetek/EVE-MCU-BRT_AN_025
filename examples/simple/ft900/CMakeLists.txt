@@ -71,6 +71,8 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     ${API_DIRECTORY}/source/extensions/bt82x_patch.c
     # Only applicable to FT81x/BT88x/BT81x
     ${API_DIRECTORY}/source/extensions/custom_touch_fw.c
+    # Only applicable LCD panels that require driver initialisation
+    ${API_DIRECTORY}/source/extensions/lcd_panel_init.c 
 
     # GENERATED: SOURCES - DO NOT MODIFY - BEGIN
     # GENERATED: SOURCES - DO NOT MODIFY - END

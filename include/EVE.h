@@ -230,6 +230,11 @@
 #define EVE_CUSTOM_TOUCH
 #endif
 
+// Enable EVE_LCD_INIT by default for this module
+#ifndef EVE_LCD_INIT
+#define EVE_LCD_INIT
+#endif
+
 #elif EVE_MODULE == EVE_IDM204043A
 // IDM2040-43A
 #define EVE_DEVICE EVE_BT883

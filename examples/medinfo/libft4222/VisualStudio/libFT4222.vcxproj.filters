@@ -148,6 +148,12 @@
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c">
       <Filter>Library\source\extensions</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\include\extensions\lcd_panel_init.h">
+      <Filter>Library\include\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c">
+      <Filter>Library\source\extensions</Filter>
+    </ClCompile>
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h">
       <Filter>Library\include\extensions</Filter>
     </ClInclude>

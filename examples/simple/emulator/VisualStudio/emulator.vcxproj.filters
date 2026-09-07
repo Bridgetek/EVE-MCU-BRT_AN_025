@@ -49,6 +49,9 @@
     <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h">
       <Filter>Library\include\extensions</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\extensions\lcd_panel_init.h">
+      <Filter>Library\include\extensions</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\snippets\touch.h">
       <Filter>Example\snippets</Filter>
     </ClInclude>
@@ -80,6 +83,9 @@
       <Filter>Library\ports\eve_emulator</Filter>
     </ClInclude>
     <ClCompile Include="..\..\..\..\source\extensions\custom_touch_fw.c">
+      <Filter>Library\source\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\extensions\lcd_panel_init.c">
       <Filter>Library\source\extensions</Filter>
     </ClCompile>
   </ItemGroup>

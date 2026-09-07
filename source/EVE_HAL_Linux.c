@@ -57,6 +57,11 @@
 #include <HAL.h>
 #include <Platform.h>
 
+// Used to run LCD initialisation where required 
+#if defined(EVE_LCD_INIT)
+#include <extensions/lcd_panel_init.h>
+#endif
+
 /* EVE HAL INCLUDES END */
 
 /* EVE HAL CONSTANTS */
@@ -96,6 +101,13 @@ static uint16_t profileCmdPointer = 0x0000;
 // Initialise EVE HAL Layer.
 int HAL_EVE_Init(void)
 {
+
+    if (lcd_panel_init() < 0)
+    {
+        err_printf("LCD panel initialisation Failed.\n");
+        return -1;
+    }
+
     if (Platform_Init() < 0)
     {
         err_printf("Platform_Init() Failed.\n");

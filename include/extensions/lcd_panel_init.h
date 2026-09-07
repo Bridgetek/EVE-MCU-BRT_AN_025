@@ -1,5 +1,5 @@
 /**
- * @file custom_touch_fw.h
+ * @file lcd_panel_init.h
  */
  /*
   * ============================================================================
@@ -37,13 +37,13 @@
   * ============================================================================
   */
 
-#ifndef _EVE_CUSTOM_TOUCH_H
-#define _EVE_CUSTOM_TOUCH_H
+#ifndef _EVE_LCD_INIT_H
+#define _EVE_LCD_INIT_H
 
-/* CUSTOM TOUCH */
+/* LCD INIT */
 
-int eve_loadcustomtouch(void);
+int lcd_panel_init(void);
 
-/* CUSTOM TOUCH END */
+/* LCD INIT END */
 
-#endif /* _EVE_CUSTOM_TOUCH_H */
+#endif /* _EVE_LCD_INIT_H */
