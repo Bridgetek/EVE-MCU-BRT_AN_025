@@ -183,7 +183,7 @@
 /**
  * @brief Definitions used for capacitive touch controller i2c address and type (type is BT82X only).
  *
- * NOTE: For FT81X/BT88X/BT81X only TOUCH_ADDR_FOCALTECH & TOUCH_ADDR_GOODIX are applicale.
+ * @note For FT81X/BT88X/BT81X only TOUCH_ADDR_FOCALTECH & TOUCH_ADDR_GOODIX are applicale.
  */
 //@{
 #define TOUCH_ADDR_FOCALTECH 0x38 // Focaltech (e.g. FT5206)

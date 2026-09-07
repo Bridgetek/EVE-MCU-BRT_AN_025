@@ -23,7 +23,7 @@
  *      Using an absent register at runtime is a logic error - guard call sites
  *      with IS_EVE_API() to make absence visible at compile time.
  *  
- * NOTE: EVE3 and EVE4 (BT81x) share the same address map, so a3 == a4
+ * @note EVE3 and EVE4 (BT81x) share the same address map, so a3 == a4
  *      throughout this file. They are kept as separate columns so that if a
  *      future BT81x variant diverges the table stays correct.
  */
@@ -271,7 +271,8 @@
 #define EVE_ENC_CMD_SNAPSHOT     EVE_API_SELECT(0xffffff1ful,0xffffff1ful,0xffffff1ful,0xffffff1ful,0xffffff1dul)
 #define EVE_ENC_CMD_BITMAP_TRANSFORM \
                                  EVE_API_SELECT(0xffffff21ul,0xffffff21ul,0xffffff21ul,0xffffff21ul,0xffffff1ful)
-/** Inflate (decompress) data. NOTE: opcode 0x22 in EVE1-4; renumbered to 0x4a in EVE5. */
+/** Inflate (decompress) data.
+ * @note opcode 0x22 in EVE1-4; renumbered to 0x4a in EVE5. */
 #define EVE_ENC_CMD_INFLATE      EVE_API_SELECT(0xffffff22ul,0xffffff22ul,0xffffff22ul,0xffffff22ul,0xffffff4aul)
 #define EVE_ENC_CMD_GETPTR       EVE_API_SELECT(0xffffff23ul,0xffffff23ul,0xffffff23ul,0xffffff23ul,0xffffff20ul)
 #define EVE_ENC_CMD_LOADIMAGE    EVE_API_SELECT(0xffffff24ul,0xffffff24ul,0xffffff24ul,0xffffff24ul,0xffffff21ul)

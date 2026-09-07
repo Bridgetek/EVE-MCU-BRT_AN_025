@@ -22,7 +22,7 @@
  *      Using an absent register at runtime is a logic error - guard call sites
  *      with IS_EVE_API() to make absence visible at compile time.
  *  
- * NOTE: EVE3 and EVE4 (BT81x) share the same address map, so a3 == a4
+ * @note EVE3 and EVE4 (BT81x) share the same address map, so a3 == a4
  *      throughout this file. They are kept as separate columns so that if a
  *      future BT81x variant diverges the table stays correct.
  */

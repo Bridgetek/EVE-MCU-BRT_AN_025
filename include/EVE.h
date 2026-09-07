@@ -449,8 +449,7 @@
     #endif // EVE_QSPI_ENABLE
 #endif // IS_EVE_API(2,3,4,5)
 
-/*
- * Custom touch firmware is supported by EVE API 2-4.
+/** Custom touch firmware is supported by EVE API 2-4.
  *
  * @note Custom touch firmware on EVE5 is supported via patch extensions,
  *       so the code guarded by this define is not required.
@@ -458,8 +457,7 @@
 #if IS_EVE_API(2,3,4) 
     #define EVE_SUPPORT_CUSTOM_TOUCH
 #endif
-/*
- * IDM2040-21R is an EVE API 1 exception which requires a
+/** IDM2040-21R is an EVE API 1 exception which requires a
  * custom touch firmware patch.
  */
 #if defined(EVE_MODULE) && (EVE_MODULE == EVE_IDM204021R)

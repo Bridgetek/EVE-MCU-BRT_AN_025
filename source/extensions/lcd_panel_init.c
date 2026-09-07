@@ -2,20 +2,21 @@
  * @file lcd_panel_init.c
  * @brief Optional LCD panel controller initialisation support.
  *
- * Provides the lcd_panel_init() function, which is called from EVE_Hal.c
- * when EVE_LCD_INIT is defined before EVE initialisation.
- * MCU-specific functionality is required to implement the interface between 
- * the host MCU and the LCD panel controller.
+ * @details  Provides the lcd_panel_init() function, which is called 
+ *      from EVE_Hal.c when EVE_LCD_INIT is defined before EVE initialisation.
+ *      MCU-specific functionality is required to implement the interface
+ *      between the host MCU and the LCD panel controller.
  *
- * The LCD controller may share the SPI interface used by EVE, provided that
- * a separate chip-select (CS#) signal is used. Alternatively, a separate SPI
- * interface may be used where implemented by the target hardware.
+ *      The LCD controller may share the SPI interface used by EVE, provided
+ *      that a separate chip-select (CS#) signal is used. Alternatively, a 
+ *      separate SPI interface may be used where implemented by the target hardware.
  *
- * LCD controller commands may also be sent by bit-banging the required GPIO
- * signals instead of using a hardware SPI peripheral.
+ *      LCD controller commands may also be sent by bit-banging the required
+ *      GPIO signals instead of using a hardware SPI peripheral.
  *
- * @note This file includes an example implementation for the ST7701S LCD controller
- * used on the Bridgetek IDM2040-21R module which utilses a RP2040 MCU and bit banging.
+ * @note This file includes an example implementation for the ST7701S LCD 
+ *      controller used on the Bridgetek IDM2040-21R module which utilses a 
+ *      RP2040 MCU and bit banging.
  */
 /*
  * ============================================================================

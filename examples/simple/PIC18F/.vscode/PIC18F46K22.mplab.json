@@ -185,7 +185,8 @@
                 "../../snippets/*.c",
                 "main/*.c",
                 "../../../source/extensions/bt82x_patch.c",
-                "../../../source/extensions/custom_touch_fw.c"
+                "../../../source/extensions/custom_touch_fw.c",
+                "../../../source/extensions/lcd_panel_init.c"
             ],
             "encoding": "ISO-8859-1"
         }
