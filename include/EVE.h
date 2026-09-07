@@ -1042,7 +1042,7 @@ void EVE_LIB_GetProps(uint32_t *addr, uint32_t *width, uint32_t *height);
  * @brief EVE API: Get current allocation pointer
  * @details Obtains the automatic allocation pointer of the last address
  *      used for certain co-processor operations.
- * @returns addr - Last allocation address rounded up to the next 32-bit 
+ * @param addr - Last allocation address rounded up to the next 32-bit 
  *      boundary.
  */
 void EVE_LIB_GetPtr(uint32_t *addr);
@@ -1069,10 +1069,22 @@ void EVE_LIB_GetMatrix(uint32_t *a, uint32_t *b, uint32_t *c, uint32_t *d, uint3
 void EVE_LIB_MemCrc(uint32_t ptr, uint32_t num, uint32_t *result);
 
 #if IS_EVE_API(2, 3, 4, 5)
+/**
+ * @brief EVE API: Computes a bitmap transformation matrix.
+ * @details  It computes the transform given three corresponding points in screen space and bitmap space.
+ * @param x0, y0 - Point 0 screen coordinate, in pixels.
+ * @param x1, y1 - Point 1 screen coordinate, in pixels.
+ * @param x2, y2 - Point 2 screen coordinate, in pixels.
+ * @param tx0, ty0 - Point 0 bitmap coordinate, in pixels.
+ * @param tx1, ty1 - Point 1 bitmap coordinate, in pixels.
+ * @param tx2, ty2 - Point 2 bitmap coordinate, in pixels.
+ * @param result - set to -1 on success, or 0 if it is not possible to find the solution matrix
+ */
 void EVE_LIB_BitmapTransform( int32_t x0, int32_t y0, int32_t x1, int32_t y1, int32_t x2, int32_t y2, 
                               int32_t tx0, int32_t ty0, int32_t tx1, int32_t ty1, int32_t tx2, int32_t ty2,
                               uint32_t *result );
 #endif
+
 #if IS_EVE_API(4, 5)
 /**
  * @brief EVE API: Get image properties.
@@ -1085,6 +1097,7 @@ void EVE_LIB_BitmapTransform( int32_t x0, int32_t y0, int32_t x1, int32_t y1, in
  */
 void EVE_LIB_GetImage(uint32_t *addr, uint32_t *fmt, uint32_t *width, uint32_t *height, uint32_t *palette);
 #endif
+
 #if IS_EVE_API(5)
 /**
  * @brief EVE API: Read a register.
@@ -1098,7 +1111,7 @@ void EVE_LIB_RegRead(uint32_t addr, uint32_t *value);
 /**
  * @brief EVE API: Write a memory location.
  * @details Writes a memory location value.
- * @param addr - Address of register to read.
+ * @param addr - Address of memory lcoation to write.
  * @param value - Value to write to memory.
  */
 //@{
@@ -1112,7 +1125,7 @@ void EVE_LIB_MemWrite8(uint32_t addr, uint8_t value);
 /**
  * @brief EVE API: Read a memory location.
  * @details Reads a memory location value.
- * @param addr - Address of register to read.
+ * @param addr - Address of memory location to read.
  * @return - Value read from memory.
  */
 //@{
@@ -1316,7 +1329,7 @@ void EVE_CMD_NOP(void);
 void EVE_CMD_FILLWIDTH(uint32_t s); 
 void EVE_CMD_ROTATEAROUND(int32_t x, int32_t y, int32_t a, int32_t s);
 void EVE_CMD_RESETFONTS(void);
-void EVE_CMD_GRADIENTA(int16_t x0, int16_t y0, uint32_t argb0, int16_t x1, int16_t y1, uint32_t argb1); //TODO
+void EVE_CMD_GRADIENTA(int16_t x0, int16_t y0, uint32_t argb0, int16_t x1, int16_t y1, uint32_t argb1);
 void EVE_CMD_FLASHERASE(void);
 void EVE_CMD_FLASHWRITEEXT(uint32_t dest, uint32_t num, uint8_t *data);
 void EVE_CMD_FLASHWRITE(uint32_t ptr, uint32_t num);

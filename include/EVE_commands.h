@@ -415,10 +415,6 @@
 #define EVE_ENC_CMD_WAITCHANGE          0xffffff67ul
 #define EVE_ENC_CMD_WAITCOND            0xffffff78ul
 #define EVE_ENC_CMD_WATCHDOG            0xffffff83ul
-/* Swapchain destination tokens */
-#define EVE_SWAPCHAIN_0                 0xffff00fful
-#define EVE_SWAPCHAIN_1                 0xffff01fful
-#define EVE_SWAPCHAIN_2                 0xffff02fful
 #endif /* IS_EVE_API(5) */
 
 /* =========================================================================
@@ -696,6 +692,15 @@
 #define EVE_FLASH_STATUS_DETACHED       0x1ul
 #define EVE_FLASH_STATUS_BASIC          0x2ul
 #define EVE_FLASH_STATUS_FULL           0x3ul
+
+/* =========================================================================
+ * Swapchain destination tokens
+ * ========================================================================= */
+#if IS_EVE_API(5)
+#define EVE_SWAPCHAIN_0                 0xffff00fful
+#define EVE_SWAPCHAIN_1                 0xffff01fful
+#define EVE_SWAPCHAIN_2                 0xffff02fful
+#endif /* IS_EVE_API(5) */
 
 /* =========================================================================
  * AWAITCOPROEMPTY STATUS
