@@ -540,8 +540,18 @@ int MCU_Setup(void)
 
 static void emulator_check(void)
 {
+    // Check if the emulator instance exists
+    if (!Emulator) {
+        EVE_DEBUG_ERROR("ERROR: Emulator is not initialised.\n");
+        // If the emulator instance doesnt exist, call MCU_Deinit() 
+        MCU_Deinit();
+        // Exit application with exit code -1
+        exit(-1);
+    }
+
     // Check whether the emulator window is still running 
-    if (!Emulator || !BT8XXEMU_isRunning(Emulator)) {
+    if (!BT8XXEMU_isRunning(Emulator)) {
+        EVE_DEBUG_PRINTF("Emulator is no longer running.\n");
         // If the window is no longer running, call MCU_Deinit() to destroy the emulator
         MCU_Deinit();
         // Exit application with exit code 0
@@ -559,6 +569,7 @@ void MCU_CSlow(void)
 // --------------------- Chip Select line high ---------------------------------
 void MCU_CShigh(void)
 {
+    emulator_check();
     BT8XXEMU_chipSelect(Emulator, 0);
 }
 
