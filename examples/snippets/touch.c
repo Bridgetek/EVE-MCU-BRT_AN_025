@@ -112,6 +112,16 @@ int eve_calibrate(void)
     calib.transform[3] = 0x00000000; // 0.0
     calib.transform[4] = 0xffff0000; // - 1.0
     calib.transform[5] = 0x04b00000; // + 1200.0
+#elif EVE_PANEL == EVE_DP_IDM21R
+    // Predefined transform matrix for EVE_DP_IDM21R display panel
+    // use default register values here as the first calib dot wont appear
+    // on the round panel
+    calib.transform[0] = 0x00010000; // 1.0
+    calib.transform[1] = 0x00000000; // 0.0
+    calib.transform[2] = 0x00000000; // 0.0
+    calib.transform[3] = 0x00000000; // 0.0
+    calib.transform[4] = 0x00010000; // 1.0
+    calib.transform[5] = 0x00000000; // 0.0
 #elif EVE_PANEL == EVE_DP_1561_01A
     // Predefined transform matrix for DP-1561-01A display panel
     // X-axis 1920 pixels. Raw 0 -> 16383 (0x4000)
@@ -127,7 +137,7 @@ int eve_calibrate(void)
     // Uncharacterised panels
     int valid = 0;
     // Try to read a touch configuration if the platform support it
-    // NOTE: platform_calib_init to return zero if supported non-zero if now
+    // NOTE: platform_calib_init to return zero if supported non-zero if not
     if (platform_calib_init() == 0)
     {
         // Do not read calibration information if screen is being touched at start

@@ -225,6 +225,11 @@
 #define EVE_DEVICE EVE_FT800
 #define EVE_PANEL EVE_DP_IDM21R
 
+// Enable EVE_CUSTOM_TOUCH by default for this module
+#ifndef EVE_CUSTOM_TOUCH
+#define EVE_CUSTOM_TOUCH
+#endif
+
 #elif EVE_MODULE == EVE_IDM204043A
 // IDM2040-43A
 #define EVE_DEVICE EVE_BT883
@@ -439,6 +444,23 @@
     #endif // EVE_QSPI_ENABLE
 #endif // IS_EVE_API(2,3,4,5)
 
+/*
+ * Custom touch firmware is supported by EVE API 2-4.
+ *
+ * @note Custom touch firmware on EVE5 is supported via patch extensions,
+ *       so the code guarded by this define is not required.
+ */
+#if IS_EVE_API(2,3,4) 
+    #define EVE_SUPPORT_CUSTOM_TOUCH
+#endif
+/*
+ * IDM2040-21R is an EVE API 1 exception which requires a
+ * custom touch firmware patch.
+ */
+#if defined(EVE_MODULE) && (EVE_MODULE == EVE_IDM204021R)
+    #define EVE_SUPPORT_CUSTOM_TOUCH
+#endif
+
 #if !defined(IS_ARDUINO_LIB) /* This block is not used in Arduino libraries */
 
 /**
@@ -506,7 +528,7 @@
 
 #elif EVE_PANEL == EVE_DP_IDM21R
 // IDM204021R (Capacitive)
-#define EVE_DISPLAY_RES EVE_WQVGAR  
+#define EVE_DISPLAY_RES EVE_WQVGAR 
 
 #else
 

@@ -269,6 +269,10 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
                     match_define = re.match(r"(\s*#define\s*)(\w+)", line)
                     match_include = re.match(r"\s*#include\s*\"(.+)\"", line)
                     match_commentline = re.match(r"^ \* ", line)
+                    # Custom touch support is not included in EVE API 1 Arduino builds
+                    match_ifcustomtouch = re.match(r"\s*#if\s+defined\s*\(EVE_SUPPORT_CUSTOM_TOUCH\)\s*&&\s*defined\s*\(EVE_CUSTOM_TOUCH\)", line)
+                    # Case to remove the IDM2040-21R custom touch code
+                    match_ifidm21r = re.match(r"\s*#if\s+defined\s*\(EVE_MODULE\)\s*&&\s*"r"\(EVE_MODULE\s*==\s*EVE_IDM204021R\)", line)
 
                     try:
                         # Skip lines that start with an indented comment continuator
@@ -294,6 +298,14 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
                                 pos.append(int(lev))
                             nest.append((pos, True, cov))
                             flag = -1
+                        elif match_ifcustomtouch and api == 1:
+                            # Remove custom touch implementation from EVE API 1 Arduino builds.
+                            nest.append(([2, 3, 4], True, []))
+                            flag = -1
+                        elif match_ifidm21r:
+                            # IDM2040-21R custom touch support is not supported by Arduino libraries.
+                            nest.append(("IDM21R", True, None))
+                            flag = -1
                         elif match_ifardulib:
                             print(match_ifardulib)
                             cov = []
@@ -308,7 +320,11 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
                             flag = -1
                         elif match_else:
                             (pos, _, cov) = nest.pop()
-                            if cov != None:
+                            if pos == "IDM21R":
+                                # Discard IDM21R branch, retain the fallback branch.
+                                nest.append(("IDM21R", False, None))
+                                flag = -1
+                            elif cov != None:
                                 if pos != None:
                                     cov.extend(pos)
                                 flag = -1
@@ -317,7 +333,9 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
                                 nest.append((cov, True, None))
                         elif match_endif:
                             (pos, _, cov) = nest.pop()
-                            if pos != None:
+                            if pos == "IDM21R":
+                                flag = -1
+                            elif pos != None:
                                 flag = -1
                         elif match_if:
                             if match_if.group(1) == "elif":
@@ -354,6 +372,10 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
                         if depth > 0:
                             for n in nest:
                                 (cond,sense,_) = n
+                                if cond == "IDM21R":
+                                    if sense:
+                                        flag = -1
+                                    continue
                                 if sense:
                                     if cond:
                                         if not api in cond and not (-subapi) in cond:

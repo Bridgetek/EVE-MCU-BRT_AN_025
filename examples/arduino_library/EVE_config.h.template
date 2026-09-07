@@ -56,7 +56,6 @@
 #undef EVE_TOUCH_ADDR
 #undef EVE_TOUCH_TYPE
 
-
 #if IS_EVE_API(2,3,4)
 // Enable or Disable custom touch FW load
 #undef EVE_CUSTOM_TOUCH

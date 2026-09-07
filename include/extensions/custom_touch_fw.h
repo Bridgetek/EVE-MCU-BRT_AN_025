@@ -40,8 +40,12 @@
 #ifndef _EVE_CUSTOM_TOUCH_H
 #define _EVE_CUSTOM_TOUCH_H
 
+#if defined(EVE_SUPPORT_CUSTOM_TOUCH) && defined(EVE_CUSTOM_TOUCH)
+
 /* CUSTOM TOUCH */
 
 int eve_loadcustomtouch(void);
+
+#endif // defined(EVE_SUPPORT_CUSTOM_TOUCH) && defined(EVE_CUSTOM_TOUCH)
 
 #endif /* _EVE_CUSTOM_TOUCH_H */
