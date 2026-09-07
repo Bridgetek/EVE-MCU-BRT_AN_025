@@ -103,7 +103,7 @@ static uint16_t profileCmdPointer = 0x0000;
 int HAL_EVE_Init(void)
 {
 
-    if (lcd_panel_init() < 0)
+    if (lcd_driver_init() < 0)
     {
         err_printf("LCD panel initialisation Failed.\n");
         return -1;

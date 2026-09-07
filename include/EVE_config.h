@@ -197,7 +197,7 @@
 
 /**
  * @brief Enable optional LCD panel controller initialisation.
- * @details If this macro is defined then lcd_panel_init() from the
+ * @details If this macro is defined then lcd_driver_init() from the
  *      "lcd_panel_init.c" file is called before EVE is initialised in EVE_Hal.c.
  * 
  *      The LCD panel controller interface requires MCU-specific support

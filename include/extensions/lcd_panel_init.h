@@ -42,7 +42,7 @@
 
 /* LCD INIT */
 
-int lcd_panel_init(void);
+int lcd_driver_init(void);
 
 /* LCD INIT END */
 

@@ -84,7 +84,7 @@ int HAL_EVE_Init(void)
 {
     // Initialise the LCD panel driver before the MCU/EVE interface, where required.
 #if defined(EVE_LCD_INIT)
-    if (lcd_panel_init() != 0)
+    if (lcd_driver_init() != 0)
     {
         EVE_DEBUG_ERROR("LCD panel initialisation failed.\n");
         return -1;

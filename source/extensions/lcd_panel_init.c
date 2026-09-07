@@ -2,7 +2,7 @@
  * @file lcd_panel_init.c
  * @brief Optional LCD panel controller initialisation support.
  *
- * @details  Provides the lcd_panel_init() function, which is called 
+ * @details  Provides the lcd_driver_init() function, which is called 
  *      from EVE_Hal.c when EVE_LCD_INIT is defined before EVE initialisation.
  *      MCU-specific functionality is required to implement the interface
  *      between the host MCU and the LCD panel controller.
@@ -297,7 +297,7 @@ static inline void IDM204021R_LCD_Init(void)
 /**
  * @brief Initialise the LCD panel driver, where required.
  */
-int lcd_panel_init(void)
+int lcd_driver_init(void)
 {
 
 #if defined(EVE_MODULE) && (EVE_MODULE == EVE_IDM204021R)
