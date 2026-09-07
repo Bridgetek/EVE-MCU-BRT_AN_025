@@ -58,7 +58,7 @@
 
 // Used to run LCD initialisation where required 
 #if defined(EVE_LCD_INIT)
-#include <extensions/lcd_panel_inith>
+#include <extensions/lcd_panel_init.h>
 #endif
 
 /* EVE HAL INCLUDES END */
