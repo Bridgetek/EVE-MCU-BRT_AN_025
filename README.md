@@ -559,7 +559,7 @@ Will reset the co-processor after an exception is reported by EVE_LIB_AwaitCoPro
 
 #### EVE_LIB_GetCoProSpace
 
-Returns the sapce remaining for further commands to be sent to the co-processor.
+Returns the space remaining for further commands to be sent to the co-processor.
 
 | EVE1 | EVE2 | EVE3 | EVE4 | EVE5 |
 | ---  | ---  | ---  | ---  | ---  |
@@ -577,6 +577,65 @@ The number of free bytes in the co-processor circular buffer.
 **Format:** 
 
 `uint16_t EVE_LIB_GetCoProSpace(void)`
+
+#### EVE_LIB_BeginCoProProfile
+
+Resets the co-processor list profiling length.
+
+| EVE1 | EVE2 | EVE3 | EVE4 | EVE5 |
+| ---  | ---  | ---  | ---  | ---  |
+| Yes  | Yes  | Yes  | Yes  | Yes  |
+
+**NOTE:** This is only compiled if the macro `EVE_COPROC_PROFILE` is defined.
+
+**Detailed Description:**
+
+Sets the profiling pointer to zero to restart profiling.
+
+**Format:** 
+
+`void EVE_LIB_BeginCoProProfile(void)`
+
+#### EVE_LIB_GetCoProProfile
+
+Size of co-processor list since last reset.
+
+| EVE1 | EVE2 | EVE3 | EVE4 | EVE5 |
+| ---  | ---  | ---  | ---  | ---  |
+| Yes  | Yes  | Yes  | Yes  | Yes  |
+
+**NOTE:** This is only compiled if the macro `EVE_COPROC_PROFILE` is defined.
+
+**Detailed Description:**
+
+Obtains the current profiling pointer for the co-processor list.
+
+**Returns:** The number of instructions added to the co-processor list since 
+the last reset of the profiling pointer.
+
+**Format:** 
+
+`uint16_t EVE_LIB_GetCoProProfile(void)`
+
+#### EVE_LIB_GetDlProfile
+
+Size of display list.
+
+| EVE1 | EVE2 | EVE3 | EVE4 | EVE5 |
+| ---  | ---  | ---  | ---  | ---  |
+| Yes  | Yes  | Yes  | Yes  | Yes  |
+
+**NOTE:** This is only compiled if the macro `EVE_COPROC_PROFILE` is defined.
+
+**Detailed Description:**
+
+Obtains the current size of the display list.
+
+**Returns:** The number of instructions instructions currently in the display list.
+
+**Format:** 
+
+`uint16_t EVE_LIB_GetDlProfile(void)`
 
 #### EVE_LIB_Int
 
