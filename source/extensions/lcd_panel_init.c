@@ -54,10 +54,8 @@
  * ============================================================================
  */
 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
+/* Include EVE-MCU-Dev library API layer */
+#include <EVE.h> 
 
 #if defined(EVE_LCD_INIT)
 

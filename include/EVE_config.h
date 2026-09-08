@@ -41,10 +41,7 @@
 #ifndef _EVE_CONFIG_H
 #define _EVE_CONFIG_H
 
-/*
- * Include the EVE configuration defintions.
- */
-#include <EVE_defs.h>
+/* EVE CONFIG */
 
 /**
  * @brief EVE device and screen configuration file.

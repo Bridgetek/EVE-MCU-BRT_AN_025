@@ -52,12 +52,8 @@
 #include <stdint.h> // For Uint8/16/32 and Int8/16/32 data types
 #include <machine/endian.h>
 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
-/* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
-#include <HAL.h> 
+/* Include EVE-MCU-Dev library */
+#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 

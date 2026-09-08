@@ -47,12 +47,8 @@
 #include <string.h>
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
-/* Include the EVE debug-output macro definitions */
-#include <EVE_debug.h>
+/* Include EVE-MCU-Dev library */
+#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
@@ -782,18 +778,6 @@ uint8_t HAL_WaitCmdFifoEmpty(uint32_t timeout)
     if (readCmdPointer & 1)
     {
         // Return 0xFF (EVE_COPRO_STATUS_EXCEPTION) if an error occurred.
-#if DEBUG_LEVEL > 0
-#if IS_EVE_API(3,4,5)
-        char message[256];
-
-        memset(message, 0, sizeof(message));
-        EVE_LIB_GetCoProException(message);
-        EVE_DEBUG_ERROR("Co-processor exception: %s\n", message);
-#else // IS_EVE_API(3,4,5)
-        EVE_DEBUG_ERROR("Co-processor exception\n");
-#endif // IS_EVE_API(3,4,5)
-#endif // DEBUG_LEVEL
-        
         return EVE_COPRO_STATUS_EXCEPTION;
     }
     else if (timeout)
@@ -801,9 +785,6 @@ uint8_t HAL_WaitCmdFifoEmpty(uint32_t timeout)
         // Return 0xFE (EVE_COPRO_STATUS_TIMEOUT) if a timeout occurred.
         if ((curtime - starttime) > timeout)
         {
-#if DEBUG_LEVEL > 0
-            EVE_DEBUG_ERROR("Co-processor timeout\n");
-#endif // DEBUG_LEVEL
             return EVE_COPRO_STATUS_TIMEOUT;
         }
     }

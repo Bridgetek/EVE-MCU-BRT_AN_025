@@ -60,16 +60,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
+/* Include EVE-MCU-Dev library */
+#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
-/* Include the EVE debug-output macro definitions */
-#include <EVE_debug.h>
 
 #include "quadspi.h"
 

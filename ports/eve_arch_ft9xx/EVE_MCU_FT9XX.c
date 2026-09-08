@@ -53,10 +53,10 @@
 #include <ft900_spi.h>
 #include <ft900_gpio.h>
 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
+/* Include EVE-MCU-Dev library */
+#include <EVE.h>
+/* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
+#include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
@@ -214,29 +214,15 @@ int MCU_Setup(void)
 {
     /* QSPI configuration */
 #if defined EVE_QSPI_ENABLE
-
-#if IS_EVE_API(2,3,4)
-    // Turn on EVE quad-SPI for FT81x/BT81x devices.
-    MCU_CSlow();
-    MCU_SPIWrite24(MCU_htobe32((EVE_REG_SPI_WIDTH << 8) | (1 << 31)));
-    MCU_SPIWrite8(2);
-    MCU_CShigh();
-
+#if IS_EVE_API(2,3,4,5)
+    /* Select QSPI after initialisation complete. */
+    HAL_SetSPIMode(2);
     // Turn on FT9xx quad-SPI.
     spi_option(SPIM, spi_option_bus_width, 4);
-#elif IS_EVE_API(5)
-    // Turn on EVE quad-SPI for BT82x devices.
-    MCU_CSlow();
-    MCU_SPIWrite32(MCU_htobe32((EVE_REG_SPI_WIDTH << 8) | (1 << 31)));
-    MCU_SPIWrite32(2);
-    MCU_CShigh();
-
-    // Turn on FT9xx quad-SPI.
-    spi_option(SPIM, spi_option_bus_width, 4);
-#endif // IS_EVE_API(2,3,4,5)
-    
     isQuadSPI = TRUE;
-
+#else // IS_EVE_API(2,3,4,5)
+    isQuadSPI = FALSE;
+#endif
 #endif // EVE_QSPI_ENABLE
 
     /* Additional SPI Configuration */

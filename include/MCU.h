@@ -45,30 +45,16 @@
 #define _EVE_MCU_HEADER_H
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
 
-/**
- * @brief MCU allows unalligned accesses to memory.
- * @details Set to zero if unaligned accesses not allowed, e.g. on
- *      microcontrolles. This has been added to support BT82x.
- *      If a platform does support unaligned access please raise an 
- *      issue in GitHub.
- */
-#if defined (PLATFORM_STM32_CUBE) || defined(PLATFORM_FT9XX) \
-    || defined(PLATFORM_STM32) ||  defined(PLATFORM_PIC) \
-    || defined(PLATFORM_NXPK64) || defined(PLATFORM_MSP430) \
-    || defined(PLATFORM_ESP32) || defined(PLATFORM_BEAGLEBONE) \
-    || defined(PLATFORM_RASPBERRYPI) || defined(PLATFORM_RP2040) \
-    || defined(PLATFORM_MSPM0)
-#define MCU_UNALIGNED_ACCESSES 0
-#elif defined(ARDUINO)
-#define MCU_UNALIGNED_ACCESSES 0
-#else
-#define MCU_UNALIGNED_ACCESSES 1
+/* -------------------------------------------------------------------------
+ * Prerequisite: This file must be included after EVE.h so that EVE_API is 
+ * defined and the IS_EVE_API and EVE_API_SELECT macros are available.
+ * ------------------------------------------------------------------------- */
+#if !(defined(EVE_API) && defined(IS_EVE_API) && defined(EVE_API_SELECT))
+#error "MCU.h requires to be included after EVE.h (defines EVE_API)."
 #endif
+
+/* EVE MCU */
 
 /**
  * @brief MCU allows large SPI transfers.

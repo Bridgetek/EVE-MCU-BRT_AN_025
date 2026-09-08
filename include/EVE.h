@@ -47,7 +47,7 @@
 /*
  * Include the EVE configuration defintions.
  */
-#include <EVE_defs.h>
+#include "EVE_defs.h"
 
 /*
  * Include the EVE configuration to select the EVE API.
@@ -57,12 +57,12 @@
 /*
  * Include the EVE settings derived from the EVE configuration.
  */
-#include <EVE_settings.h>
+#include "EVE_settings.h"
 
 /*
  * Include the EVE debug-output macros.
  */
-#include <EVE_debug.h>
+#include "EVE_debug.h"
 
 #if IS_EVE_API(1, 2, 3, 4, 5)
     #include "EVE_commands.h"

@@ -41,6 +41,8 @@
 #ifndef _EVE_DEFS_H
 #define _EVE_DEFS_H
 
+/* EVE DEFS */
+
 /**
  * @note IMPORTANT This header file must be included before EVE.h.
  * @details The macro EVE_DEVICE and the panel display settings (EVE_DISP_*) must 

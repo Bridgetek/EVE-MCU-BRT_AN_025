@@ -52,12 +52,11 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
+/* Include EVE-MCU-Dev library API layer */
+#include <EVE.h> 
 /* Include functions for EVE-MCU-Dev Hardware Abstraction layer */
 #include <HAL.h>
+/* Include functions for EVE-MCU-Dev library platform layer */
 #include <Platform.h>
 
 // Used to run LCD initialisation where required 
@@ -1019,18 +1018,6 @@ uint8_t HAL_WaitCmdFifoEmpty(uint32_t timeout)
     if (readCmdPointer & 1)
     {
         // Return 0xFF (EVE_COPRO_STATUS_EXCEPTION) if an error occurred.
-#ifdef EVE_HAL_ERROR
-#if IS_EVE_API(3,4,5)
-        char message[256];
-
-        memset(message, 0, sizeof(message));
-        EVE_LIB_GetCoProException(message);
-        err_printf("Co-processor exception: %s\n", message);
-#else // IS_EVE_API(3,4,5)
-        err_printf("Co-processor exception\n");
-#endif // IS_EVE_API(3,4,5)
-#endif // EVE_HAL_ERROR
-        
         return EVE_COPRO_STATUS_EXCEPTION;
     }
     else if (timeout)
@@ -1038,9 +1025,6 @@ uint8_t HAL_WaitCmdFifoEmpty(uint32_t timeout)
         // Return 0xFE (EVE_COPRO_STATUS_TIMEOUT) if a timeout occurred.
         if ((curtime - starttime) > timeout)
         {
-#if DEBUG_LEVEL > 0
-            EVE_DEBUG_ERROR("Co-processor timeout\n");
-#endif // DEBUG_LEVEL
             return EVE_COPRO_STATUS_TIMEOUT;
         }
     }

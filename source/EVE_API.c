@@ -47,17 +47,8 @@
 
 /* Include EVE-MCU-Dev library API layer */
 #include <EVE.h> 
-/* Include configuration for EVE-MCU-Dev library */
-#include <EVE_config.h>  
-/* Include settings and macros for EVE-MCU-Dev library */
-#include <EVE_settings.h> 
-/* Include the EVE debug-output macro definitions */
-#include <EVE_debug.h>
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
-/* Include functions for EVE-MCU-Dev library MCU layer */
-#include <MCU.h>
-
 
 #if IS_EVE_API(5)
 #include <extensions/bt82x_patch.h>
@@ -391,18 +382,48 @@ void EVE_LIB_EndCoProList(void)
 #endif
 }
 
+static int EVE_API_WaitCmdFifoEmpty(uint32_t timeout)
+{
+    int status;
+
+    status = (int)HAL_WaitCmdFifoEmpty(timeout);
+
+    if (status == EVE_COPRO_STATUS_EXCEPTION)
+    {
+#if DEBUG_LEVEL > 0
+#if IS_EVE_API(3,4,5)
+        char message[256];
+
+        memset(message, 0, sizeof(message));
+        EVE_LIB_GetCoProException(message);
+        EVE_DEBUG_ERROR("Co-processor exception: %s\n", message);
+#else // IS_EVE_API(3,4,5)
+        EVE_DEBUG_ERROR("Co-processor exception\n");
+#endif // IS_EVE_API(3,4,5)
+#endif // DEBUG_LEVEL
+    }
+    else if (status == EVE_COPRO_STATUS_TIMEOUT)
+    {
+#if DEBUG_LEVEL > 0
+            EVE_DEBUG_ERROR("Co-processor timeout\n");
+#endif // DEBUG_LEVEL
+    }
+
+    return status;
+}
+
 // Waits for the read and write pointers to become equal
 int EVE_LIB_AwaitCoProEmpty(void)
 {
     // Await completion of processing.
-    return HAL_WaitCmdFifoEmpty(0);
+    return EVE_API_WaitCmdFifoEmpty(0);
 }
 
 // Waits for the read and write pointers to become equal with a millisecond timeout
 int EVE_LIB_AwaitCoProEmptyTimeout(uint32_t timeout)
 {
     // Await completion of processing
-    return HAL_WaitCmdFifoEmpty(timeout);
+    return EVE_API_WaitCmdFifoEmpty(timeout);
 }
 
 // Recovers the co-processor as described in "Fault Scenarios" in the Programming Guide
@@ -762,15 +783,6 @@ uint16_t EVE_LIB_SendString(const char* string)
     length = ((strlen(string) + 1) + 3) & (~3);
     CommandSize = length;
 
-#if MCU_UNALIGNED_ACCESSES 
-    // Send string as 32 bit data.
-    while (length)
-    {
-        HAL_WriteCmd(*(uint32_t*)string);
-        string += 4;
-        length -= 4;
-    }
-#else
     uint32_t val32;
     while (length)
     {
@@ -781,7 +793,6 @@ uint16_t EVE_LIB_SendString(const char* string)
         HAL_WriteCmd(val32);
         length -= 4;
     }
-#endif
 
     return CommandSize;
 }

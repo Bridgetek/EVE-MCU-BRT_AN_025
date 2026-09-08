@@ -79,10 +79,10 @@
 #include "ftd2xx.h"
 #include "libmpsse_spi.h"
 
+/* Include EVE-MCU-Dev library */
+#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
-/* Include the EVE debug-output macro definitions */
-#include <EVE_debug.h>
 
 /* EVE MCU HEADER END */
 

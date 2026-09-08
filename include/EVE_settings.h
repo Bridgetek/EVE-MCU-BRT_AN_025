@@ -41,18 +41,13 @@
 #ifndef _EVE_SETTINGS_H
 #define _EVE_SETTINGS_H
 
-/*
- * Include the EVE configuration defintions.
- */
-#include <EVE_defs.h>
+/* -------------------------------------------------------------------------
+ * Prerequisite: This file must be included by EVE.h.
+ * ------------------------------------------------------------------------- */
 
-/*
- * Include the EVE configuration to select the EVE API.
- */
-#include <EVE_config.h>
+ /* EVE SETTINGS */
 
 /**
- * @note IMPORTANT This header file must be included before EVE.h.
  * @details The macro EVE_DEVICE and the panel display settings (EVE_DISP_*) must 
  *      be configured in this file. For BT82x the EVE_RAM_G_CONFIG_SIZE macro must
  *      also be configured.

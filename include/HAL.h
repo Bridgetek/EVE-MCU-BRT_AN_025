@@ -48,6 +48,14 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
+/* -------------------------------------------------------------------------
+ * Prerequisite: This file must be included after EVE.h so that EVE_API is 
+ * defined and the IS_EVE_API and EVE_API_SELECT macros are available.
+ * ------------------------------------------------------------------------- */
+#if !(defined(EVE_API) && defined(IS_EVE_API) && defined(EVE_API_SELECT))
+#error "HAL.h requires to be included after EVE.h (defines EVE_API)."
+#endif
+
 /* EVE HAL */
 
 /**

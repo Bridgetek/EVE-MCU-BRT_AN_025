@@ -74,6 +74,8 @@
 #error "EVE_commands.h requires to be included by EVE.h (defines EVE_API)."
 #endif
 
+/* EVE COMMANDS */
+
 /* =========================================================================
  * Sentinel for a register / constant absent on a given generation.
  * For CMD opcodes, guard usage sites with IS_EVE_API rather than relying
