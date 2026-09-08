@@ -213,7 +213,7 @@
  */
 //@{
 #ifndef EVE_LCD_INIT
-#define EVE_LCD_INIT
+#undef EVE_LCD_INIT
 #endif
 //@}
 
