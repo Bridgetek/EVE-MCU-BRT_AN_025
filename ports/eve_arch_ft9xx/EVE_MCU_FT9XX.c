@@ -57,6 +57,8 @@
 #include <EVE_config.h>  
 /* Include settings and macros for EVE-MCU-Dev library */
 #include <EVE_settings.h> 
+/* Include the EVE register definitions */
+#include <EVE_registers.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
