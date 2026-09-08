@@ -37,13 +37,13 @@
   * ============================================================================
   */
 
-#ifndef _EVE_LCD_INIT_H
-#define _EVE_LCD_INIT_H
+#ifndef _EVE_LCD_PANEL_INIT_H
+#define _EVE_LCD_PANEL_INIT_H
 
-/* LCD INIT */
+/* LCD PANEL INIT */
 
 int lcd_driver_init(void);
 
-/* LCD INIT END */
+/* LCD PANEL INIT END */
 
-#endif /* _EVE_LCD_INIT_H */
+#endif /* _EVE_LCD_PANEL_INIT_H */
