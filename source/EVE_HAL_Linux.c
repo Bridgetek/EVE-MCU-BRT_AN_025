@@ -103,12 +103,14 @@ static uint16_t profileCmdPointer = 0x0000;
 // Initialise EVE HAL Layer.
 int HAL_EVE_Init(void)
 {
-
+    // Initialise the LCD panel driver before the MCU/EVE interface, where required.
+#if defined(EVE_LCD_INIT)
     if (lcd_driver_init() < 0)
     {
         err_printf("LCD panel initialisation Failed.\n");
         return -1;
     }
+#endif /* defined(EVE_LCD_INIT) */
 
     if (Platform_Init() < 0)
     {
