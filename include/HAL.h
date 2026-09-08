@@ -1,6 +1,7 @@
 /**
  * @file HAL.h
  * @brief Definitions for accessing the abstraction layer from the API layer.
+ *
  * @details This layer is used by the API layer (in EVE.h) to interface to the hardware layer. 
  *      There is an option of using an MCU style interface implemented in EVE_HAL.c or
  *      a Linux style interface implemented in EVE_HAL_Linux.c. These HAL files

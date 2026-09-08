@@ -1,6 +1,7 @@
 /**
  * @file EVE_registers.h
  * @brief Header file which provides cross-generation EVE register address map.
+ *
  * @details Provides a single unified set of EVE_REG_* macros that resolve to
  *      the correct hardware address for the selected generation at compile time.
  *      The EVE generation is dependent by EVE_DEVICE which is set in EVE_config.h

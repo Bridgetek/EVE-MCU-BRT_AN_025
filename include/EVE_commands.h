@@ -1,6 +1,7 @@
 /**
  * @file EVE_commands.h 
  * @brief Header file which provides cross-generation EVE command and option definitions.
+ *
  * @details Provides a single unified set of EVE_ display list commands and
  *      EVE_CMD_ co-processor commands that correct command codes for the selected 
  *      generation at compile time.
@@ -65,6 +66,8 @@
 
 #ifndef _EVE_COMMANDS_H
 #define _EVE_COMMANDS_H
+
+#include <stdint.h>
 
 /* -------------------------------------------------------------------------
  * Prerequisite: This file must be included by EVE.h so that EVE_API is 

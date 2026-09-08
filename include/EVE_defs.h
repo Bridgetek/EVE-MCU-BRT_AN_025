@@ -1,6 +1,10 @@
 /**
  * @file EVE_defs.h
- * @brief Header file with preset definitions use in configuring the target application in EVE_config.h.
+ * @brief Header file with preset definitions used in configuring the target application in EVE_config.h.
+ *
+ * @details Defines the supported EVE devices, modules, panels, display
+ *      resolutions, RAM_G sizes and configuration options used by
+ *      EVE_config.h and other library headers.
  */
 /*
  * ============================================================================
@@ -42,16 +46,6 @@
 #define _EVE_DEFS_H
 
 /* EVE DEFS */
-
-/**
- * @note IMPORTANT This header file must be included before EVE.h.
- * @details The macro EVE_DEVICE and the panel display settings (EVE_DISP_*) must 
- *      be configured in this file. For BT82x the EVE_RAM_G_CONFIG_SIZE macro must
- *      also be configured.
- *      Values from the macros defined in this file can be used in code based on this library. 
- *      To make a custom configuration file, edit this file as required as long as the macros
- *      listed above are correctly defined.
- */
 
 /**
  * @brief Definitions used for target device selection.
