@@ -76,6 +76,8 @@
 #include <EVE_settings.h> 
 /* Include the EVE debug-output macro definitions */
 #include <EVE_debug.h>
+/* Include the EVE register definitions */
+#include <EVE_registers.h> // for EVE_REG_CPURESET write
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
