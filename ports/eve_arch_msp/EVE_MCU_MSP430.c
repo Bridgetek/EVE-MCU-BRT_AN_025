@@ -194,6 +194,8 @@ int MCU_Deinit(void)
     P1DIR  &= ~INT;
     P1REN  |= INT;
     P1OUT  |= INT;
+
+    return 0;
 }
 
 int MCU_Setup(void)

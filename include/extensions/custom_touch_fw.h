@@ -1,5 +1,7 @@
 /**
  * @file custom_touch_fw.h
+ * @brief Header file for adding custom touch firmware support to 
+ *      FT81X/BT88X/BT81X series devices.
  */
  /*
   * ============================================================================

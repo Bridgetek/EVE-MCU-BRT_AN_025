@@ -1,5 +1,8 @@
 /**
  * @file custom_touch_fw.c
+ * @brief Optional custom touch firmware support implementation for
+ *      FT81X/BT88X/BT81X series devices.
+ *
  * @details File holds an array which contains custom touch FW binary data.
  *		  This data can be loaded into the co-processor via the eve_loadcustomtouch()
  *      function to add support for touch controllers to FT81X/BT88X/BT81X series 

@@ -1,5 +1,6 @@
 /**
  * @file lcd_panel_init.h
+ * @brief Header file for Optional LCD panel driver initialisation support.
  */
  /*
   * ============================================================================

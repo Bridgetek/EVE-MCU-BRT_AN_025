@@ -74,7 +74,7 @@
 #include "pico/stdlib.h"
 #include <stdbool.h>
 
-// Pins to match Bridgetek IDM2040-21R board.
+// Pins to match Bridgetek IDM2040-21R module.
 static const uint lcd_cs_pin = 17;
 static const uint lcd_sck_pin = 10;
 static const uint lcd_mosi_pin = 11;
