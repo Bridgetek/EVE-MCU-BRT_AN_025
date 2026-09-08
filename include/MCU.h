@@ -1,6 +1,9 @@
 /**
  * @file MCU.h
  * @brief Embedded header file for access to the MCU layer from the abstraction layer.
+ * @details This file defines the functions required in the MCU layer. The functions
+ *      described in this file are required to be implemented in a port to an MCU
+ *      device. They are called by the HAL layer from the file EVE_HAL.c.
  */
 /*
  * ============================================================================

@@ -1,6 +1,7 @@
 /**
  * @file EVE.h
  * @brief Header file to include to access all required programming interface entry points and definitions.
+ * @details This is the main header file for an application wishing to use the EVE-MCU-Dev library in an application.
  */
 /*
  * ============================================================================

@@ -1,6 +1,9 @@
 /**
  * @file platform.h
- * @brief Linux-like header file for access to the MCU layer from the abstraction layer.
+ * @brief Linux-like header file for access to the platform layer from the abstraction layer.
+ * @details This file defines the functions required in the platform layer. The functions
+ *      described in this file are required to be implemented in a port to a platform
+ *      device. They are called by the HAL layer from the file EVE_HAL_Linux.c.
  */
 /*
  * ============================================================================
