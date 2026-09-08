@@ -91,16 +91,16 @@ add_library(eve_library # EVE library name
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 target_sources(eve_library PRIVATE # EVE library name
         # Source code for MPSSE library
-        ${API_DIRECTORY}/ports/eve_libmpsse/ftdi_infra.c
-        ${API_DIRECTORY}/ports/eve_libmpsse/ftdi_spi.c
-        ${API_DIRECTORY}/ports/eve_libmpsse/ftdi_mid.c
+        ${FTDI_SUBMODULE}/libMPSSE/source/ftdi_infra.c
+        ${FTDI_SUBMODULE}/libMPSSE/source/ftdi_spi.c
+        ${FTDI_SUBMODULE}/libMPSSE/source/ftdi_mid.c
 )
 endif()
 # Header files used for EVE library
 target_include_directories(eve_library PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${API_DIRECTORY}/include
-        ${API_DIRECTORY}/ports/eve_libmpsse # MPSSE Library headers
+        ${FTDI_SUBMODULE}/libMPSSE/include # MPSSE Library headers
 )
 
 # EVE library dependencies
