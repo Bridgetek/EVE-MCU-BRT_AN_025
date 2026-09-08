@@ -59,7 +59,7 @@
 
 #if defined(EVE_LCD_INIT)
 
-/* LCD INIT */
+/* LCD PANEL INIT */
 
 /* INCLUDES ************************************************************************/
 
@@ -308,6 +308,6 @@ int lcd_driver_init(void)
     return 0;
 }
 
-/* LCD INIT */
+/* LCD PANEL INIT */
 
 #endif /* defined(EVE_LCD_INIT) */
