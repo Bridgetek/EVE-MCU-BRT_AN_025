@@ -45,7 +45,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Include functions for EVE-MCU-Dev library API layer */
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h> 
 /* Include the EVE debug-output macro definitions */
 #include <EVE_debug.h>

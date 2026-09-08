@@ -52,7 +52,9 @@
 #include <time.h>
 #endif // _WIN32
 
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
+/* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
 extern uint16_t HAL_GetCmdPointer(void);

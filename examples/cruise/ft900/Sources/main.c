@@ -47,7 +47,8 @@
 #include <ft900.h>
 #include <ft900_dlog.h>
 #include <ft900_memctl.h>
-/* Include functions for EVE-MCU-Dev library API layer */
+
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "eve_example.h"

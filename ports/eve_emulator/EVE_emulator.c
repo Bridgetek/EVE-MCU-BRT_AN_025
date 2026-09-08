@@ -70,12 +70,14 @@
 #include "EVE_Emulator/include/bt8xxemu_inttypes.h"
 #include "EVE_Emulator/include/bt8xxemu.h"
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> // for IS_EVE_API() macro
-/* Include functions for EVE-MCU-Dev library MCU layer */
-#include <MCU.h>
+/* Include configuration for EVE-MCU-Dev library */
+#include <EVE_config.h>  
+/* Include settings and macros for EVE-MCU-Dev library */
+#include <EVE_settings.h> 
 /* Include the EVE debug-output macro definitions */
 #include <EVE_debug.h>
+/* Include functions for EVE-MCU-Dev library MCU layer */
+#include <MCU.h>
 
 /* EVE MCU HEADER END */
 

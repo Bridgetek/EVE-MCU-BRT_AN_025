@@ -54,7 +54,7 @@
 #include "driver/gpio.h"
 #include "soc/rtc.h"
 
-/* Include functions for EVE-MCU-Dev library API layer */
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "eve_example.h"

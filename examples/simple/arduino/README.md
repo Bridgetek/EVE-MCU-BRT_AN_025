@@ -31,6 +31,7 @@ Sketch name is simple_arduino
 ..\..\..\include\EVE_commands.h -> simple_arduino\EVE_commands.h
 ..\..\..\include\EVE_debug.h -> simple_arduino\EVE_debug.h
 ..\..\..\include\EVE_registers.h -> simple_arduino\EVE_registers.h
+..\..\..\include\EVE_settings.h -> simple_arduino\EVE_settings.h
 ..\..\..\source\EVE_API.c -> simple_arduino\EVE_API.ino
 ..\..\..\source\EVE_HAL.c -> simple_arduino\EVE_HAL.ino
 ..\..\..\ports\eve_arch_arduino\eve_arch_arduino.ino -> simple_arduino\eve_arch_arduino.ino
@@ -55,6 +56,7 @@ The following files **must** be copied into the `simple_arduino` directory to be
   - EVE_config.h
   - EVE_defs.h
   - EVE_registers.h
+  - EVE_settings.h
 - From the `source` directory add the library files:
   - EVE_API.c
   - EVE_HAL.c
@@ -98,6 +100,7 @@ All files with a ".c" extension must be renamed to have the extension ".ino". In
 - `#include <EVE_defs.h>` --> `#include "EVE_defs.h"`
 - `#include <EVE_debug.h>` --> `#include "EVE_debug.h"`
 - `#include <EVE_registers.h>` --> `#include "EVE_registers.h"`
+- `#include <EVE_settings.h>` --> `#include "EVE_settings.h"`
 - `#include <extensions/bt82x_patch.h>` --> `#include "bt82x_patch.h"`
 - `#include <extensions/custom_touch_fw.h>` --> `#include "custom_touch_fw.h"`
 - `#include <extensions/lcd_panel_init.h>` --> `#include "lcd_panel_init.h"`
@@ -116,7 +119,8 @@ EVE_commands.h
 EVE_config.h 
 EVE_defs.h 
 EVE_debug.h 
-EVE_registers.h   
+EVE_registers.h
+EVE_settings.h    
 EVE_API.ino   
 EVE_HAL.ino   
 bt82x_patch.ino      

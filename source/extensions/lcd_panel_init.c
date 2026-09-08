@@ -1,21 +1,21 @@
 /**
  * @file lcd_panel_init.c
- * @brief Optional LCD panel controller initialisation support.
+ * @brief Optional LCD panel driver initialisation support.
  *
  * @details  Provides the lcd_driver_init() function, which is called 
  *      from EVE_Hal.c when EVE_LCD_INIT is defined before EVE initialisation.
  *      MCU-specific functionality is required to implement the interface
- *      between the host MCU and the LCD panel controller.
+ *      between the host MCU and the LCD panel driver.
  *
- *      The LCD controller may share the SPI interface used by EVE, provided
+ *      The LCD driver may share the SPI interface used by EVE, provided
  *      that a separate chip-select (CS#) signal is used. Alternatively, a 
  *      separate SPI interface may be used where implemented by the target hardware.
  *
- *      LCD controller commands may also be sent by bit-banging the required
+ *      LCD driver commands may also be sent by bit-banging the required
  *      GPIO signals instead of using a hardware SPI peripheral.
  *
  * @note This file includes an example implementation for the ST7701S LCD 
- *      controller used on the Bridgetek IDM2040-21R module which utilses a 
+ *      driver used on the Bridgetek IDM2040-21R module which utilses a 
  *      RP2040 MCU and bit banging.
  */
 /*
@@ -54,8 +54,10 @@
  * ============================================================================
  */
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> // for config macros
+/* Include configuration for EVE-MCU-Dev library */
+#include <EVE_config.h>  
+/* Include settings and macros for EVE-MCU-Dev library */
+#include <EVE_settings.h> 
 
 #if defined(EVE_LCD_INIT)
 
@@ -252,14 +254,14 @@ static inline void ST7701S_init(void)
  * @brief Initialise the ST7701S LCD interface on the IDM2040-21R module.
  *
  * Configures the GPIO used by the ST7701S serial interface, resets the
- * display controller, and loads the panel configuration.
+ * display driver, and loads the panel configuration.
  */
 static inline void IDM204021R_LCD_Init(void)
 {
     /* Configure the ST7701S serial interface pins as GPIO outputs.
      *
      * These pins are driven directly to generate the 9-bit command/data
-     * protocol required by the LCD controller. */
+     * protocol required by the LCD driver. */
     gpio_init(lcd_cs_pin);
     gpio_init(lcd_sck_pin);
     gpio_init(lcd_mosi_pin);
@@ -275,7 +277,7 @@ static inline void IDM204021R_LCD_Init(void)
     gpio_put(lcd_mosi_pin, 1);
 
     /* Reset the ST7701S before loading the panel configuration.
-     * This ensures the LCD controller starts from a known state. */
+     * This ensures the LCD driver starts from a known state. */
     gpio_init(lcd_reset_pin);
     gpio_set_dir(lcd_reset_pin, GPIO_OUT);
 

@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "touch.h"

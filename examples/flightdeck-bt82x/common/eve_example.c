@@ -43,7 +43,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-/* Include functions for EVE-MCU-Dev library API layer */
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h> 
 
 #include "patch_lvds.h"

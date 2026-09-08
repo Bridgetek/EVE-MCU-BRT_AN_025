@@ -45,16 +45,19 @@
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 #include <stdarg.h>
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> // for IS_EVE_API() macro
+/* Include EVE-MCU-Dev library API layer */
+#include <EVE.h> 
+/* Include configuration for EVE-MCU-Dev library */
+#include <EVE_config.h>  
+/* Include settings and macros for EVE-MCU-Dev library */
+#include <EVE_settings.h> 
+/* Include the EVE debug-output macro definitions */
+#include <EVE_debug.h>
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
-/* Include the EVE debug-output macro definitions */
-#include <EVE_debug.h>
-/* Include the EVE configuration to select the EVE API */
-#include <EVE_config.h>
+
 
 #if IS_EVE_API(5)
 #include <extensions/bt82x_patch.h>

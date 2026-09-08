@@ -49,8 +49,8 @@
   * ============================================================================
   */
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> // for config macros
+/* Include EVE-MCU-Dev library API layer */
+#include <EVE.h>
 
 #if defined(EVE_SUPPORT_CUSTOM_TOUCH) && defined(EVE_CUSTOM_TOUCH)
 /* CUSTOM TOUCH */

@@ -41,6 +41,7 @@
  
 #include <stdint.h>
 
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "sevenseg.h"

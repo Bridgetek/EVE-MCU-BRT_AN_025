@@ -514,6 +514,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\include\EVE_registers.h</FilePath>
             </File>
+              <File>
+              <FileName>EVE_settings.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\include\EVE_settings.h</FilePath>
+            </File>
             <File>
               <FileName>HAL.h</FileName>
               <FileType>5</FileType>

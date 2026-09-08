@@ -52,8 +52,10 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h>
+/* Include configuration for EVE-MCU-Dev library */
+#include <EVE_config.h>  
+/* Include settings and macros for EVE-MCU-Dev library */
+#include <EVE_settings.h> 
 /* Include functions for EVE-MCU-Dev Hardware Abstraction layer */
 #include <HAL.h>
 #include <Platform.h>

@@ -42,7 +42,7 @@
 #include <stdint.h>
 #include <string.h>
 
-/* Include functions for EVE-MCU-Dev library API layer */
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "eve_example.h"

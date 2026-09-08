@@ -36,6 +36,7 @@ Sketch name is gyminterval_arduino
 ..\..\..\include\EVE_defs.h -> gyminterval_arduino\EVE_defs.h
 ..\..\..\include\EVE_commands.h -> gyminterval_arduino\EVE_commands.h
 ..\..\..\include\EVE_debug.h -> gyminterval_arduino\EVE_debug.h
+..\..\..\include\EVE_settings.h -> gyminterval_arduino\EVE_settings.h
 ..\..\..\include\EVE_registers.h -> gyminterval_arduino\EVE_registers.h
 ..\..\..\source\EVE_API.c -> gyminterval_arduino\EVE_API.ino
 ..\..\..\source\EVE_HAL.c -> gyminterval_arduino\EVE_HAL.ino
@@ -60,6 +61,7 @@ The following files **must** be copied into the `gyminterval_arduino` directory 
   - EVE_commands.h
   - EVE_config.h
   - EVE_defs.h
+  - EVE_settings.h
   - EVE_registers.h
 - From the `source` directory add the library files:
   - EVE_API.c
@@ -105,6 +107,7 @@ All files with a ".c" extension must be renamed to have the extension ".ino". In
 - `#include <EVE_config.h>` --> `#include "EVE_config.h"`
 - `#include <EVE_defs.h>` --> `#include "EVE_defs.h"`
 - `#include <EVE_debug.h>` --> `#include "EVE_debug.h"`
+- `#include <EVE_settings.h>` --> `#include "EVE_settings.h"`
 - `#include <EVE_registers.h>` --> `#include "EVE_registers.h"`
 - `#include <extensions/bt82x_patch.h>` --> `#include "bt82x_patch.h"`
 - `#include <extensions/custom_touch_fw.h>` --> `#include "custom_touch_fw.h"`
@@ -124,6 +127,7 @@ EVE_commands.h
 EVE_config.h 
 EVE_defs.h 
 EVE_debug.h 
+EVE_settings.h   
 EVE_registers.h   
 EVE_API.ino   
 EVE_HAL.ino   

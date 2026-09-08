@@ -469,7 +469,7 @@ def template(file_in, file_out, ardver, cpplib, api, subapi, str_full_version, a
             exit(0)
 
 # Collate header files needed (from include directory)
-dist_inc_files = ["HAL.h", "MCU.h", "EVE_debug.h", "EVE_registers.h", "EVE_commands.h", "EVE_defs.h"]
+dist_inc_files = ["HAL.h", "MCU.h", "EVE_debug.h", "EVE_registers.h", "EVE_commands.h", "EVE_defs.h", "EVE_settings.h"]
 
 # Destination API file
 dest_api = os.path.join(dest_lib,"EVE_API.c")

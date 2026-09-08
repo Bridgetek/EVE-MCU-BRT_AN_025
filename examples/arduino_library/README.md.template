@@ -256,9 +256,9 @@ The required firmware data and loading functions are provided by the custom touc
 
 ##### LCD Panel Initialisation
 
-`EVE_LCD_INIT` enables optional LCD panel controller initialisation before EVE is initialised.
+`EVE_LCD_INIT` enables optional LCD panel driver initialisation before EVE is initialised.
 
-LCD panel initialisation requires MCU-specific functionality to provide the interface between the host MCU and the LCD panel controller. This interface may share the SPI bus used by EVE with a separate CS# signal, use a separate SPI interface, or use GPIO bit-banging where appropriate.
+LCD panel initialisation requires MCU-specific functionality to provide the interface between the host MCU and the LCD panel driver. This interface may share the SPI bus used by EVE with a separate CS# signal, use a separate SPI interface, or use GPIO bit-banging where appropriate.
 
 LCD panel initialisation is disabled by default in the Arduino library and requires a suitable Arduino-specific implementation before it can be enabled.
 

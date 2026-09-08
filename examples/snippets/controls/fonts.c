@@ -42,6 +42,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "fonts.h"

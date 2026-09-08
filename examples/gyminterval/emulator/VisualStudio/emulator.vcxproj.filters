@@ -91,6 +91,9 @@
     <ClInclude Include="..\..\..\..\include\EVE_registers.h">
       <Filter>Library\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\EVE_settings.h">
+      <Filter>Library\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\snippets\controls\fonts.h">
       <Filter>Example\snippets</Filter>
     </ClInclude>

@@ -115,6 +115,7 @@ copy /Y ..\..\..\..\ports\eve_emulator\EVE_Emulator\bin\zlib.dll "$(OutDir)zlib.
     <ClInclude Include="..\..\..\..\include\EVE_config.h" />
     <ClInclude Include="..\..\..\..\include\EVE_defs.h" />
     <ClInclude Include="..\..\..\..\include\EVE_registers.h" />
+    <ClInclude Include="..\..\..\..\include\EVE_settings.h" />
     <ClInclude Include="..\..\..\..\include\HAL.h" />
     <ClInclude Include="..\..\..\..\include\extensions\bt82x_patch.h" />
     <ClInclude Include="..\..\..\..\include\extensions\custom_touch_fw.h" />

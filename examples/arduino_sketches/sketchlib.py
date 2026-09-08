@@ -33,6 +33,7 @@ def copy_norm(src_file, dest_file, flatten_filter):
                 line = line.replace("<MCU.h>", "\"MCU.h\"")
                 line = line.replace("<EVE_debug.h>", "\"EVE_debug.h\"")
                 line = line.replace("<EVE_registers.h>", "\"EVE_registers.h\"")
+                line = line.replace("<EVE_settings.h>", "\"EVE_settings.h\"")
                 line = line.replace("<EVE_commands.h>", "\"EVE_commands.h\"")
                 line = line.replace("<EVE_config.h>", "\"EVE_config.h\"")
                 line = line.replace("<EVE_defs.h>", "\"EVE_defs.h\"")

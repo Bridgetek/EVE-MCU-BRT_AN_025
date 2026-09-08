@@ -151,6 +151,9 @@
     <ClInclude Include="..\..\..\..\include\EVE_registers.h">
       <Filter>Library\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\EVE_settings.h">
+      <Filter>Library\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\common\patch_medinfo.h">
       <Filter>Example</Filter>
     </ClInclude>

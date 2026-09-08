@@ -124,6 +124,9 @@
     <ClInclude Include="..\..\..\..\include\EVE_registers.h">
       <Filter>Library\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\EVE_settings.h">
+      <Filter>Library\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\ports\eve_libft4222\libft4222.h">
       <Filter>Library\ports\eve_libft4222</Filter>
     </ClInclude>

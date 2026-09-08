@@ -63,8 +63,10 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> 
+/* Include configuration for EVE-MCU-Dev library */
+#include <EVE_config.h>  
+/* Include settings and macros for EVE-MCU-Dev library */
+#include <EVE_settings.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 

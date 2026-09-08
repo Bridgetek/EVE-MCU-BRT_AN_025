@@ -61,7 +61,7 @@
 #undef EVE_CUSTOM_TOUCH
 #endif
 
-// Disable optional LCD panel controller initialisation
+// Disable optional LCD panel driver initialisation
 #undef EVE_LCD_INIT
 
 // Explicitly disable QuadSPI

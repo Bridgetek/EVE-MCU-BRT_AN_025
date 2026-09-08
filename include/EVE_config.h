@@ -41,6 +41,11 @@
 #ifndef _EVE_CONFIG_H
 #define _EVE_CONFIG_H
 
+/*
+ * Include the EVE configuration defintions.
+ */
+#include <EVE_defs.h>
+
 /**
  * @brief EVE device and screen configuration file.
  * @note IMPORTANT This header file must be included by EVE.h.
@@ -69,7 +74,7 @@
  */
 //@{
 #ifndef EVE_MODULE
-#define EVE_MODULE EVE_NO_MODULE 
+#define EVE_MODULE EVE_NO_MODULE
 #endif
 //@}
 
@@ -196,19 +201,19 @@
 //@}
 
 /**
- * @brief Enable optional LCD panel controller initialisation.
+ * @brief Enable optional LCD panel driver initialisation.
  * @details If this macro is defined then lcd_driver_init() from the
  *      "lcd_panel_init.c" file is called before EVE is initialised in EVE_Hal.c.
  * 
- *      The LCD panel controller interface requires MCU-specific support
+ *      The LCD panel driver interface requires MCU-specific support
  *      and may use the SPI interface shared with EVE using a separate CS#
  *      signal, a separate SPI interface, or GPIO bit-banging.
- *      If this macro is undefined then no LCD panel controller
+ *      If this macro is undefined then no LCD panel driver
  *      initialisation is performed.
  */
 //@{
 #ifndef EVE_LCD_INIT
-#undef EVE_LCD_INIT
+#define EVE_LCD_INIT
 #endif
 //@}
 

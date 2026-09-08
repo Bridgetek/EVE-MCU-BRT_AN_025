@@ -60,8 +60,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> 
+/* Include configuration for EVE-MCU-Dev library */
+#include <EVE_config.h>  
+/* Include settings and macros for EVE-MCU-Dev library */
+#include <EVE_settings.h> 
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */

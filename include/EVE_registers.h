@@ -4,11 +4,11 @@
  * @details Provides a single unified set of EVE_REG_* macros that resolve to
  *      the correct hardware address for the selected generation at compile time.
  *      The EVE generation is dependent by EVE_DEVICE which is set in EVE_config.h
- *      and converted to the EVE generation in EVE.h. The generation is set in
- *      EVE_API to 1-5 and EVE_SUB_API if required.
+ *      and converted to the EVE generation in EVE_settings.h. The generation is
+ *      set in EVE_API to 1-5 and EVE_SUB_API if required.
  *  
  *      Usage:
- *          #include <EVE.h>          // sets EVE_API, includes this file
+ *          #include <EVE.h>          // includes this file
  *  
  *      Macro convention:
  *          EVE_API_SELECT(a1, a2, a3, a4, a5)

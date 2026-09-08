@@ -42,6 +42,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/* Include EVE-MCU-Dev library API layer */
 #include <EVE.h>
 
 #include "maths/trig_furman.h"
