@@ -61,10 +61,18 @@ IF(EVE_QSPI_ENABLE)
     message(EVE_QSPI_ENABLE=TRUE)
 ENDIF(EVE_QSPI_ENABLE)
 
+# Setup Co-processor transfer method from command line
+option(EVE_COPRO_METHOD "Set co-processor transfer method")
+IF(EVE_COPRO_METHOD)
+    ADD_DEFINITIONS(-DEVE_COPRO_METHOD=${EVE_COPRO_METHOD})
+    message(EVE_COPRO_METHOD="${EVE_COPRO_METHOD}")
+ENDIF(EVE_COPRO_METHOD)
+
 # Add environment for example code
 set(EXAMPLE_COMMON "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 set(EXAMPLE_SNIPPETS "${CMAKE_CURRENT_SOURCE_DIR}/../../snippets")
 set(EXAMPLE_ASSETS "${CMAKE_CURRENT_SOURCE_DIR}/../assets")
+set(FTDI_SUBMODULE "${API_DIRECTORY}/ports/external/ftdi_libraries/")
 
 # Point to where to find the platform source file
 add_executable(${PROJECT_NAME}
@@ -134,27 +142,25 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(NOT EXISTS "${API_DIRECTORY}/ports/eve_libft4222/libft4222.h")
-        message(FATAL_ERROR "The Windows LibFT4222 installation has not been completed. Follow the instructions in \"\\ports\\eve_libft4222\\README.md\"")
+    if(NOT EXISTS "${FTDI_SUBMODULE}/libFT4222")
+        message(FATAL_ERROR "The ftdi_libraries submodule needs to be loaded. Follow the instructions in \"\\ports\\eve_libft4222\\README.md\"")
     endif()
 
+    target_include_directories(eve_library PUBLIC
+            ${FTDI_SUBMODULE}/libFT4222/include
+            ${FTDI_SUBMODULE}/libFTD2XX/include
+    )
+
     target_link_libraries(eve_library
-            ${API_DIRECTORY}/ports/eve_libft4222/libft4222.lib
-            ${API_DIRECTORY}/ports/eve_libft4222/libftd2xx.lib
+            ${FTDI_SUBMODULE}/libFT4222/lib-windows/LibFT4222-64.lib
+            ${FTDI_SUBMODULE}/libFTD2XX/lib-windows/libftd2xx.lib
     )
 
     # Copy the DLL to beside the executable for Windows
-    if(EXISTS "${API_DIRECTORY}/ports/eve_libft4222/LibFT4222-64.dll")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different "${API_DIRECTORY}/ports/eve_libft4222/LibFT4222-64.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
-                COMMAND_EXPAND_LISTS
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${FTDI_SUBMODULE}/libFT4222/lib-windows/LibFT4222-64.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+            COMMAND_EXPAND_LISTS
     )
-    elseif(EXISTS "${API_DIRECTORY}/ports/eve_libft4222/LibFT4222.dll")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different "${API_DIRECTORY}/ports/eve_libft4222/LibFT4222.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
-                COMMAND_EXPAND_LISTS
-    )
-    endif()
 endif()
 
 # Source for example code

@@ -51,49 +51,11 @@ The settings required in `EVE_config.h` are:
 
 Important Information about Windows builds.
 
-To compile this you will have to download the **LibFT4222** "middleware library" for Windows. The recommended version is v1.4.8 or later. It is available from the FTDI website:
+To compile this you will have to download the **LibFT4222** "middleware library" for Windows. The recommended version is v1.4.8 or later. The distributed files for this library are collected in the repository by Bridgetek for convenience: 
 
-https://ftdichip.com/software-examples/ft4222h-software-examples/
+https://github.com/Bridgetek/FTDI-SW-Release/
 
-Download the latest version of the LibFT4222 library distribution. The file will typically have a name in the format `LibFT4222-vx.x.x.zip` where *vx.x.x* is the version number. 
-
-The library is installed *once* into the `ports\eve_libft4222` directory. When building the example code the library files (H, DLL and LIB files) are loaded from this location.
-
-### Install the LibFT4222 Middleware Library in EVE-MCU-Dev library
-
-The LibFT4222 library distribution zip file must be extracted into a new directory. The new directory will have a subfolder called `imports`. The distribution contains libraries for various CPU architectures. On v1.4.8 these architectures are AMD64 (64-bit Windows) and x86 (32- bit Windows).
-
-Each architecture has:
-- A DLL file for LibFT4222
-- LIB files for connecting the application to the LibFT4222 DLL and FTD2XX DLLs
-- C header files for LibFT4222 and FTD2XX
-
-A Windows Command Line BAT file `install_libft4222.bat` is included in this folder. This will copy the correct files from a LibFT4222 library distribution to the 
-current directory (`ports\eve_libft4222`).
-
-To run the BAT file change directory to the `ports\eve_libft4222` directory. The path to the `imports` directory in the extracted distribution folder is passed as the first parameter to the BAT file. For example:
-
-```
-> cd ports\eve_libft4222
-> install_libft4222.bat ..\..\..\LibFT4222-v1.4.8\imports
-Installing AMD64 libraries from "..\..\..\LibFT4222-v1.4.8\imports"
-Copying "..\..\..\LibFT4222-v1.4.8\imports\LibFT4222\dll\amd64\LibFT4222-64.dll" to LibFT4222-64.dll
-        1 file(s) copied.
-Copying "..\..\..\LibFT4222-v1.4.8\imports\LibFT4222\dll\amd64\LibFT4222-64.lib" to libft4222.lib
-        1 file(s) copied.
-Copying "..\..\..\LibFT4222-v1.4.8\imports\LibFT4222\inc\LibFT4222.h" to libft4222.h
-        1 file(s) copied.
-Copying "..\..\..\LibFT4222-v1.4.8\imports\ftd2xx\dll\amd64\ftd2xx.lib" to libftd2xx.lib
-        1 file(s) copied.
-Copying "..\..\..\LibFT4222-v1.4.8\imports\ftd2xx\ftd2xx.h" to ftd2xx.h
-        1 file(s) copied.
-```
-
-The example application will load and use the `LibFT4222-64.dll` or `LibFT4222.dll` file at runtime. This file must be available either locally (in the same directory as the example executable) or on the system path (recommended "C:\Windows\System32"). The `CMakeLists.txt` file in each example will copy the DLL to the same output directory as the executable.
-
-Additionally, the `ftd2xx.dll` library is required. This is installed automatically on the system path when Windows installs the driver for an FTDI device.
-
-A **bash** script file `install_libft4222.sh` is also included in this folder. It has the same functionality as `install_libft4222.bat` but can run in a bash shell to help with setting up the environment.
+This is used as a submodule for Windows compilations and is found in the directory `ports/external/ftdi_libraries`. Ensure that the repository has been cloned before compiling libft4222 builds.
 
 ## Linux
 

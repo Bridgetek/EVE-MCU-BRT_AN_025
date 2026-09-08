@@ -58,6 +58,7 @@ ENDIF(EVE_MODULE)
 set(EXAMPLE_COMMON "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 set(EXAMPLE_ASSETS "${CMAKE_CURRENT_SOURCE_DIR}/../assets")
 set(EXAMPLE_SNIPPETS "${CMAKE_CURRENT_SOURCE_DIR}/../../snippets")
+set(FTDI_SUBMODULE "${API_DIRECTORY}/ports/external/ftdi_libraries/")
 
 # Point to where to find the platform source file
 add_executable(${PROJECT_NAME}
@@ -127,18 +128,25 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     #target_link_libraries(eve_library ${CMAKE_DL_LIBS})
     target_link_libraries(eve_library
-	mpsse
+        mpsse
     )
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(NOT EXISTS "${API_DIRECTORY}/ports/eve_libmpsse/libmpsse_spi.h")
-        message(FATAL_ERROR "The Windows libMPSSE installation has not been completed. Follow the instructions in \"\\ports\\eve_libmpsse\\README.md\"")
+    if(NOT EXISTS "${FTDI_SUBMODULE}/libMPSSE")
+        message(FATAL_ERROR "The ftdi_libraries submodule needs to be loaded. Follow the instructions in \"\\ports\\eve_libmpsse\\README.md\"")
     endif()
 
-    target_link_libraries(eve_library
-            ${API_DIRECTORY}/ports/eve_libmpsse/libmpsse.lib
+    target_include_directories(eve_library PUBLIC
+            ${FTDI_SUBMODULE}/libMPSSE/include
+            ${FTDI_SUBMODULE}/libFTD2XX/include
     )
+
+    target_link_libraries(eve_library
+            ${FTDI_SUBMODULE}/libMPSSE/lib-windows/libmpsse.lib
+            ${FTDI_SUBMODULE}/libFTD2XX/lib-windows/libftd2xx.lib
+    )
+
 endif()
 
 # Source for example code
