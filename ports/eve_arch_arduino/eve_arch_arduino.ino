@@ -115,11 +115,6 @@ int MCU_Deinit(void) {
 
 int MCU_Setup(void) {
 
-  /* QSPI Configuration */
-#ifdef EVE_QSPI_ENABLE
-#error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on Arduino
-#endif // EVE_QSPI_ENABLE
-
   /* Additional SPI Configuration */
   SPI.endTransaction();
 
@@ -128,6 +123,16 @@ int MCU_Setup(void) {
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
   return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+    #error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on Arduino
+    /* Initialize IO2 and IO3 pad/pin for quad settings */
+    return -1;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 // Simple endian alignment for tested Arduino devices
 #define bswap16(x) __builtin_bswap16(x)

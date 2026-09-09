@@ -49,13 +49,11 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-/* -------------------------------------------------------------------------
- * Prerequisite: This file must be included after EVE.h so that EVE_API is 
- * defined and the IS_EVE_API and EVE_API_SELECT macros are available.
- * ------------------------------------------------------------------------- */
-#if !(defined(EVE_API) && defined(IS_EVE_API) && defined(EVE_API_SELECT))
-#error "HAL.h requires to be included after EVE.h (defines EVE_API)."
-#endif
+/*
+ * Include the EVE settings required by the HAL layer, including API
+ * selection macros and device-specific configuration.
+ */
+#include "EVE_settings.h"
 
 /* EVE HAL */
 
@@ -358,25 +356,20 @@ uint16_t HAL_Read16(void);
 uint8_t HAL_Read8(void);
 #endif
 
+#if defined(EVE_QSPI_ENABLE)
 /**
- * @brief Valid SPI bus widths on EVE
- */
-typedef enum EVE_SPI_CHANNELS_T
-{
-	EVE_SPI_SINGLE_CHANNEL = 0x00,
-	EVE_SPI_DUAL_CHANNEL = 0x01,
-	EVE_SPI_QUAD_CHANNEL = 0x02,
-} EVE_SPI_CHANNELS_T;
-
-/**
- * @brief Sets the SPI bus width on EVE
- * @details Changes from single SPI (default) to Dual SPI to Quad SPI.
+ * @brief Configures the EVE and MCU SPI interface width.
+ * @details Changes the EVE SPI interface width and then configures the
+ *      MCU peripheral to use the corresponding interface mode. No EVE
+ *      transactions are performed between these operations.
  * @param mode - SPI mode:
  *                  0 - 1bit (Default Single mode)
  *                  1 - 2bits (Dual mode)
  *                  2 - 4bits (Quad mode)
+ * @returns 0 if successful, -1 if failed.
  */
-void HAL_SetSPIMode(uint32_t mode);
+int HAL_SetSPIMode(uint8_t mode);
+#endif
 
 /**
  * @brief Test interrupt input line

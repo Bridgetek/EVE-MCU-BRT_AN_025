@@ -41,11 +41,15 @@
 #ifndef _EVE_CONFIG_H
 #define _EVE_CONFIG_H
 
+/*
+ * Include the EVE configuration defintions.
+ */
+#include "EVE_defs.h"
+
 /* EVE CONFIG */
 
 /**
  * @brief EVE device and screen configuration file.
- * @note IMPORTANT This header file must be included by EVE.h.
  * @details The macro EVE_DEVICE and the panel display settings (EVE_DISP_*) 
  *      must be configured in this file. 
  *      For BT82x the EVE_RAM_G_CONFIG_SIZE macro must also be configured.
@@ -54,9 +58,13 @@
  * 
  *      To make a custom configuration file, edit this file as required as 
  *      long as the macros listed above are correctly defined.
- *      This file is included with angle brackets in EVE.h and can therefore 
- *      be copied to anywhere in the include file search path to override this 
- *      copy.
+ *
+ *      This file is included with angle brackets in EVE_settings.h and can
+ *      therefore be copied to anywhere in the include file search path to
+ *      override this copy.
+ *
+ * @note This header is included by EVE_settings.h and may also be included
+ *      directly where access to the configured values is required.
  */
 
 /** 
@@ -119,7 +127,7 @@
 #ifndef EVE_DISPLAY_RES
 #define EVE_DISPLAY_RES EVE_WVGA
 #endif
-//@}
+//@} 
 
 /**
  * @brief Enable or Disable QuadSPI.
@@ -135,7 +143,7 @@
  */
 //@{
 #ifndef EVE_QSPI_ENABLE
-#undef EVE_QSPI_ENABLE
+#define EVE_QSPI_ENABLE
 #endif
 //@}
 
@@ -210,7 +218,7 @@
  */
 //@{
 #ifndef EVE_LCD_INIT
-#undef EVE_LCD_INIT
+#define EVE_LCD_INIT
 #endif
 //@}
 

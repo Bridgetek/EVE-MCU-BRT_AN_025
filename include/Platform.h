@@ -51,13 +51,13 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-/* -------------------------------------------------------------------------
- * Prerequisite: This file must be included after EVE.h so that EVE_API is 
- * defined and the IS_EVE_API and EVE_API_SELECT macros are available.
- * ------------------------------------------------------------------------- */
-#if !(defined(EVE_API) && defined(IS_EVE_API) && defined(EVE_API_SELECT))
-#error "Platform.h requires to be included after EVE.h (defines EVE_API)."
-#endif
+/*
+ * Include the EVE settings derived from the EVE configuration, including API
+ * selection macros and device-specific configuration.
+ */
+#include "EVE_settings.h"
+
+struct spi_ioc_transfer;
 
 /* EVE PLATFORM */
 
@@ -141,6 +141,19 @@ int Platform_Deinit(void);
  @returns 0 if successful, -1 if failed.
  */
 int Platform_Setup(void);
+
+#if defined(EVE_QSPI_ENABLE)
+/**
+ * @brief Platform specific SPI interface mode configuration
+ * @details Configures the platform SPI interface for the requested EVE SPI
+ *      interface mode. This function only configures the platform side of
+ *      the interface. Configuration of the EVE device SPI mode is performed
+ *      by the HAL layer.
+ * @param mode SPI interface mode to configure.
+ * @returns 0 if successful, -1 if failed.
+ */
+int Platform_SetSPIMode(uint8_t mode);
+#endif
 
 /**
  @brief Platform specific SPI transfer

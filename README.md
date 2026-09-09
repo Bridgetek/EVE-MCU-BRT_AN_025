@@ -118,6 +118,73 @@ The software consists of several layers which are shown below. The different lay
 
 The library structure is designed to provide a format where multiple examples with support for multiple platforms can be presented.
 
+```mermaid
+flowchart TD
+    APP["Application"]
+    API["EVE.h / EVE_API.c<br/>(EVE API Layer)"]
+    HAL["HAL.h<br/>(Hardware Abstraction Layer)"]
+
+    MCUHAL["EVE_HAL.c"]
+    LINUXHAL["EVE_HAL_Linux.c"]
+
+    MCU["MCU.h<br/>(MCU / Host Port)"]
+    PLATFORM["Platform.h<br/>(Linux Port)"]
+
+    APP --> API
+    API --> HAL
+
+    HAL --> MCUHAL
+    HAL --> LINUXHAL
+
+    MCUHAL --> MCU
+    LINUXHAL --> PLATFORM
+
+```
+
+`EVE_HAL.c` is used by MCU-style ports and host interfaces which implement `MCU.h`. `EVE_HAL_Linux.c` is used by Linux SPI device ports which implement `Platform.h`.
+
+The HAL layer contains EVE-specific protocol handling, while the MCU or Platform layer contains host-specific SPI, GPIO, timing and operating-system functionality.
+
+### Header Dependencies
+
+The main header and configuration dependencies are shown below. Arrows indicate that the file above includes or depends on the file below.
+```mermaid
+flowchart TD
+
+    DEFS["EVE_defs.h<br/>(EVE device, module, panel and option definitions)"]
+    CONFIG["EVE_config.h<br/>(EVE configuration)"]
+    SETTINGS["EVE_settings.h<br/>(Derived EVE configuration and API selection)"]
+
+    COMMANDS["EVE_commands.h<br/>(EVE Command definitions)"]
+    REGISTERS["EVE_registers.h<br/>(EVE Register definitions)"]
+    DEBUG["EVE_debug.h<br/>(Independent debug macros)"]
+
+    subgraph PUBLIC_LEVEL[" "]
+        direction LR
+        EVE["EVE.h<br/>(Public application header)"]
+        HAL["HAL.h<br/>(Hardware Abstraction Layer interface)"]
+        MCU["MCU.h<br/>(MCU / Host specific interface)"]
+        PLATFORM["Platform.h<br/>(Linux specific interface)"]
+    end
+
+    DEFS --> CONFIG
+    CONFIG --> SETTINGS
+
+    SETTINGS --> COMMANDS
+    SETTINGS --> REGISTERS
+
+    SETTINGS --> EVE
+    SETTINGS --> HAL
+    SETTINGS --> MCU
+    SETTINGS --> PLATFORM
+
+    COMMANDS --> EVE
+    REGISTERS --> EVE
+    DEBUG --> EVE
+
+    style PUBLIC_LEVEL fill:none,stroke:none
+```
+
 ### Folder Structure
 
 The library is organised into a number of top-level directories. 
@@ -138,25 +205,60 @@ The file `EVE_HAL.c` is intended for MCU platforms, the file `EVE_HAL_Linux.c` i
 Contents of the `source` directory:
 
 - **`EVE_API.c`** The programming interface to the library.
-- `EVE_HAL.c` The abstraction layer between the programming interface and the MCU specific layer.
-- `EVE_HAL_Linux.c` The abstraction layer between the programming interface and the Linux SPI character device.
+- `EVE_HAL.c` Hardware abstraction layer for MCU-style and supported host-interface ports implementing `MCU.h`..
+- `EVE_HAL_Linux.c` Hardware abstraction layer for Linux SPI device ports implementing `Platform.h`.
 
 Include files show the layers inherent in the library. The main API can be accessed with just the `EVE.h` header file which will include all the required header files to compile using the EVE API. The configuration for the display panel and other relvant configurable settings is modified in the `EVE_config.h` file. For most applications this is the only file in the library that will need modification.
 
 Contents of the `include` directory:
 
-- **`EVE.h`** Header file to include to access all required programming interface entry points and definitions.
-- **`EVE_config.h`** Overridable configuration file for target application.
-- `EVE_commands.h` Header file which provides cross-generation EVE command and option definitions.
-- `EVE_debug.h` Header file which provides platform specific macro definitions for debug messaging.
-- `EVE_defs.h` Header file with preset definitions use in configuring the target application in EVE_config.h.
-- `EVE_registers.h` Header file which provides cross-generation EVE register address map.
-- `EVE_settings.h` Header file to include to library settings and macros derived from the configuration file.
-- `HAL.h` Definitions for accessing the abstraction layer from the API layer.
-- `MCU.h` Embedded header file for access to the MCU layer from the abstraction layer.
-- `Platform.h` _Linux-like_ header file for access to the MCU layer from the abstraction layer.
+- **`EVE.h`** Main public header for applications using the library. It includes the
+  configured EVE settings, command definitions, register definitions and public API
+  declarations required by an application.
+
+- **`EVE_config.h`** Overridable target configuration file. This is the primary
+  configuration file for selecting the EVE device, module, panel, display resolution
+  and optional library features.
+
+- `EVE_defs.h` Common definitions used by `EVE_config.h`, including supported EVE
+  devices, Bridgetek modules and panels, display resolutions, RAM_G sizes and other
+  configuration values.
+
+- `EVE_settings.h` Derives the effective library configuration from `EVE_config.h`.
+  This includes EVE API and sub-API selection, module and panel expansion, display
+  settings, feature support and compatibility handling for deprecated configuration
+  macros.
+
+- `EVE_commands.h` Cross-generation display-list command, co-processor command and
+  option definitions. Definitions are selected at compile time for the configured
+  EVE API.
+
+- `EVE_registers.h` Cross-generation EVE memory-map and register definitions.
+  Register addresses are selected at compile time for the configured EVE API.
+
+- `EVE_debug.h` Platform-specific debug output macros. This header is independent of
+  the EVE device configuration and selects the appropriate logging mechanism for the
+  target platform.
+
+- `HAL.h` Interface between the EVE API layer and the hardware abstraction layer.
+
+- `MCU.h` Interface implemented by MCU-style and host-interface ports used by
+  `EVE_HAL.c`. It defines the SPI, GPIO, timing and other host-side functions required
+  by the HAL.
+
+- `Platform.h` Interface implemented by Linux SPI device ports used by
+  `EVE_HAL_Linux.c`.
 
 **Bold** files are the files with the recommended access points for a program into the library.
+
+Applications should normally include only `EVE.h`.
+
+The remaining headers are intended for library implementation, configuration or port
+development. Each header includes the configuration or standard-library headers that
+it directly depends upon and should not rely on `EVE.h` having been included first.
+
+`EVE_config.h` may be replaced by an application-specific version by placing the
+replacement earlier in the compiler include search path.
 
 Extension-specific functionality is separated from the common EVE API source and header files. Extension header files are located in `include/extensions`, with their corresponding implementations located in `source/extensions`. These files provide functionality which is required only for specific EVE device generations or configurations and can be excluded from projects if the are not required.
 
@@ -171,7 +273,15 @@ The extension source files are included in the build only where required for the
 
 #### Port Files
 
-The ports directory has folder for each platform supported. These will contain a file that implements the interface described in `MCU.h` or `Platform.h` files in the `include` directory. This will deal with any byte-order changing required and all access to the GPIO and SPI interfaces. 
+The `ports` directory contains a folder for each supported platform.
+
+MCU-style and host-interface ports implement the interface declared by `MCU.h` and are used by `EVE_HAL.c`.
+
+Linux SPI character-device ports implement the interface declared by `Platform.h`and are used by `EVE_HAL_Linux.c`.
+
+These implementations provide the host-specific SPI, GPIO, timing, byte-order and optional interrupt functionality required by the HAL. Where supported, a port may also provide host-side configuration for optional interfaces such as Quad SPI.
+
+EVE-specific register and command handling remains in the HAL layer and should not normally be implemented by the MCU or Platform layer.
 
 It is further discussed in the [Ports](#ports) section.
 
@@ -187,16 +297,20 @@ It is **recommended** that the `EVE_config.h` file is modified in a user program
 
 There are three methods of configuring the EVE device and panel type. 
 - The `EVE_DEVICE` macro and `EVE_DISPLAY_RES` macro. (Formerly the `FT8XX_TYPE` macro and `DISPLAY_RES` macro)
-  This is the simplest method if a configuration is fixed. The `EVE_MODULE` and `EVE_PANEL` macros may be removed or be set to `EVE_NO_MODULE` and `PANEL_TYPE_NONE` respectively.
+  This is the simplest method if a configuration is fixed. The `EVE_MODULE` and `EVE_PANEL` macros may be removed or be set to `EVE_NO_MODULE` and `EVE_NO_PANEL` respectively.
 - The `EVE_DEVICE` macro and `EVE_PANEL` macro.
   This sets the `EVE_DISPLAY_RES` for a panel. The `EVE_MODULE` macros may be removed or be set to `EVE_NO_MODULE`.
 - A Bridgetek module type may be set. 
   This will configure the `EVE_DEVICE` and `EVE_PANEL` macros. 
   The `EVE_PANEL` macro will be further expanded into a `EVE_DISPLAY_RES` macro.
   
-In all cases the `EVE_DISPLAY_RES` macro will lead to the `EVE_DISP_*` macros being set for configuring the registers on in on the EVE device. 
+In all cases, the selected module, device and panel settings are resolved in `EVE_settings.h`.
 
-The `EVE_DISPLAY_RES` macro is not used in the library.
+Where `EVE_MODULE` is selected, it determines the corresponding `EVE_DEVICE` and `EVE_PANEL`.
+
+Where `EVE_PANEL` is selected, it determines the corresponding `EVE_DISPLAY_RES`.
+
+`EVE_DISPLAY_RES` is then used to derive the `EVE_DISP_*` timing macro settings used when initialising the EVE display interface.
 
 The `EVE_PANEL` macro is not used in the library, however it is optionally used in the `examples/snippets/touch.c` examples snippet code to set predefined touchscreen configuration values to bypass calibration.
 
@@ -228,15 +342,15 @@ The following options are supported in `EVE_config.h`:
   The following resolutions are defined:
   | Resolution Name | Size | Example |
   | ----- | ----- | ----- |
-  | **EVE_RES_QVGA**    | 320 x 240   | [DP-0351-11A](https://brtchip.com/product/dp-0351-11a/) | 
-  | **EVE_RES_WQVGA**   | 320 x 240   | [DP-0431-11A](https://brtchip.com/product/dp-0431-11a/), [DP-0502-11A](https://brtchip.com/product/dp-0502-11a/) |
-  | **EVE_RES_WQVGAR**  | 480 x 480   | [IDM2040-21R](https://brtchip.com/product/idm2040-21r/) with 2.1 inch round display |
-  | **EVE_RES_WVGA**    | 800 x 480   | [DP-0501-01A](https://brtchip.com/product/dp-0501-01a/), [DP-0501-11A](https://brtchip.com/product/dp-0501-11a/), [DP-0701-11A](https://brtchip.com/product/dp-0701-01a/) |
-  | **EVE_RES_WSVGA**   | 1024 x 600  | [ME817EV](https://brtchip.com/product/me817ev/) with 7 inch display |
-  | **EVE_RES_WXGA**    | 1280 x 800  | [DP-1011-01A](https://brtchip.com/product/dp-1011-01a/) |
-  | **EVE_RES_WXGA_NG** | 1280 x 800  | [DP-1011-02A](https://brtchip.com/product/dp-1011-02a/) |
-  | **EVE_RES_FULLHD**  | 1920 x 1080 | [DP-1561-01A](https://brtchip.com/product/dp-1561-01a/), [DP-1561-02A](https://brtchip.com/product/dp-1561-02a/) |
-  | **EVE_RES_WUXGA**   | 1920 x 1200 | [DP-1012-01A](https://brtchip.com/product/dp-1012-01a/) |
+  | **EVE_QVGA**    | 320 x 240   | [DP-0351-11A](https://brtchip.com/product/dp-0351-11a/) | 
+  | **EVE_WQVGA**   | 320 x 240   | [DP-0431-11A](https://brtchip.com/product/dp-0431-11a/), [DP-0502-11A](https://brtchip.com/product/dp-0502-11a/) |
+  | **EVE_WQVGAR**  | 480 x 480   | [IDM2040-21R](https://brtchip.com/product/idm2040-21r/) with 2.1 inch round display |
+  | **EVE_WVGA**    | 800 x 480   | [DP-0501-01A](https://brtchip.com/product/dp-0501-01a/), [DP-0501-11A](https://brtchip.com/product/dp-0501-11a/), [DP-0701-11A](https://brtchip.com/product/dp-0701-01a/) |
+  | **EVE_WSVGA**   | 1024 x 600  | [ME817EV](https://brtchip.com/product/me817ev/) with 7 inch display |
+  | **EVE_WXGA**    | 1280 x 800  | [DP-1011-01A](https://brtchip.com/product/dp-1011-01a/) |
+  | **EVE_WXGA_NG** | 1280 x 800  | [DP-1011-02A](https://brtchip.com/product/dp-1011-02a/) |
+  | **EVE_FULLHD**  | 1920 x 1080 | [DP-1561-01A](https://brtchip.com/product/dp-1561-01a/), [DP-1561-02A](https://brtchip.com/product/dp-1561-02a/) |
+  | **EVE_WUXGA**   | 1920 x 1200 | [DP-1012-01A](https://brtchip.com/product/dp-1012-01a/) |
   
 
 - `EVE_PANEL` The Bridgetek panel type of the display panel.
@@ -282,7 +396,7 @@ The following options are supported in `EVE_config.h`:
 
 #### Device Selection
 
-The EVE device to target is set in the file `EVE_config.h`. The macro `EVE_DEVICE` or `EVE_API`/`EVE_SUB_API` is set to choose the device or the API respectively. One or other of these macros **must** be set correctly for the device being used.
+The EVE device to target is set in the file `EVE_config.h`, `EVE_settings.h` then maps the selected `EVE_DEVICE` to the corresponding `EVE_API` and, where required, `EVE_SUB_API` to choose the device or the API respectively. One or other of these macros **must** be set correctly for the device being used.
 
 There are predefined settings mapping of device names for `EVE_DEVICE` to `EVE_API`/`EVE_SUB_API` in the EVE API in the library. The [device API table](#device-api-support) can be used to select the correct value of `EVE_DEVICE`.
 

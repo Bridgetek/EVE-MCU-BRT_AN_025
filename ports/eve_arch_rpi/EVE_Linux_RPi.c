@@ -198,13 +198,19 @@ int Platform_Deinit(void)
 
 int Platform_Setup(void)
 {
-
-#if defined EVE_QSPI_ENABLE
-#error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported RasberryPi
-#endif // EVE_QSPI_ENABLE
-
+    /* Additional SPI Configuration */
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int Platform_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+#error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on Raspberry Pi
+    /* Initialize IO2 and IO3 pad/pin for quad settings */
+    return -1;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 int Platform_SPI_transfer(struct spi_ioc_transfer *xfer, int count)
 {

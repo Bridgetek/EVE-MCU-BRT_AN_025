@@ -61,12 +61,10 @@
 #include "ftd2xx.h"
 #include "libft4222.h"
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
-/* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
-#include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
+/* Include EVE-MCU-Dev library debug macros */
+#include "EVE_debug.h"
 
 #if defined(__linux__) || defined(__CYGWIN__)
 // Linux endianness (not BSD variants)
@@ -334,23 +332,21 @@ int MCU_Setup(void)
     // Increase SPI speed to 20 MHz after initialisation is complete
     // See the notes for MCU_SPI_TIMEOUT in the MCU.h file.
     // Clock is 80 MHz / 4 = 20 MHz
-#if defined EVE_QSPI_ENABLE
-#if IS_EVE_API(2,3,4,5)
-    /* Select QSPI after initialisation complete. */
-    HAL_SetSPIMode(2);
-    mcu_setup_spi(CLK_DIV_4, SPI_IO_QUAD);
-    ftIsQuad = TRUE;
-#else // IS_EVE_API(2,3,4,5)
     mcu_setup_spi(CLK_DIV_4, SPI_IO_SINGLE);
-    ftIsQuad = FALSE;
-#endif
-#else // EVE_QSPI_ENABLE
-    mcu_setup_spi(CLK_DIV_4, SPI_IO_SINGLE);
-    ftIsQuad = FALSE;
-#endif // EVE_QSPI_ENABLE
-
+    
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+    mcu_setup_spi(CLK_DIV_4, SPI_IO_QUAD);
+    ftIsQuad = TRUE;
+    /* Initialize IO2 and IO3 pad/pin for quad settings */
+    return 0;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 // ------------------------- Output buffering ----------------------------------
 

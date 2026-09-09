@@ -47,13 +47,11 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-/* -------------------------------------------------------------------------
- * Prerequisite: This file must be included after EVE.h so that EVE_API is 
- * defined and the IS_EVE_API and EVE_API_SELECT macros are available.
- * ------------------------------------------------------------------------- */
-#if !(defined(EVE_API) && defined(IS_EVE_API) && defined(EVE_API_SELECT))
-#error "MCU.h requires to be included after EVE.h (defines EVE_API)."
-#endif
+/*
+ * Include the EVE settings required by the MCU layer, including API
+ * selection macros and device-specific configuration.
+ */
+#include "EVE_settings.h"
 
 /* EVE MCU */
 
@@ -83,7 +81,7 @@
 #elif defined(USE_LINUX_SPI_DEV)
 #define MCU_SPI_TRANSFER sizeof(uint32_t)
 #endif
-#endif
+#endif // IS_EVE_API(5)
 
 /**
  * @brief MCU SPI bus speed.
@@ -137,7 +135,7 @@
 #define MCU_SPI_TIMEOUT 8
 #endif
 
-#endif
+#endif // IS_EVE_API(5)
 
 /* EVE MCU */
 
@@ -158,12 +156,26 @@ int MCU_Init(void);
 int MCU_Deinit(void);
 
 /**
- * @brief MCU specific setup
- * @details Called after the EVE has been power cycled and started. Contains
- *      any MCU-specific configuration options for the EVE.
+ * @brief MCU specific post-initialisation setup
+ * @details Called after EVE has been power cycled and started. This may be
+ *      used to apply MCU-specific interface settings which are only suitable
+ *      after EVE has completed boot, such as increasing the SPI clock rate.
  * @returns 0 if successful, -1 if failed.
  */
 int MCU_Setup(void);
+
+#if defined(EVE_QSPI_ENABLE)
+/**
+ * @brief MCU specific SPI interface mode configuration
+ * @details Configures the MCU SPI peripheral and associated GPIOs for the
+ *      requested EVE SPI interface mode. This function only configures the
+ *      MCU side of the interface. Configuration of the EVE device SPI mode
+ *      is performed by the HAL layer.
+ * @param mode SPI interface mode to configure.
+ * @returns 0 if successful, -1 if failed.
+ */
+int MCU_SetSPIMode(uint8_t mode);
+#endif
 
 /**
  * @brief MCU specific chip select enable

@@ -56,8 +56,6 @@
 #include <stdint.h> // For Uint8/16/32 and Int8/16/32 data types
 // Note there is no endian.h for this platform.
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
@@ -123,6 +121,15 @@ int MCU_Setup(void)
 
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+    #error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is set but not supported on this STM32 configuration
+    return -1;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 inline void MCU_CSlow(void)
 {

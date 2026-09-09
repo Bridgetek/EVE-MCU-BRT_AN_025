@@ -47,12 +47,16 @@
 #include <string.h>
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
+/* Include EVE register definitions used by the HAL layer. */
+#include "EVE_registers.h"
+/* Include the EVE command definitions used by the HAL layer. */
+#include "EVE_commands.h"
+/* Include the EVE debug-output macros */
+#include "EVE_debug.h"
 
 // Used to run LCD initialisation where required 
 #if defined(EVE_LCD_INIT)
@@ -242,15 +246,23 @@ int HAL_EVE_Init(void)
 
     EVE_DEBUG_PRINTF("[Boot complete]\n");
 
-#endif  //IS_EVE_API(5)
-
-    // Perform any additional MCU functions. This is when the SPI interface
-    // could be switched to QuadSPI in the MCU code.
+#endif //IS_EVE_API(5)
+    
+    // Apply post-boot MCU configuration, such as increasing the SPI clock frequency.
     if (MCU_Setup() != 0)
     {
         EVE_DEBUG_ERROR("MCU_Setup() Failed.\n");
         return -1;
     }
+
+#if defined(EVE_QSPI_ENABLE)
+    // Switch both EVE and the MCU interface from single SPI to Quad SPI.
+    if (HAL_SetSPIMode(EVE_SPI_QUAD_CHANNEL) != 0)
+    {
+        EVE_DEBUG_ERROR("Unable to enable Quad SPI.\n");
+        return -1;
+    }
+#endif // defined(EVE_QSPI_ENABLE)
 
 #if defined(EVE_USE_INTERRUPT_METHOD)
     // Enable only the INT_CMDEMPTY interrupt. Other interrupt sources
@@ -818,24 +830,39 @@ uint16_t HAL_CheckCmdFreeSpace(void)
 #endif // defined(EVE_USE_CMDB_METHOD)
 }
 
-void HAL_SetSPIMode(uint32_t mode)
+#if defined(EVE_QSPI_ENABLE)
+int HAL_SetSPIMode(uint8_t mode)
 {
+    // check the mode input is valid
+    if ((mode != EVE_SPI_SINGLE_CHANNEL) &&
+        (mode != EVE_SPI_DUAL_CHANNEL) &&
+        (mode != EVE_SPI_QUAD_CHANNEL))
+    {
+        return -1;
+    }
+
 #if IS_EVE_API(1)
-    // QuadSPI is not supported on FT80x.
+    // QuadSPI is not supported on FT80x
     (void)mode;
-#elif IS_EVE_API(2,3,4)
+    return -1;
+#elif IS_EVE_API(2, 3, 4) // IS_EVE_API(1)
     // Turn on EVE quad-SPI for FT81x and BT81x devices.
     // Write EVE_REG_SPI_WIDTH and mask SPI_WIDTH.
-    HAL_MemWrite32(EVE_REG_SPI_WIDTH, ((uint32_t)mode) & 3);
-#elif IS_EVE_API(5)
+    HAL_MemWrite32(EVE_REG_SPI_WIDTH, ((uint32_t)mode) & 0x03UL);
+#elif IS_EVE_API(5) // IS_EVE_API(2, 3, 4)
     // Turn on EVE quad-SPI for FT82x devices.
     // Read REG_SYS_CFG and mask SPI_WIDTH.
     uint32_t cfg;
     cfg = HAL_MemRead32(EVE_REG_SYS_CFG) & (~(0x3 << 8));
     cfg = cfg | (((uint32_t)mode) << 8);
     HAL_MemWrite32(EVE_REG_SYS_CFG, cfg);
-#endif 
+#endif // IS_EVE_API(5)
+    
+    // call the MCU layer SPI mode configuration implementation
+    // and return its result
+    return MCU_SetSPIMode(mode);
 }
+#endif // defined(EVE_QSPI_ENABLE)
 
 int HAL_Int(void)
 {

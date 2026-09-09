@@ -69,13 +69,10 @@
 
 #include <stdint.h>
 
-/* -------------------------------------------------------------------------
- * Prerequisite: This file must be included by EVE.h so that EVE_API is 
- * defined and the IS_EVE_API and EVE_API_SELECT macros are available.
- * ------------------------------------------------------------------------- */
-#if !(defined(EVE_API) && defined(IS_EVE_API) && defined(EVE_API_SELECT))
-#error "EVE_commands.h requires to be included by EVE.h (defines EVE_API)."
-#endif
+/*
+ * Include the EVE macros and settings derived from the EVE configuration.
+ */
+#include "EVE_settings.h"
 
 /* EVE COMMANDS */
 

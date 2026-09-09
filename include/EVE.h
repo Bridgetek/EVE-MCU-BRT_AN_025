@@ -46,17 +46,8 @@
 #include <stdint.h>
 
 /*
- * Include the EVE configuration defintions.
- */
-#include "EVE_defs.h"
-
-/*
- * Include the EVE configuration to select the EVE API.
- */
-#include <EVE_config.h>
-
-/*
- * Include the EVE settings derived from the EVE configuration.
+ * Include the EVE settings derived from the EVE configuration, including API
+ * selection macros and device-specific configuration.
  */
 #include "EVE_settings.h"
 
@@ -71,38 +62,6 @@
 #else
     #error No EVE API selected.
 #endif
-
-/*
- * Support deprecated config items by overriding the replacement
- * macros with the deprecated values.
- * The presence of the deprecated macros is reported in EVE_API.c.
- */
-#define EVEIFY(y) EVE_ ## y
-#define EVEUPDATE(y) EVEIFY(y)
-
-#if defined(FT8XX_TYPE)
-#undef EVE_DEVICE
-#define EVE_DEVICE EVEUPDATE(FT8XX_TYPE)
-#endif // defined(FT8XX_TYPE)
-
-#if defined(DISPLAY_RES)
-#undef EVE_DISPLAY_RES
-#define EVE_DISPLAY_RES EVEUPDATE(DISPLAY_RES)
-#endif // defined(DISPLAY_RES)
-
-#if defined(MODULE_TYPE)
-#undef EVE_MODULE
-#define EVE_MODULE EVEUPDATE(MODULE_TYPE)
-#endif // defined(MODULE_TYPE)
-
-#if defined(PANEL_TYPE)
-#undef EVE_PANEL
-#define EVE_PANEL EVEUPDATE(PANEL_TYPE)
-#endif // defined(PANEL_TYPE)
-
-#if defined(QUADSPI_ENABLE)
-#define EVE_QSPI_ENABLE
-#endif // defined(QUADSPI_ENABLE)
 
 /** EVE API definitions. */
 

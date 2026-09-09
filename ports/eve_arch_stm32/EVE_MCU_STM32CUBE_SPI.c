@@ -62,8 +62,6 @@
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
@@ -145,6 +143,15 @@ int MCU_Setup(void)
 
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+    #error EVE_QSPI_ENABLE set but SMT32 configuration is for Single SPI 
+    return -1;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 /* EVE_CS__GPIO_Port and EVE_CS__Pin are defined by STM32CubMX.
  * The "User Label" for the CS pin is set to "EVE CS#" in the

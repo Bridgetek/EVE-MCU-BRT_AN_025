@@ -53,10 +53,6 @@
 #include <ft900_spi.h>
 #include <ft900_gpio.h>
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
-/* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
-#include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
 
@@ -209,22 +205,23 @@ int MCU_Deinit(void)
 
 int MCU_Setup(void)
 {
-    /* QSPI configuration */
-#if defined EVE_QSPI_ENABLE
-#if IS_EVE_API(2,3,4,5)
-    /* Select QSPI after initialisation complete. */
-    HAL_SetSPIMode(2);
-    // Turn on FT9xx quad-SPI.
-    spi_option(SPIM, spi_option_bus_width, 4);
-#endif // IS_EVE_API(2,3,4,5)
-#endif // EVE_QSPI_ENABLE
-
     /* Additional SPI Configuration */
     // Turn off SPI buffering. Timing of chip select is critical.
     spi_option(SPIM, spi_option_fifo, 0);
 
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+
+    // Turn on FT9xx quad-SPI.
+    spi_option(SPIM, spi_option_bus_width, 4);    
+    return 0;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 /**
  * @brief The interrupt handler for the timers.

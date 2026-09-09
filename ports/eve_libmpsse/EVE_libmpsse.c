@@ -79,10 +79,11 @@
 #include "ftd2xx.h"
 #include "libmpsse_spi.h"
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
+/* Include EVE-MCU-Dev library debug macros */
+#include "EVE_debug.h"
+
 
 /* EVE MCU HEADER END */
 
@@ -224,11 +225,6 @@ int MCU_Deinit(void)
 int MCU_Setup(void)
 {
     /* Additional SPI Configuration */
-
-#if defined EVE_QSPI_ENABLE
-#error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on libmpsse
-#endif // EVE_QSPI_ENABLE
-
     SPI_CloseChannel(ftHandle);
 
     // Increase SPI speed to 15 MHz after initialisation is complete
@@ -237,6 +233,16 @@ int MCU_Setup(void)
 
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* QSPI Configuration */
+#error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on libmpsse
+    /* Initialize IO2 and IO3 pad/pin for quad settings */
+    return -1;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 // ------------------------- Output buffering ----------------------------------
 

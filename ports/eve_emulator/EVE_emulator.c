@@ -70,10 +70,12 @@
 #include "EVE_Emulator/include/bt8xxemu_inttypes.h"
 #include "EVE_Emulator/include/bt8xxemu.h"
 
-/* Include EVE-MCU-Dev library */
-#include <EVE.h>
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
+/* Include EVE-MCU-Dev library debug macros */
+#include "EVE_debug.h"
+/* Include the EVE register definitions */
+#include "EVE_registers.h"
 
 /* EVE MCU HEADER END */
 
@@ -535,6 +537,14 @@ int MCU_Setup(void)
     /* No Additional "SPI" Configuration */
     return 0;
 }
+
+#if defined(EVE_QSPI_ENABLE)
+int MCU_SetSPIMode(uint8_t mode)
+{
+    /* No Additional "SPI" Configuration */
+    return 0;
+}
+#endif // defined(EVE_QSPI_ENABLE)
 
 static void emulator_check(void)
 {

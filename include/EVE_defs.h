@@ -215,4 +215,15 @@
 // Uses the EVE_COPRO_CMD_WRITE method.
 #define EVE_COPRO_INT            3
 //@}
+
+/**
+ * @brief SPI interface width definitions.
+ */
+//@{
+#define EVE_SPI_SINGLE_CHANNEL    0x00U
+#define EVE_SPI_DUAL_CHANNEL      0x01U
+#define EVE_SPI_QUAD_CHANNEL      0x02U
+//@}
+
+
 #endif /* _EVE_DEFS_H */
