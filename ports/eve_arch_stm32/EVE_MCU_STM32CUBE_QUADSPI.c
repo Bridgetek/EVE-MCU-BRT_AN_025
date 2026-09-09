@@ -168,7 +168,7 @@ int MCU_SetSPIMode(uint8_t mode)
 {
     if (mode == EVE_SPI_SINGLE_CHANNEL)
     {
-        ftIsQuad = 0;
+        isQuadSPI= 0;
     }
     else if (mode == EVE_SPI_QUAD_CHANNEL)
     {
@@ -181,7 +181,7 @@ int MCU_SetSPIMode(uint8_t mode)
         * on FT81x, BT88x, BT81x. */
         MX_QUADSPI_Init();
 
-        ftIsQuad = 1;
+        isQuadSPI = 1;
     }
     else
     {

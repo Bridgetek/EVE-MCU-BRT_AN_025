@@ -340,8 +340,6 @@ int MCU_Setup(void)
 #if defined(EVE_QSPI_ENABLE)
 int MCU_SetSPIMode(uint8_t mode)
 {
-    FT_STATUS ftStatus;
-
     if (mode == EVE_SPI_SINGLE_CHANNEL)
     {
         /* SPI Configuration */
