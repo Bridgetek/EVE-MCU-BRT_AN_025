@@ -143,7 +143,7 @@
  */
 //@{
 #ifndef EVE_QSPI_ENABLE
-#define EVE_QSPI_ENABLE
+#undef EVE_QSPI_ENABLE
 #endif
 //@}
 
@@ -218,7 +218,7 @@
  */
 //@{
 #ifndef EVE_LCD_INIT
-#define EVE_LCD_INIT
+#undef EVE_LCD_INIT
 #endif
 //@}
 

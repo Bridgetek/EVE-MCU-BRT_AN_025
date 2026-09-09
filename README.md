@@ -147,7 +147,7 @@ The HAL layer contains EVE-specific protocol handling, while the MCU or Platform
 
 ### Header Dependencies
 
-The main header and configuration dependencies are shown below. Arrows indicate that the file above includes or depends on the file below.
+The main header and configuration dependencies are shown below. Arrows show configuration and dependency flow from foundational headers toward the headers which consume them.
 ```mermaid
 flowchart TD
 
@@ -306,13 +306,13 @@ There are three methods of configuring the EVE device and panel type.
   
 In all cases, the selected module, device and panel settings are resolved in `EVE_settings.h`.
 
-Where `EVE_MODULE` is selected, it determines the corresponding `EVE_DEVICE` and `EVE_PANEL`.
+Where `EVE_MODULE` is selected, it determines the corresponding `EVE_DEVICE` and `EVE_PANEL` and may also enable/disable module-specific features.
 
-Where `EVE_PANEL` is selected, it determines the corresponding `EVE_DISPLAY_RES`.
+Where `EVE_PANEL` is selected, it determines the corresponding `EVE_DISPLAY_RES` and may also enable panel-specific features.
 
 `EVE_DISPLAY_RES` is then used to derive the `EVE_DISP_*` timing macro settings used when initialising the EVE display interface.
 
-The `EVE_PANEL` macro is not used in the library, however it is optionally used in the `examples/snippets/touch.c` examples snippet code to set predefined touchscreen configuration values to bypass calibration.
+The `EVE_PANEL` is optionally used in the `examples/snippets/touch.c` examples snippet code to set predefined touchscreen configuration values to bypass calibration.
 
 #### Device and Panel Options
 
