@@ -133,14 +133,6 @@ int MCU_Init(void)
     gpio_dir(PIN_NUM_PD, pad_dir_output);
     gpio_dir(PIN_NUM_INT, pad_dir_input);
 
-#if defined EVE_QSPI_ENABLE
-    /* Initialize IO2 and IO3 pad/pin for quad settings */
-    gpio_function(PIN_NUM_IO2, pad_spim_io2); /* GPIO31 to IO2 */
-    gpio_function(PIN_NUM_IO3, pad_spim_io3); /* GPIO32 to IO3 */
-    gpio_dir(PIN_NUM_IO2, pad_dir_output);
-    gpio_dir(PIN_NUM_IO3, pad_dir_output);
-#endif // EVE_QSPI_ENABLE
-
     /* CS# & PD# pins write to high */
     gpio_write(PIN_NUM_CS, 1);
     gpio_write(PIN_NUM_PD, 1);
@@ -215,13 +207,36 @@ int MCU_Setup(void)
 #if defined(EVE_QSPI_ENABLE)
 int MCU_SetSPIMode(uint8_t mode)
 {
-    /* QSPI Configuration */
+    if (mode == EVE_SPI_SINGLE_CHANNEL)
+    {
+        /* SPI Configuration */
+        if (spi_option(SPIM, spim_option_bus_width, 1) != 0)
+        {
+            return -1;
+        }
+    }
+    else if (mode == EVE_SPI_QUAD_CHANNEL)
+    {
+        /* Initialize IO2 and IO3 pad/pin for quad settings */
+        gpio_function(PIN_NUM_IO2, pad_spim_io2); /* GPIO31 to IO2 */
+        gpio_function(PIN_NUM_IO3, pad_spim_io3); /* GPIO32 to IO3 */
+        gpio_dir(PIN_NUM_IO2, pad_dir_output);
+        gpio_dir(PIN_NUM_IO3, pad_dir_output);
+        
+        /* QSPI Configuration */
+        if (spi_option(SPIM, spim_option_bus_width, 4) != 0)
+        {
+            return -1;
+        }
+    }
+    else
+    {
+        return -1;
+    }
 
-    // Turn on FT9xx quad-SPI.
-    spi_option(SPIM, spi_option_bus_width, 4);    
     return 0;
 }
-#endif // defined(EVE_QSPI_ENABLE)
+#endif /* defined(EVE_QSPI_ENABLE) */
 
 /**
  * @brief The interrupt handler for the timers.

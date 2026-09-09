@@ -340,13 +340,28 @@ int MCU_Setup(void)
 #if defined(EVE_QSPI_ENABLE)
 int MCU_SetSPIMode(uint8_t mode)
 {
-    /* QSPI Configuration */
-    mcu_setup_spi(CLK_DIV_4, SPI_IO_QUAD);
-    ftIsQuad = TRUE;
-    /* Initialize IO2 and IO3 pad/pin for quad settings */
+    FT_STATUS ftStatus;
+
+    if (mode == EVE_SPI_SINGLE_CHANNEL)
+    {
+        /* SPI Configuration */
+        mcu_setup_spi(CLK_DIV_4, SPI_IO_SINGLE);
+        ftIsQuad = FALSE;
+    }
+    else if (mode == EVE_SPI_QUAD_CHANNEL)
+    {
+        /* QSPI Configuration */
+        mcu_setup_spi(CLK_DIV_4, SPI_IO_QUAD);
+        ftIsQuad = TRUE;
+    }
+    else
+    {
+        return -1;
+    }
+
     return 0;
 }
-#endif // defined(EVE_QSPI_ENABLE)
+#endif /* defined(EVE_QSPI_ENABLE) */
 
 // ------------------------- Output buffering ----------------------------------
 

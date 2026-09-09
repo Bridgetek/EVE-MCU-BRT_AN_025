@@ -126,7 +126,7 @@ int MCU_Setup(void)
 int MCU_SetSPIMode(uint8_t mode)
 {
     /* QSPI Configuration */
-    #error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is set but not supported on this STM32 configuration
+    #error EVE_QSPI_ENABLE is not supported by the PLATFORM_STM32 port
     return -1;
 }
 #endif // defined(EVE_QSPI_ENABLE)

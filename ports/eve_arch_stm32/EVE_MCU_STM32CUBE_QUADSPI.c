@@ -166,20 +166,31 @@ int MCU_Setup(void)
 #if defined(EVE_QSPI_ENABLE)
 int MCU_SetSPIMode(uint8_t mode)
 {
-    /* QSPI Configuration */
-    /* Increase SPI speed after initialisation is complete.
-     * See the notes for MCU_SPI_TIMEOUT in the MCU.h file.
-     * This will set the QUADSPI to maximum speed configured
-     * in STM32CubeMX.
-     * This can be a maximum of 60 MHz for BT820, or 25 MHz
-     * on FT81x, BT88x, BT81x. */
-    MX_QUADSPI_Init();
+    if (mode == EVE_SPI_SINGLE_CHANNEL)
+    {
+        ftIsQuad = 0;
+    }
+    else if (mode == EVE_SPI_QUAD_CHANNEL)
+    {
+        /* QSPI Configuration */
+        /* Increase SPI speed after initialisation is complete.
+        * See the notes for MCU_SPI_TIMEOUT in the MCU.h file.
+        * This will set the QUADSPI to maximum speed configured
+        * in STM32CubeMX.
+        * This can be a maximum of 60 MHz for BT820, or 25 MHz
+        * on FT81x, BT88x, BT81x. */
+        MX_QUADSPI_Init();
 
-    isQuadSPI = 1;
+        ftIsQuad = 1;
+    }
+    else
+    {
+        return -1;
+    }
 
     return 0;
 }
-#endif // defined(EVE_QSPI_ENABLE)
+#endif /* defined(EVE_QSPI_ENABLE) */
 
 /* Send data in the write buffer and read in bytes from the QSPI. */
 static HAL_StatusTypeDef MCU_multi_transfer(uint8_t *DataToRead, uint32_t len)
