@@ -345,15 +345,19 @@ The library headers are grouped by logical layer below. The arrows show direct i
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|              Device and Feature-Specific Extensions          |
+|              Feature and Device-Specific Extensions          |
 |                                                              |
 |  include/extensions/*.h                                      |
 |  source/extensions/*.c                                       |
 |                                                              |
 |  e.g. custom_touch_fw.*, lcd_panel_init.*                    |
 |                                                              |
-|  Device- or feature-specific code isolated behind its        |
+|  Feature- or device-specific code isolated behind its        |
 |  associated configuration or feature guard.                  |
+|                                                              |
+|  Extensions may use common EVE functionality and, where      |
+|  required, contain MCU- or platform-specific implementation  |
+|  code.                                                       |
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
@@ -361,7 +365,7 @@ The library headers are grouped by logical layer below. The arrows show direct i
 |                                                              |
 |  EVE_debug.h                                                 |
 |                                                              |
-|  Shared debug interface with no dependency on EVE.h.         |
+|  Shared debug macro interface with no dependency on EVE.h.   |
 +--------------------------------------------------------------+
 ```
 
@@ -384,7 +388,7 @@ Lower-level MCU and platform implementation files should not depend on higher-le
 
 `EVE_debug.h` remains independent and may be used by API, HAL, MCU, platform, or port implementation code without requiring `EVE.h`.
 
-Extension code under `include/extensions` and `source/extensions` should depend only on the EVE functionality required by that feature and should remain isolated behind the relevant feature guards.
+Extension code under `include/extensions` and `source/extensions` sshould depend only on the functionality required by that feature and should remain isolated behind the relevant feature guards. Where required, an extension may contain MCU- or platform-specific implementation code for functionality that is not provided by the common library interfaces.
 
 ### Device and Panel Selection
 
@@ -409,7 +413,7 @@ Where `EVE_PANEL` is selected, it determines the corresponding `EVE_DISPLAY_RES`
 
 `EVE_DISPLAY_RES` is then used to derive the `EVE_DISP_*` timing macro settings used when initialising the EVE display interface.
 
-The `EVE_PANEL` is optionally used in the `examples/snippets/touch.c` examples snippet code to set predefined touchscreen configuration values to bypass calibration.
+The `EVE_PANEL` setting is optionally used in the `examples/snippets/touch.c` example snippet to select predefined touchscreen configuration values and bypass calibration. The `EVE_MODULE` setting is also used by `source/extensions/lcd_panel_init.c` to select the appropriate LCD panel driver initialisation sequence where supported.
 
 #### Device and Panel Options
 
