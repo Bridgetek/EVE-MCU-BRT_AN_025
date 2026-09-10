@@ -220,6 +220,10 @@
 
 /**
  * @brief SPI interface width definitions.
+ * @details Defines the supported EVE SPI bus widths used when configuring
+ *      the host and EVE interfaces. Single and quad channel modes are used
+ *      by the library. Dual channel mode is defined for completeness but is
+ *      not currently used by the library.
  */
 //@{
 #define EVE_SPI_SINGLE_CHANNEL    0x00U
@@ -228,10 +232,10 @@
 //@}
 
 /**
- * @brief Maximum transfer size of data transmit or receive
- * @details The maximum number of bytes in a transfer using 
- *      Read or Write functions to EVE.
- *      This must be less than 65535 bytes in all cases.
+ * @brief Maximum size of an EVE data transfer chunk.
+ * @details Defines the maximum number of data bytes passed to the EVE read
+ *      or write functions in a single chunk. This value must always be less
+ *      than 65535 bytes.
  */
 #define EVE_MAX_CHUNK_SIZE (1024 - sizeof(uint32_t))
 
