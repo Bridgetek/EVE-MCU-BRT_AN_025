@@ -52,8 +52,9 @@
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
 /*
- * Include the EVE settings derived from the EVE configuration, including API
- * selection macros and device-specific configuration.
+ * EVE_settings.h is used only for derived build-time configuration.
+ * Platform implementations remain independent of the public EVE API
+ * and HAL implementation.
  */
 #include "EVE_settings.h"
 
@@ -82,7 +83,7 @@ struct spi_ioc_transfer;
  *      size plus a small number of bytes for protocol.
  *      A larger buffer is only needed if fast reads of large blocks 
  *      of data are required from the device. Normal operation can be
- *      acheived with 32-bit reads with good performance.
+ *      achieved with 32-bit reads with good performance.
  */
 #if IS_EVE_API(5)
 #if defined(PLATFORM_RASPBERRYPI) 

@@ -49,7 +49,7 @@
 
 /*
  * EVE_settings.h is used only for derived build-time configuration.
- * Platform implementations remain independent of the public EVE API
+ * MCU implementations remain independent of the public EVE API
  * and HAL implementation.
  */
 #include "EVE_settings.h"

@@ -256,7 +256,8 @@ The examples directory contains all the examples provided. There are more detail
 
 ### Header Dependency
 
-The library headers are grouped by logical layer below. The arrows show direct include dependencies between files, while the layer groupings indicate each file's role within the library structure.
+The library headers are grouped below by their role within the library structure. The arrows show direct include dependencies between files. Software layers are
+shown alongside shared configuration, definition, extension, and utility headers
 
 ```text
 +--------------------------------------------------------------+
@@ -388,7 +389,7 @@ Lower-level MCU and platform implementation files should not depend on higher-le
 
 `EVE_debug.h` remains independent and may be used by API, HAL, MCU, platform, or port implementation code without requiring `EVE.h`.
 
-Extension code under `include/extensions` and `source/extensions` sshould depend only on the functionality required by that feature and should remain isolated behind the relevant feature guards. Where required, an extension may contain MCU- or platform-specific implementation code for functionality that is not provided by the common library interfaces.
+Extension code under `include/extensions` and `source/extensions` should depend only on the functionality required by that feature and should remain isolated behind the relevant feature guards. Where required, an extension may contain MCU- or platform-specific implementation code for functionality that is not provided by the common library interfaces.
 
 ### Device and Panel Selection
 
