@@ -528,13 +528,13 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
         return;
     }
 #else
-    unsigned char bb[PLATFORM_SPI_TIMEOUT];
+    unsigned char bb[EVE_SPI_TIMEOUT];
     uint32_t recvlen = 0;
     int i;
-    // Read PLATFORM_SPI_TIMEOUT bytes before the "0x01" that signifies data ready.
+    // Read EVE_SPI_TIMEOUT bytes before the "0x01" that signifies data ready.
     xfer[0].tx_buf = (uintptr_t)NULL;
     xfer[0].rx_buf = (uintptr_t)bb;
-    xfer[0].len = PLATFORM_SPI_TIMEOUT;
+    xfer[0].len = EVE_SPI_TIMEOUT;
     xfer[0].cs_change = 0;
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
@@ -542,14 +542,14 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
         EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
         return;
     }
-    for (i = 0; i < PLATFORM_SPI_TIMEOUT; i++)
+    for (i = 0; i < EVE_SPI_TIMEOUT; i++)
     {
         if (bb[i] == 1)
         {
             i++;
             // Number of bytes received that are valid.
-            recvlen = PLATFORM_SPI_TIMEOUT - i;
-            // Number of valid bytes can range from 0 to PLATFORM_SPI_TIMEOUT-1.
+            recvlen = EVE_SPI_TIMEOUT - i;
+            // Number of valid bytes can range from 0 to EVE_SPI_TIMEOUT-1.
             // Only take the requested length of data from the input buffer.
             if (length < recvlen)
             {
@@ -557,7 +557,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
             }
             length -= recvlen;
             // Read first part of data in. This will always be less than 
-            // PLATFORM_SPI_TIMEOUT bytes. Do not break alignment.
+            // EVE_SPI_TIMEOUT bytes. Do not break alignment.
             while (recvlen--)
             {
                 *(buffer++) = bb[i++];

@@ -147,7 +147,7 @@ static void mcu_setup_spi(FT4222_SPIClock div, FT4222_SPIMode mode)
         exit(ftStatus);
     }
 
-    /* Set SPI clock speed to 20 MHz - See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file. */
+    /* Set SPI clock speed to 20 MHz - See the notes for EVE_SPI_TIMEOUT in the MCU.h file. */
     ftStatus = FT4222_SPIMaster_Init(ftHandleSPI, SPI_IO_SINGLE, div, CLK_IDLE_LOW, CLK_LEADING, FT8XX_CS_N_PIN);
     if (FT_OK != ftStatus)
     {
@@ -330,7 +330,7 @@ int MCU_Deinit(void)
 int MCU_Setup(void)
 {
     // Increase SPI speed to 20 MHz after initialisation is complete
-    // See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+    // See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
     // Clock is 80 MHz / 4 = 20 MHz
     mcu_setup_spi(CLK_DIV_4, SPI_IO_SINGLE);
     

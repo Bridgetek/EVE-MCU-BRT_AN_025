@@ -120,7 +120,7 @@ static void cmd_open_channel(DWORD channel, uint32_t speed)
     FT_STATUS ftStatus;
     ChannelConfig channelConf;
 
-    /* Set SPI clock speed to 15 MHz - See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file. */
+    /* Set SPI clock speed to 15 MHz - See the notes for EVE_SPI_TIMEOUT in the MCU.h file. */
     memset(&channelConf, 0, sizeof(ChannelConfig));
     channelConf.ClockRate = speed;
     channelConf.LatencyTimer = 10;
@@ -228,7 +228,7 @@ int MCU_Setup(void)
     SPI_CloseChannel(ftHandle);
 
     // Increase SPI speed to 15 MHz after initialisation is complete
-    // See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+    // See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
     cmd_open_channel(openChannel, 15000000);
 
     return 0;

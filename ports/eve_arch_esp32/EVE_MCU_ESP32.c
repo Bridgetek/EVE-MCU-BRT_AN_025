@@ -167,7 +167,7 @@ int MCU_Setup(void)
 {
     /* Additional SPI Configuration */
     // Increase SPI speed to 25 MHz after initialisation is complete
-    // See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+    // See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
     mcu_deinit_spi();
     MCU_Delay_20ms();
     mcu_setup_spi(25000000);

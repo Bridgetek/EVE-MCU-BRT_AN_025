@@ -87,7 +87,7 @@ include_directories(
 add_compile_definitions(SOFTWARE_SIMULATOR)
 
 add_compile_definitions(=2)
-add_compile_definitions(EVE_MCU_SPI_TIMEOUT=8)
+add_compile_definitions(EVE_SPI_TIMEOUT=8)
 add_compile_definitions(EVE_MCU_SPI_TRANSFER=0x100)
 
 # Use look up table instead of maths functions for trig

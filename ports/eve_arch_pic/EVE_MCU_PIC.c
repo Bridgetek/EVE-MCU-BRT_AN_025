@@ -106,7 +106,7 @@ int MCU_Init(void)
 
     LATBbits.LATB0 = 1;
     
-    // Set SPI clock speed to 1 MHz - See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+    // Set SPI clock speed to 1 MHz - See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
 
     // SPI 1 set-up
     SSP1CON1bits.SSPEN  = 0;    // Disable SPI1

@@ -100,40 +100,40 @@
 #if IS_EVE_API(5)
 #if defined(PLATFORM_FT9XX) 
 /* FT9xx SPI Bus is set to 12.5 MHz by default */
-#define EVE_MCU_SPI_TIMEOUT 16
+#define EVE_MCU_ 16
 
 #elif defined(PLATFORM_RP2040)
 /* RP2040 SPI bus is set to 10 MHz by default */
-#define EVE_MCU_SPI_TIMEOUT 16
+#define EVE_SPI_TIMEOUT 16
 
 #elif defined (USE_MPSSE) 
 /* libMPSSE and libft4222 generate a 15 MHz SPI bus - 16 bytes is sufficient. */
-#define EVE_MCU_SPI_TIMEOUT 16
+#define EVE_SPI_TIMEOUT 16
 
 #elif defined (USE_FT4222)
 /* libMPSSE and libft4222 generate a 20 MHz SPI bus - 16 bytes is sufficient. */
-#define EVE_MCU_SPI_TIMEOUT 16
+#define EVE_SPI_TIMEOUT 16
 
 #elif defined (PLATFORM_STM32_CUBE)
 /* STM32 SPI bus is set to 60 MHz by default */
 #if defined(EVE_QSPI_ENABLE)
-#define EVE_MCU_SPI_TIMEOUT 56
+#define EVE_SPI_TIMEOUT 56
 #else
-#define EVE_MCU_SPI_TIMEOUT 16
+#define EVE_SPI_TIMEOUT 16
 #endif
 
 #elif  defined(PLATFORM_STM32) || defined(PLATFORM_PIC) \
     || defined(PLATFORM_NXPK64) || defined(PLATFORM_MSP430) \
     || defined(PLATFORM_ESP32)|| defined(PLATFORM_MSPM0)
 /* The default SPI bus for embedded MCUs to 1 MHz */
-#define EVE_MCU_SPI_TIMEOUT 8
+#define EVE_SPI_TIMEOUT 8
 
 #elif defined(ARDUINO)
 /* Arduino SPI bus is set to 1 MHz by default */
-#define EVE_MCU_SPI_TIMEOUT 8
+#define EVE_SPI_TIMEOUT 8
 
 #elif defined(PLATFORM_EMULATOR)
-#define EVE_MCU_SPI_TIMEOUT 8
+#define EVE_SPI_TIMEOUT 8
 #endif
 
 #endif // IS_EVE_API(5)

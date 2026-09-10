@@ -99,13 +99,13 @@ struct spi_ioc_transfer;
 #if IS_EVE_API(5)
 #if defined(PLATFORM_RASPBERRYPI) 
 /* Raspberry Pi SPI bus is set to 1 MHz by default */
-#define PLATFORM_SPI_TIMEOUT 8
+#define EVE_SPI_TIMEOUT 8
 #elif defined(PLATFORM_BEAGLEBONE) 
 /* The default SPI on Beaglebone to 1 MHz */
-#define PLATFORM_SPI_TIMEOUT 8
+#define EVE_SPI_TIMEOUT 8
 #else
 /* Linux systems SPI busses are set to 1 MHz by default */
-#define PLATFORM_SPI_TIMEOUT 8
+#define EVE_SPI_TIMEOUT 8
 #endif
 #endif
 

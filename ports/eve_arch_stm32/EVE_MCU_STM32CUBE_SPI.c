@@ -129,7 +129,7 @@ int MCU_Setup(void)
 {
     /* Additional SPI Configuration */
     /* Increase SPI speed after initialisation is complete.
-     * See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+     * See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
      * This will set the SPI to maximum speed configured
      * in STM32CubeMX.
      * This can be a maximum of 60 MHz for BT820, or 30 MHz

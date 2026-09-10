@@ -138,7 +138,7 @@ int MCU_Init(void)
     gpio_write(PIN_NUM_PD, 1);
 
     /* Start SPIM interface */
-    // Set SPI clock speed to 12.5 MHz - See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+    // Set SPI clock speed to 12.5 MHz - See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
     // Divide by 8 is 12.5 MHz
     spi_init(SPIM, spi_dir_master, spi_mode_0, 8);
     spi_option(SPIM,spi_option_fifo_size,64);

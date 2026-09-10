@@ -119,7 +119,7 @@ int MCU_Setup(void) {
   SPI.endTransaction();
 
   // Increase SPI speed to 8 MHz after initialisation is complete
-  // See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file.
+  // See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
   return 0;
 }

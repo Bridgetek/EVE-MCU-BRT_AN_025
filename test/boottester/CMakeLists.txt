@@ -66,7 +66,7 @@ include_directories(
 add_compile_definitions(SOFTWARE_SIMULATOR)
 
 add_compile_definitions(EVE_DEBUG_LEVEL=1)
-add_compile_definitions(EVE_MCU_SPI_TIMEOUT=8)
+add_compile_definitions(EVE_SPI_TIMEOUT=8)
 add_compile_definitions(EVE_MCU_SPI_TRANSFER=0x100)
 
 # Source code for EVE library (targetted at FT4222)

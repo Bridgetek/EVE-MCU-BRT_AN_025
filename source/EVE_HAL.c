@@ -404,19 +404,19 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
 #if IS_EVE_API(1, 2, 3, 4)
     MCU_SPIRead(buffer, length);
 #else
-    unsigned char bb[EVE_MCU_SPI_TIMEOUT];
+    unsigned char bb[EVE_SPI_TIMEOUT];
     uint32_t recvlen = 0;
     int i;
-    // Read EVE_MCU_SPI_TIMEOUT bytes before the "0x01" that signifies data ready.
-    MCU_SPIRead(bb, EVE_MCU_SPI_TIMEOUT);
-    for (i = 0; i < EVE_MCU_SPI_TIMEOUT; i++)
+    // Read EVE_SPI_TIMEOUT bytes before the "0x01" that signifies data ready.
+    MCU_SPIRead(bb, EVE_SPI_TIMEOUT);
+    for (i = 0; i < EVE_SPI_TIMEOUT; i++)
     {
         if (bb[i] == 1)
         {
             i++;
             // Number of bytes received that are valid.
-            recvlen = EVE_MCU_SPI_TIMEOUT - i;
-            // Number of valid bytes can range from 0 to EVE_MCU_SPI_TIMEOUT-1.
+            recvlen = EVE_SPI_TIMEOUT - i;
+            // Number of valid bytes can range from 0 to EVE_SPI_TIMEOUT-1.
             // Only take the requested length of data from the input buffer.
             if (length < recvlen)
             {
