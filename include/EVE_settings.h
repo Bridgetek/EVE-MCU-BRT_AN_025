@@ -42,7 +42,8 @@
 #define _EVE_SETTINGS_H
 
 /*
- * Include the EVE configuration to select the EVE API.
+ * Include the user-supplied EVE configuration from the configured
+ * include path to select the EVE API and library options.
  */
 #include <EVE_config.h>
 

@@ -259,6 +259,11 @@ The examples directory contains all the examples provided. There are more detail
 The library headers are grouped below by their role within the library structure. The arrows show direct include dependencies between files. Software layers are
 shown alongside shared configuration, definition, extension, and utility headers
 
+The public EVE-MCU-Dev interface headers `EVE.h`, `HAL.h`, `MCU.h`, and `Platform.h` are included through the configured include path using angle brackets. Extension headers under `include/extensions` are also included through the configured include path, for example `<extensions/bt82x_patch.h>`.
+
+Internal support headers such as `EVE_registers.h`, `EVE_commands.h`, and `EVE_debug.h` use quoted includes where they are consumed within the library or port implementations. `EVE_settings.h` and `EVE_defs.h` are likewise internal library headers. `EVE_config.h` is intentionally included using angle brackets so that applications may provide their own configuration header through the configured include path.
+
+
 ```text
 +--------------------------------------------------------------+
 |                      Application Layer                       |
