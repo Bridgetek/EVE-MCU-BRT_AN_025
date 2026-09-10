@@ -100,7 +100,7 @@
 #if IS_EVE_API(5)
 #if defined(PLATFORM_FT9XX) 
 /* FT9xx SPI Bus is set to 12.5 MHz by default */
-#define EVE_MCU_ 16
+#define EVE_SPI_TIMEOUT 16
 
 #elif defined(PLATFORM_RP2040)
 /* RP2040 SPI bus is set to 10 MHz by default */
