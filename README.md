@@ -319,7 +319,6 @@ Internal support headers such as `EVE_registers.h`, `EVE_commands.h`, and `EVE_d
 |                                                              |
 |  HAL.h                                                       |
 |    +--> EVE_settings.h                                       |
-|    +--> MCU.h / Platform.h [as required]                     |
 |                                                              |
 |  EVE_HAL.c                  |  EVE_HAL_Linux.c               |
 |    +--> HAL.h               |    +--> HAL.h                  |
