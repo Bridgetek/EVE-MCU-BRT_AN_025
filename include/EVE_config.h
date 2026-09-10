@@ -131,8 +131,9 @@
 
 /**
  * @brief Enable or Disable QuadSPI.
- * @details If the macro is set then the platform port may only enable QSPI
- *      on the EVE device (using HAL_SetSPIMode) if  is supported by the platform.
+ * @details When enabled, the HAL configures the EVE device for the requested SPI
+ *      interface mode. The HAL then uses MCU_SetSPIMode() or Platform_SetSPIMode()
+ *      to configure the host SPI interface accordingly.
  *      EVE_QSPI_ENABLE may be defined externally to enable QSPI, otherwise it
  *      remains undefined.
  * 

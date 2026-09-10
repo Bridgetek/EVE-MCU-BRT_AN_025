@@ -170,10 +170,10 @@ The file `EVE_HAL.c` is intended for MCU platforms, the file `EVE_HAL_Linux.c` i
 Contents of the `source` directory:
 
 - **`EVE_API.c`** The programming interface to the library.
-- `EVE_HAL.c` Hardware abstraction layer for MCU-style and supported host-interface ports implementing `MCU.h`..
+- `EVE_HAL.c` Hardware abstraction layer for MCU-style and supported host-interface ports implementing `MCU.h`.
 - `EVE_HAL_Linux.c` Hardware abstraction layer for Linux SPI device ports implementing `Platform.h`.
 
-Include files show the layers inherent in the library. The main API can be accessed with just the `EVE.h` header file which will include all the required header files to compile using the EVE API. The configuration for the display panel and other relvant configurable settings is modified in the `EVE_config.h` file. For most applications this is the only file in the library that will need modification.
+Include files show the layers inherent in the library. The main API can be accessed with just the `EVE.h` header file which will include all the required header files to compile using the EVE API. The configuration for the display panel and other relevant configurable settings is modified in the `EVE_config.h` file. For most applications this is the only file in the library that will need modification.
 
 Contents of the `include` directory:
 
@@ -225,7 +225,7 @@ it directly depends upon and should not rely on `EVE.h` having been included fir
 `EVE_config.h` may be replaced by an application-specific version by placing the
 replacement earlier in the compiler include search path.
 
-Extension-specific functionality is separated from the common EVE API source and header files. Extension header files are located in `include/extensions`, with their corresponding implementations located in `source/extensions`. These files provide functionality which is required only for specific EVE device generations or configurations and can be excluded from projects if the are not required.
+Extension-specific functionality is separated from the common EVE API source and header files. Extension header files are located in `include/extensions`, with their corresponding implementations located in `source/extensions`. These files provide functionality which is required only for specific EVE device generations or configurations and can be excluded from projects if they are not required.
 
 * `/source/extensions/bt82x_patch.c` Implementation of the BT82x base patch loader and the additional API commands provided by the base patch for EVE API level 5 devices.
 * `/include/extensions/bt82x_patch.h` Definitions and function declarations for the BT82x base patch functionality.
@@ -242,7 +242,7 @@ The `ports` directory contains a folder for each supported platform.
 
 MCU-style and host-interface ports implement the interface declared by `MCU.h` and are used by `EVE_HAL.c`.
 
-Linux SPI character-device ports implement the interface declared by `Platform.h`and are used by `EVE_HAL_Linux.c`.
+Linux SPI ports implement the interface declared by `Platform.h` and are used by `EVE_HAL_Linux.c`.
 
 These implementations provide the host-specific SPI, GPIO, timing, byte-order and optional interrupt functionality required by the HAL. Where supported, a port may also provide host-side configuration for optional interfaces such as Quad SPI.
 
@@ -260,14 +260,14 @@ The library headers are grouped by logical layer below. The arrows show direct i
 
 ```text
 +--------------------------------------------------------------+
-|                     Application Layer                        |
+|                      Application Layer                       |
 |                                                              |
 |  Application source files                                    |
 |    +--> EVE.h                                                |
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                        EVE API Layer                         |
+|                       EVE API Layer                          |
 |                                                              |
 |  EVE.h                                                       |
 |    +--> EVE_commands.h                                       |
@@ -280,7 +280,7 @@ The library headers are grouped by logical layer below. The arrows show direct i
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                  EVE Configuration Layer                     |
+|                 Shared Configuration Headers                 |
 |                                                              |
 |  EVE_settings.h                                              |
 |    +--> EVE_config.h                                         |
@@ -289,11 +289,14 @@ The library headers are grouped by logical layer below. The arrows show direct i
 |    +--> EVE_defs.h                                           |
 |                                                              |
 |  EVE_defs.h                                                  |
-|    Common definitions shared between library layers          |
+|    Common device, module, panel and option definitions.      |
+|                                                              |
+|  These headers provide shared compile-time configuration     |
+|  used by multiple library layers and interfaces.             |
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                   EVE Definition Layer                       |
+|              EVE Command and Register Definitions            |
 |                                                              |
 |  EVE_commands.h                                              |
 |    +--> EVE_settings.h                                       |
@@ -321,7 +324,7 @@ The library headers are grouped by logical layer below. The arrows show direct i
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                 MCU / Platform Interface Layer               |
+|                MCU / Platform Interface Layer                |
 |                                                              |
 |  MCU.h                      |  Platform.h                    |
 |    +--> EVE_settings.h      |    +--> EVE_settings.h         |
@@ -330,11 +333,11 @@ The library headers are grouped by logical layer below. The arrows show direct i
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                   Port Implementation Layer                  |
+|                  Port Implementation Layer                   |
 |                                                              |
 |  ports/eve_*/EVE_*.c                                         |
 |    +--> MCU.h                                                |
-|    +--> EVE_debug.h [as required]                            |
+|    +--> EVE_debug.h [where debug output is required]         |
 |                                                              |
 |  Linux platform implementation sources                       |
 |                                                              |
@@ -342,18 +345,19 @@ The library headers are grouped by logical layer below. The arrows show direct i
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                       Extension Layer                        |
+|              Device and Feature-Specific Extensions          |
 |                                                              |
 |  include/extensions/*.h                                      |
 |  source/extensions/*.c                                       |
 |                                                              |
 |  e.g. custom_touch_fw.*, lcd_panel_init.*                    |
 |                                                              |
-|  Feature-specific code isolated behind its associated guard. |
+|  Device- or feature-specific code isolated behind its        |
+|  associated configuration or feature guard.                  |
 +--------------------------------------------------------------+
 
 +--------------------------------------------------------------+
-|                  Independent Utility Layer                   |
+|                  Independent Debug Utility                   |
 |                                                              |
 |  EVE_debug.h                                                 |
 |                                                              |
@@ -374,9 +378,9 @@ EVE_config.h
 EVE_settings.h
 ```
 
-`EVE_settings.h` is consumed by the API, HAL, MCU, platform, command, and register definition headers as required.
+`EVE_settings.h` is consumed by the API, HAL, MCU, platform, command, and register definition headers as required. This is a shared configuration dependency rather than a dependency on a higher-level software interface.
 
-Lower-level MCU and platform implementation files should not depend on higher-level headers such as `EVE.h` or `HAL.h`.
+Lower-level MCU and platform implementation files should not depend on higher-level headers such as `EVE.h` or `HAL.h`. They may, however, depend on `EVE_settings.h` where derived build-time configuration such as the selected EVE API level or QSPI support affects the host interface implementation
 
 `EVE_debug.h` remains independent and may be used by API, HAL, MCU, platform, or port implementation code without requiring `EVE.h`.
 
@@ -532,9 +536,9 @@ The source code for each platform is stored in the [ports](ports) directory. Eac
 
 ## Example Code
 
-There are example projects for many each supported platform. The [examples/README.md](examples/README.md) file has details on each of the included examples.
+There are example projects for each supported platform. The [examples/README.md](examples/README.md) file has details on each of the included examples.
 
-The ["simple"](examples/simple/README.md) example has build environments for all platforms and forms the basis of other examples that are provided. Build instructions are included in the ["simple" example directory.](examples/simple/README.md).
+The ["simple"](examples/simple/README.md) example provides build environments for all supported platforms and forms the basis of the other examples provided. Build instructions are included in the ["simple" example directory.](examples/simple/README.md).
 
 ## Module Connections
 

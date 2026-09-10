@@ -48,8 +48,9 @@
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
 
 /*
- * Include the EVE settings required by the MCU layer, including API
- * selection macros and device-specific configuration.
+ * EVE_settings.h is used only for derived build-time configuration.
+ * Platform implementations remain independent of the public EVE API
+ * and HAL implementation.
  */
 #include "EVE_settings.h"
 

@@ -62,8 +62,6 @@
 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
-/* Include EVE-MCU-Dev library debug macros */
-#include "EVE_debug.h"
 
 #include "quadspi.h"
 
@@ -116,7 +114,6 @@ int MCU_Init(void)
     MCU_buffer = malloc(MCU_BUFFER_SIZE);
     if (MCU_buffer == NULL)
     {
-        EVE_DEBUG_ERROR("QSPI Setup malloc failed\n");
         return -1;
     }
 
@@ -227,7 +224,6 @@ static HAL_StatusTypeDef MCU_multi_transfer(uint8_t *DataToRead, uint32_t len)
         status = HAL_QSPI_Command(&hqspi, &sCommand, HAL_MAX_DELAY);
         if (status != HAL_OK)
         {
-            EVE_DEBUG_PRINTF("QSPI command sending error in QSPI_Transmit...\n");
             return status;
         }
         else
@@ -235,7 +231,6 @@ static HAL_StatusTypeDef MCU_multi_transfer(uint8_t *DataToRead, uint32_t len)
 			status = HAL_QSPI_Transmit(&hqspi, MCU_buffer, HAL_MAX_DELAY);
 			if (status != HAL_OK)
 			{
-				EVE_DEBUG_PRINTF("QSPI Transmit error in QSPI_Transmit...\n");
 				return status;
 			}
 		}
@@ -273,7 +268,6 @@ static HAL_StatusTypeDef MCU_multi_transfer(uint8_t *DataToRead, uint32_t len)
         status = HAL_QSPI_Command(&hqspi, &sCommand, HAL_MAX_DELAY);
         if (status != HAL_OK)
         {
-            EVE_DEBUG_PRINTF("QSPI command sending error in rdBuffer...\n");
             return status;
         }
         else
@@ -281,7 +275,6 @@ static HAL_StatusTypeDef MCU_multi_transfer(uint8_t *DataToRead, uint32_t len)
 			status = HAL_QSPI_Receive(&hqspi, DataToRead, HAL_MAX_DELAY);
 			if (status != HAL_OK)
 			{
-				EVE_DEBUG_PRINTF("QSPI receive error in rdBuffer...\n");
 				return status;
 			}
         }
@@ -378,8 +371,7 @@ uint8_t MCU_SPIRead8(void)
     status = MCU_receive_buffer((uint8_t *)&DataRead, 1, 0);
     if (HAL_OK != status)
     {
-         // QUADSPI master read failed
-        EVE_DEBUG_ERROR("MCU_SPIRead8 failed %d\n", status);
+        // QUADSPI master read failed
         DataRead = 0;
     }
  
@@ -400,7 +392,6 @@ uint16_t MCU_SPIRead16(void)
     if (HAL_OK != status)
     {
         // QUADSPI master read failed
-        EVE_DEBUG_ERROR("MCU_SPIRead16 failed %d\n", status);
         DataRead = 0;
     }
 
@@ -426,7 +417,6 @@ uint32_t MCU_SPIRead32(void)
     if (HAL_OK != status)
     {
         // QUADSPI master read failed
-        EVE_DEBUG_ERROR("MCU_SPIRead32 failed %d\n", status);
         DataRead = 0;
     }
 
@@ -443,16 +433,15 @@ void MCU_SPIRead(uint8_t *DataToRead, uint32_t length)
     HAL_StatusTypeDef status;
 
     status = MCU_receive_buffer((uint8_t *)DataToRead, length, 0);
-    if (HAL_OK != status)
-    {
-        // QUADSPI master read failed
-        EVE_DEBUG_ERROR("MCU_SPIRead failed %d\n", status);
-    }
+    (void)status;
 }
 
 void MCU_SPIWrite(const uint8_t *DataToWrite, uint32_t length)
 {
-    MCU_append_buffer(DataToWrite, length, 0);
+    HAL_StatusTypeDef status;
+    
+    status = MCU_append_buffer(DataToWrite, length, 0);
+    (void)status;
 }
 
 /* EVE MCU END */
