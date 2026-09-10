@@ -49,6 +49,8 @@
 #include <EVE.h> 
 /* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
 #include <HAL.h> 
+/* Include the EVE debug-output macros */
+#include "EVE_debug.h"
 
 #if IS_EVE_API(5)
 #include <extensions/bt82x_patch.h>
@@ -381,7 +383,6 @@ void EVE_LIB_EndCoProList(void)
     HAL_WriteCmdPointer();
 #endif
 }
-
 static int EVE_API_WaitCmdFifoEmpty(uint32_t timeout)
 {
     int status;
@@ -390,23 +391,19 @@ static int EVE_API_WaitCmdFifoEmpty(uint32_t timeout)
 
     if (status == EVE_COPRO_STATUS_EXCEPTION)
     {
-#if DEBUG_LEVEL > 0
-#if IS_EVE_API(3,4,5)
+#if IS_EVE_API(3, 4, 5)
         char message[256];
 
         memset(message, 0, sizeof(message));
         EVE_LIB_GetCoProException(message);
         EVE_DEBUG_ERROR("Co-processor exception: %s\n", message);
-#else // IS_EVE_API(3,4,5)
+#else
         EVE_DEBUG_ERROR("Co-processor exception\n");
-#endif // IS_EVE_API(3,4,5)
-#endif // DEBUG_LEVEL
+#endif
     }
     else if (status == EVE_COPRO_STATUS_TIMEOUT)
     {
-#if DEBUG_LEVEL > 0
-            EVE_DEBUG_ERROR("Co-processor timeout\n");
-#endif // DEBUG_LEVEL
+        EVE_DEBUG_ERROR("Co-processor timeout\n");
     }
 
     return status;
@@ -511,7 +508,7 @@ int EVE_LIB_Int(void)
     return HAL_Int();
 }
 
-#if defined (EVE_MANANGE_INTERRUPTS)
+#if defined (EVE_MANAGE_INTERRUPTS)
 // Get the status of the interrupt flag register
 uint8_t EVE_LIB_GetInterrupt(uint8_t mask)
 {
@@ -526,7 +523,7 @@ uint8_t EVE_LIB_GetInterrupt(uint8_t mask)
 
     return val;
 }
-#endif // defined (EVE_MANANGE_INTERRUPTS)
+#endif // defined (EVE_MANAGE_INTERRUPTS)
 
 // Gets a result from the command buffer
 uint32_t EVE_LIB_GetResult(int offset)

@@ -68,7 +68,7 @@ int HAL_EVE_Init(void);
 
 /**
  * @brief De-Initialise EVE HAL Layer.
- & @details This will call the MCU-specific de-initialisation routines.
+ * @details This will call the MCU-specific de-initialisation routines.
  * @return 0 for success or -1 for failure.
  */
 int HAL_EVE_Deinit(void);

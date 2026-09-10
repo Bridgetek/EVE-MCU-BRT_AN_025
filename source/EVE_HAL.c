@@ -51,9 +51,9 @@
 #include <HAL.h> 
 /* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
-/* Include EVE register definitions used by the HAL layer. */
+/* Include EVE register definitions used by the HAL layer */
 #include "EVE_registers.h"
-/* Include the EVE command definitions used by the HAL layer. */
+/* Include the EVE command definitions used by the HAL layer */
 #include "EVE_commands.h"
 /* Include the EVE debug-output macros */
 #include "EVE_debug.h"
@@ -404,19 +404,19 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
 #if IS_EVE_API(1, 2, 3, 4)
     MCU_SPIRead(buffer, length);
 #else
-    unsigned char bb[MCU_SPI_TIMEOUT];
+    unsigned char bb[EVE_MCU_SPI_TIMEOUT];
     uint32_t recvlen = 0;
     int i;
-    // Read MCU_SPI_TIMEOUT bytes before the "0x01" that signifies data ready.
-    MCU_SPIRead(bb, MCU_SPI_TIMEOUT);
-    for (i = 0; i < MCU_SPI_TIMEOUT; i++)
+    // Read EVE_MCU_SPI_TIMEOUT bytes before the "0x01" that signifies data ready.
+    MCU_SPIRead(bb, EVE_MCU_SPI_TIMEOUT);
+    for (i = 0; i < EVE_MCU_SPI_TIMEOUT; i++)
     {
         if (bb[i] == 1)
         {
             i++;
             // Number of bytes received that are valid.
-            recvlen = MCU_SPI_TIMEOUT - i;
-            // Number of valid bytes can range from 0 to MCU_SPI_TIMEOUT-1.
+            recvlen = EVE_MCU_SPI_TIMEOUT - i;
+            // Number of valid bytes can range from 0 to EVE_MCU_SPI_TIMEOUT-1.
             // Only take the requested length of data from the input buffer.
             if (length < recvlen)
             {
@@ -432,9 +432,9 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
             while (length > 0)
             {
                 uint32_t nn = length;
-                if (nn > MCU_SPI_TRANSFER)
+                if (nn > EVE_MCU_SPI_TRANSFER)
                 {
-                    nn = MCU_SPI_TRANSFER;
+                    nn = EVE_MCU_SPI_TRANSFER;
                 }
                 MCU_SPIRead(buffer, nn);
                 length -= nn;

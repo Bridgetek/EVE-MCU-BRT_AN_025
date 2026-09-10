@@ -111,7 +111,7 @@ int Platform_Init(void)
         return -1;
     }
 
-    // Set SPI clock speed to 1 MHz - See the notes for MCU_SPI_TIMEOUT in the MCU.h file. */
+    // Set SPI clock speed to 1 MHz - See the notes for EVE_MCU_SPI_TIMEOUT in the MCU.h file. */
     uint32_t speed = 1000000;
     ioctl(spiHandle, SPI_IOC_WR_MAX_SPEED_HZ, &speed );
     // Initialize SPIM HW

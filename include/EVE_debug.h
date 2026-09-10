@@ -43,26 +43,51 @@
 
 /* EVE DEBUG */
 
-/*
- * Enable informational debug output by default for host platforms that
- * normally provide an operating-system console, such as MPSSE, FT4222 and
- * emulator ports. Preserve an explicitly defined DEBUG_LEVEL, including
- * DEBUG_LEVEL=0.
+/**
+ * @brief Configure EVE debug output.
+ * @details Debug output is enabled by defining EVE_DEBUG_LEVEL:
+ *
+ *      - EVE_DEBUG_LEVEL=0 enables error messages only.
+ *      - EVE_DEBUG_LEVEL=1 enables error and standard debug messages.
+ *      - EVE_DEBUG_LEVEL>1 enables error, standard debug, and verbose
+ *        informational messages.
+ *
+ * Host platforms normally write errors to stderr and standard/verbose debug
+ * output to stdout. ESP32 uses the ESP-IDF logging API. RP2040 writes error,
+ * standard debug, and informational output to stdout because Pico stdio does
+ * not normally separate stderr from stdout over USB or UART.
+ *
+ * Applications may define EVE_DEBUG_LEVEL and the appropriate platform
+ * selection macro at compile time where required. On unsupported platforms,
+ * the debug macros expand to no-op expressions.
  */
 
-#ifndef DEBUG_LEVEL
-#if defined(USE_MPSSE) || defined(USE_FT4222) || defined(PLATFORM_EMULATOR)
-#define DEBUG_LEVEL 1
-#endif
+/*
+ * Enable standard debug output by default for host platforms that normally
+ * provide an operating-system console, such as MPSSE, FT4222 and emulator
+ * ports. Preserve an explicitly defined EVE_DEBUG_LEVEL, including
+ * EVE_DEBUG_LEVEL=0.
+ */
+#ifndef EVE_DEBUG_LEVEL
+
+#if defined(USE_MPSSE) || \
+    defined(USE_FT4222) || \
+    defined(PLATFORM_EMULATOR)
+
+#define EVE_DEBUG_LEVEL 2
+
 #endif
 
+#endif /* EVE_DEBUG_LEVEL */
+
 /*
- * Include platform-specific logging/stdio headers whenever DEBUG_LEVEL is
+ * Include platform-specific logging/stdio headers whenever EVE_DEBUG_LEVEL is
  * defined. These headers provide the functions used by the debug macros below.
  */
-#if defined(DEBUG_LEVEL)
+#if defined(EVE_DEBUG_LEVEL)
 
 #if defined(PLATFORM_RASPBERRYPI) || \
+    defined(PLATFORM_BEAGLEBONE) || \
     defined(USE_LINUX_SPI_DEV) || \
     defined(USE_MPSSE) || \
     defined(USE_FT4222) || \
@@ -74,32 +99,22 @@
 
 #elif defined(PLATFORM_ESP32)
 
-/* ESP_LOGE(), ESP_LOGI() */
+/* ESP_LOGE(), ESP_LOGI(), ESP_LOGD() */
 #include "esp_log.h"
 
 #endif /* platform selection */
 
-#endif /* defined(DEBUG_LEVEL) */
+#endif /* defined(EVE_DEBUG_LEVEL) */
 
 /**
- * @brief Configure debug output.
- * @details Debug output is enabled by defining DEBUG_LEVEL:
- *
- *      - DEBUG_LEVEL=0 enables error messages only.
- *      - DEBUG_LEVEL>0 enables error and informational messages.
- *
- * Host platforms normally write errors to stderr and informational output
- * to stdout. ESP32 uses the ESP-IDF logging API. RP2040 writes both error
- * and informational output to stdout because Pico stdio does not normally
- * separate stderr from stdout over USB or UART. On unsupported platforms,
- * the debug macros expand to no-op expressions.
+ * @brief Output an error message.
+ * @details Enabled whenever EVE_DEBUG_LEVEL is defined, including
+ *      EVE_DEBUG_LEVEL=0.
  */
+#if defined(EVE_DEBUG_LEVEL)
 
-/* Error output */
-#if defined(DEBUG_LEVEL)
-
-/* Select from supported platforms. */
 #if defined(PLATFORM_RASPBERRYPI) || \
+    defined(PLATFORM_BEAGLEBONE) || \
     defined(USE_LINUX_SPI_DEV) || \
     defined(USE_MPSSE) || \
     defined(USE_FT4222) || \
@@ -108,9 +123,11 @@
 #define EVE_DEBUG_ERROR(...) fprintf(stderr, __VA_ARGS__)
 
 #elif defined(PLATFORM_ESP32)
+
 #define EVE_DEBUG_ERROR(...) ESP_LOGE(__FUNCTION__, __VA_ARGS__)
 
 #elif defined(PLATFORM_RP2040)
+
 /* Pico stdio does not normally separate stderr from stdout over USB or UART. */
 #define EVE_DEBUG_ERROR(...)         \
     do                               \
@@ -124,20 +141,23 @@
 /* Map to no-op on unsupported platforms. */
 #define EVE_DEBUG_ERROR(...) ((void)0)
 
-#endif
+#endif /* platform selection */
 
 #else
 
-/* Map error output to no-op when DEBUG_LEVEL is not defined. */
+/* Map error output to no-op when EVE_DEBUG_LEVEL is not defined. */
 #define EVE_DEBUG_ERROR(...) ((void)0)
 
-#endif /* defined(DEBUG_LEVEL) */
+#endif /* defined(EVE_DEBUG_LEVEL) */
 
-/* Informational output */
-#if defined(DEBUG_LEVEL) && (DEBUG_LEVEL > 0)
+/**
+ * @brief Output a standard debug message.
+ * @details Enabled when EVE_DEBUG_LEVEL is greater than zero.
+ */
+#if defined(EVE_DEBUG_LEVEL) && (EVE_DEBUG_LEVEL > 0)
 
-/* Select from supported platforms. */
 #if defined(PLATFORM_RASPBERRYPI) || \
+    defined(PLATFORM_BEAGLEBONE) || \
     defined(USE_LINUX_SPI_DEV) || \
     defined(USE_MPSSE) || \
     defined(USE_FT4222) || \
@@ -155,15 +175,50 @@
 /* Map to no-op on unsupported platforms. */
 #define EVE_DEBUG_PRINTF(...) ((void)0)
 
-#endif
+#endif /* platform selection */
 
 #else
 
-/* Map informational output to no-op when DEBUG_LEVEL is undefined or zero. */
+/* Map standard debug output to no-op when EVE_DEBUG_LEVEL is undefined or zero. */
 #define EVE_DEBUG_PRINTF(...) ((void)0)
 
-#endif /* defined(DEBUG_LEVEL) && (DEBUG_LEVEL > 0) */
+#endif /* defined(EVE_DEBUG_LEVEL) && (EVE_DEBUG_LEVEL > 0) */
+
+/**
+ * @brief Output a verbose informational message.
+ * @details Enabled when EVE_DEBUG_LEVEL is greater than one.
+ */
+#if defined(EVE_DEBUG_LEVEL) && (EVE_DEBUG_LEVEL > 1)
+
+#if defined(PLATFORM_RASPBERRYPI) || \
+    defined(PLATFORM_BEAGLEBONE) || \
+    defined(USE_LINUX_SPI_DEV) || \
+    defined(USE_MPSSE) || \
+    defined(USE_FT4222) || \
+    defined(PLATFORM_EMULATOR) || \
+    defined(PLATFORM_RP2040)
+
+#define EVE_DEBUG_INFO(...) printf(__VA_ARGS__)
+
+#elif defined(PLATFORM_ESP32)
+
+#define EVE_DEBUG_INFO(...) ESP_LOGD(__FUNCTION__, __VA_ARGS__)
+
+#else
+
+/* Map to no-op on unsupported platforms. */
+#define EVE_DEBUG_INFO(...) ((void)0)
+
+#endif /* platform selection */
+
+#else
+
+/* Map verbose informational output to no-op below EVE_DEBUG_LEVEL 2. */
+#define EVE_DEBUG_INFO(...) ((void)0)
+
+#endif /* defined(EVE_DEBUG_LEVEL) && (EVE_DEBUG_LEVEL > 1) */
 
 /* EVE DEBUG END */
 
 #endif /* _EVE_DEBUG_H */
+

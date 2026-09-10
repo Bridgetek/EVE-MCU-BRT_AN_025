@@ -198,7 +198,7 @@
 //@}
 
 /**
- * @brief Defintions for transfer methods for co-processor lists.
+ * @brief Definitions for transfer methods for co-processor lists.
  * @details These can enable the use of REG_CMDB_WRITE on EVE2 onwards
  *      or enable the INT# line to be used when REG_CMD_WRITE method
  *      is being used. See the "Command FIFO" section in the Programming

@@ -276,9 +276,9 @@ Internal support headers such as `EVE_registers.h`, `EVE_commands.h`, and `EVE_d
 |                       EVE API Layer                          |
 |                                                              |
 |  EVE.h                                                       |
+|    +--> EVE_settings.h                                       |
 |    +--> EVE_commands.h                                       |
 |    +--> EVE_registers.h                                      |
-|    +--> EVE_settings.h                                       |
 |                                                              |
 |  EVE_API.c                                                   |
 |    +--> EVE.h                                                |

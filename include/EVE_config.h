@@ -42,7 +42,7 @@
 #define _EVE_CONFIG_H
 
 /*
- * Include the EVE configuration defintions.
+ * Include the EVE configuration definitions.
  */
 #include "EVE_defs.h"
 

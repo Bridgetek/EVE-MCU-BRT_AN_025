@@ -154,10 +154,10 @@
  *      Alternatively, to override this directly set the EVE_API and EVE_SUB_API macro
  *      as required.
  *      The EVE_DEVICE and the display settings must be configured before calling EVE.h.
- *      "#define EVE_DEVICE EVE_EVE_BT817" is equivalent to having "#define EVE_API 4".
+ *      "#define EVE_DEVICE EVE_BT817" is equivalent to having "#define EVE_API 4".
  *      Note the use of EVEx_ENABLE is deprecated but the macro is still defined.
  *      The EVE_DEVICE and EVE_PANEL macros must not be expanded until their
- *      allowable values from EVE_defs.h are available.VE.h).
+ *      allowable values from EVE_defs.h are available.
  */
 //@{
 #if defined(EVE_MODULE) && (EVE_MODULE != EVE_NO_MODULE)
@@ -431,8 +431,8 @@
  *   If EVE_USE_INTERRUPT_METHOD is defined then the feature is enabled.
  *   The function does not manage the INT# line (see EVE_LIB_Int function).
  */
-#if defined(EVE_USE_INTERRUPT_METHOD) && !defined(EVE_MANANGE_INTERRUPTS)
-#define EVE_MANANGE_INTERRUPTS
+#if defined(EVE_USE_INTERRUPT_METHOD) && !defined(EVE_MANAGE_INTERRUPTS)
+#define EVE_MANAGE_INTERRUPTS
 #endif
 
 /** EVE1 does not support QSPI, disable this if it has been defined */

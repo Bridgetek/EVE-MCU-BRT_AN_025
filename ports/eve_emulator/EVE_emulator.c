@@ -155,7 +155,7 @@ static const eve_tchar_t* MCU_ResolvePath(MCU_PathType pathType, const eve_tchar
     {
         // Print the absolute path.
         // EVE_Debug.h does not provide a wprintf macro.
-#if (defined(DEBUG_LEVEL) && (DEBUG_LEVEL > 0)) 
+#if defined(EVE_DEBUG_LEVEL) && (EVE_DEBUG_LEVEL > 0)
         wprintf(L"Path: %ls\n", path);
 #endif
 
@@ -189,7 +189,7 @@ static const eve_tchar_t* MCU_ResolvePath(MCU_PathType pathType, const eve_tchar
 
     // Print the path relative to the executable.
     // EVE_Debug.h does not provide a wprintf macro..
-#if (defined(DEBUG_LEVEL) && (DEBUG_LEVEL > 0)) 
+#if defined(EVE_DEBUG_LEVEL) && (EVE_DEBUG_LEVEL > 0) 
     wprintf(L"Path from executable: %ls\n", path);
 #endif
 

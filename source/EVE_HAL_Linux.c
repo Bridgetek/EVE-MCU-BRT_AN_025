@@ -72,24 +72,6 @@
 
 /* EVE HAL CONSTANTS */
 
-#ifdef EVE_HAL_DEBUG
-#define dbg_printf(...) printf(__VA_ARGS__)
-#else
-#define dbg_printf(...)
-#endif
-
-#ifdef EVE_HAL_INFO
-#define info_printf printf
-#else
-#define info_printf(...)
-#endif
-
-#ifdef EVE_HAL_ERROR
-#define err_printf(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define err_printf(...)
-#endif
-
 // Used to navigate command ring buffer on FT800 and when EVE_USE_CMDB_METHOD
 // is not defined.
 #if !defined(EVE_USE_CMDB_METHOD)
@@ -111,14 +93,14 @@ int HAL_EVE_Init(void)
 #if defined(EVE_LCD_INIT)
     if (lcd_driver_init() < 0)
     {
-        err_printf("LCD panel initialisation Failed.\n");
+        EVE_DEBUG_ERROR("LCD panel initialisation Failed.\n");
         return -1;
     }
 #endif /* defined(EVE_LCD_INIT) */
 
     if (Platform_Init() < 0)
     {
-        err_printf("Platform_Init() Failed.\n");
+        EVE_DEBUG_ERROR("Platform_Init() Failed.\n");
         return -1;
     }
 
@@ -162,7 +144,7 @@ int HAL_EVE_Init(void)
     HAL_HostCmdWrite(0, 0x00);
 
     // Read REG_ID register (0x302000) until reads 0x7C.
-    info_printf("[Waiting for REG_ID...]\n");
+    EVE_DEBUG_PRINTF("[Waiting for REG_ID...]\n");
     uint8_t val;
     while ((val = HAL_MemRead8(EVE_REG_ID)) != 0x7C)
     {
@@ -171,7 +153,7 @@ int HAL_EVE_Init(void)
     }
 
     // Ensure CPUreset register reads 0 and so FT8xx/BT88x/BT81x is ready 
-    info_printf("[Waiting for REG_CPURESET...]\n");
+    EVE_DEBUG_PRINTF("[Waiting for REG_CPURESET...]\n");
     while (HAL_MemRead8(EVE_REG_CPURESET) != 0x00)
     {
         Platform_Delay_20ms();
@@ -239,7 +221,7 @@ int HAL_EVE_Init(void)
 
         if (Platform_SPI_transfer(xfer, 1) < 0)
         {
-            err_printf("HAL_Read: Transfer Failed \n");
+            EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
             return -1;
         }
         HAL_ChipSelect(0);
@@ -251,7 +233,7 @@ int HAL_EVE_Init(void)
                 uint32_t boot;
 
                 // Wait for the REG_ID register to be set to 0x7c.
-                dbg_printf("[Waiting for REG_ID...]\n");
+                EVE_DEBUG_PRINTF("[Waiting for REG_ID...]\n");
                 while (HAL_MemRead32(EVE_REG_ID) != 0x7c)
                 {
                     Platform_Delay_20ms();
@@ -260,11 +242,11 @@ int HAL_EVE_Init(void)
                 boot = HAL_MemRead32(EVE_REG_BOOT_STATUS);
                 if (boot != 0x522e2e2e)
                 {
-                    dbg_printf("[Timeout waiting for BOOT_STATUS, stuck at 0x%08x, retrying...]\n", boot);
+                    EVE_DEBUG_PRINTF("[Waiting for BOOT_STATUS, stuck at 0x%08x, retrying...]\n", boot);
                 }
                 else if (HAL_MemRead32(EVE_REG_FREQUENCY) != 72000000)
                 {
-                    dbg_printf("[frequency %d, retrying...]\n", HAL_MemRead32(EVE_REG_FREQUENCY));
+                    EVE_DEBUG_PRINTF("[frequency %d, retrying...]\n", HAL_MemRead32(EVE_REG_FREQUENCY));
                 }
                 Platform_Delay_20ms();
                 break;
@@ -272,7 +254,7 @@ int HAL_EVE_Init(void)
         }
         if (i < sizeof(bb)) break;
 
-        info_printf("[Boot fail after reset, retrying...]\n");
+        EVE_DEBUG_PRINTF("[Boot failed after reset, retrying...]\n");
     }
 
 #if 0 // If we need to disable sequential reads.
@@ -280,7 +262,7 @@ int HAL_EVE_Init(void)
     HAL_MemWrite32(EVE_REG_SYS_CFG, 1 << 10);
 #endif
 
-    info_printf("[Boot complete]\n");
+    EVE_DEBUG_PRINTF("[Boot complete]\n");
 
 #endif  //IS_EVE_API(5)
 
@@ -288,7 +270,7 @@ int HAL_EVE_Init(void)
     // could be switched to QuadSPI in the Platform code.
     if (Platform_Setup() != 0)
     {
-        err_printf("Platform_Setup() Failed.\n");
+        EVE_DEBUG_ERROR("Platform_Setup() Failed.\n");
         return -1;
     }
 
@@ -318,7 +300,7 @@ int HAL_EVE_Deinit(void)
 {
     if (Platform_Deinit() < 0)
     {
-        err_printf("Platform_Deinit() Failed.\n");
+        EVE_DEBUG_ERROR("Platform_Deinit() Failed.\n");
         return -1;
     }
 
@@ -353,7 +335,7 @@ void HAL_SetWriteAddress(uint32_t address)
     // Ignore return values as this is an SPI write only.
     // Send high byte of address with 'read/write' bit set.
     uint32_t addr = Platform_htobe32((address << 8) | (1UL << 31));
-    dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
+    EVE_DEBUG_INFO("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 
     memset(xfer, 0, sizeof(xfer));
 
@@ -365,7 +347,7 @@ void HAL_SetWriteAddress(uint32_t address)
     // Send 32-bit address to write to.
     // Send high byte of address with 'read/write' bit set.
     uint32_t addr = Platform_htobe32(address | (1UL << 31));
-    dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
+    EVE_DEBUG_INFO("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 
     memset(xfer, 0, sizeof(xfer));
 
@@ -377,7 +359,7 @@ void HAL_SetWriteAddress(uint32_t address)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_SetWriteAddress: 0x%x Transfer Failed 0x%x \n", address, addr);
+        EVE_DEBUG_ERROR("HAL_SetWriteAddress: 0x%x Transfer Failed 0x%x \n", address, addr);
     }
 }
 
@@ -391,12 +373,12 @@ void HAL_SetReadAddress(uint32_t address)
     // Ignore return values as this is an SPI write only.
     // Send high byte of address with 'read/write' bit unset.
     uint32_t addr = Platform_htobe32((address << 8) | (0UL << 31));
-    dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
+    EVE_DEBUG_INFO("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 #else
     // Send 32-bit address to read from.
     // Send high byte of address with 'read/write' bit unset.
     uint32_t addr = Platform_htobe32(address | (0UL << 31));
-    dbg_printf("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
+    EVE_DEBUG_INFO("%s: 0x%x -> 0x%x \n", __FUNCTION__, address, addr);
 #endif
 
     memset(xfer, 0, sizeof(xfer));
@@ -408,7 +390,7 @@ void HAL_SetReadAddress(uint32_t address)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_SetReadAddress: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_SetReadAddress: Transfer Failed \n");
     }
 }
 
@@ -419,7 +401,7 @@ void HAL_Write(const uint8_t *buffer, uint32_t length)
     // values as this is an SPI write only. Data must be the correct endianess
     // for the SPI bus.
     struct spi_ioc_transfer xfer[1];
-    dbg_printf("%s: %d \n", __FUNCTION__, length);
+    EVE_DEBUG_INFO("%s: %d \n", __FUNCTION__, length);
 
     memset(xfer, 0, sizeof(xfer));
 
@@ -430,7 +412,7 @@ void HAL_Write(const uint8_t *buffer, uint32_t length)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Write: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Write: Transfer Failed \n");
     }
 }
 
@@ -461,7 +443,7 @@ void HAL_Write32(uint32_t val32)
     // Send four bytes of data after previously sending address. Ignore return
     // values as this is an SPI write only.
     struct spi_ioc_transfer xfer[1];
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val32);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val32);
 
     memset(xfer, 0, sizeof(xfer));
 
@@ -472,7 +454,7 @@ void HAL_Write32(uint32_t val32)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Write32: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Write32: Transfer Failed \n");
     }
 }
 
@@ -484,7 +466,7 @@ void HAL_Write16(uint16_t val16)
     // Send two bytes of data after previously sending address. Ignore return
     // values as this is an SPI write only.
     struct spi_ioc_transfer xfer[1];
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val16);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val16);
 
     memset(xfer, 0, sizeof(xfer));
 
@@ -495,7 +477,7 @@ void HAL_Write16(uint16_t val16)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Write16: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Write16: Transfer Failed \n");
     }
 }
 #endif
@@ -507,7 +489,7 @@ void HAL_Write8(uint8_t val8)
     // Send one byte of data after previously sending address. Ignore return
     // values as this is an SPI write only.
     struct spi_ioc_transfer xfer[1];
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val8);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val8);
 
     memset(xfer, 0, sizeof(xfer));
 
@@ -518,7 +500,7 @@ void HAL_Write8(uint8_t val8)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Write8: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Write8: Transfer Failed \n");
     }
 }
 #endif
@@ -531,7 +513,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
     // for the SPI bus.
     struct spi_ioc_transfer xfer[1];
     memset(xfer, 0, sizeof(xfer));
-    dbg_printf("%s: %d \n", __FUNCTION__, length);
+    EVE_DEBUG_INFO("%s: %d \n", __FUNCTION__, length);
 
 #if IS_EVE_API(1, 2, 3, 4)
 
@@ -542,7 +524,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Read: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
         return;
     }
 #else
@@ -557,7 +539,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Read: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
         return;
     }
     for (i = 0; i < PLATFORM_SPI_TIMEOUT; i++)
@@ -594,7 +576,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
 
                 if (Platform_SPI_transfer(xfer, 1) < 0)
                 {
-                    err_printf("HAL_Read: Transfer Failed \n");
+                    EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
                     return;
                 }
                 length -= nn;
@@ -623,10 +605,10 @@ uint32_t HAL_Read32(void)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Read32: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Read32: Transfer Failed \n");
     }
 
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val32);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val32);
 #else
     HAL_Read((uint8_t *)&val32, sizeof(uint32_t));
 #endif
@@ -653,10 +635,10 @@ uint16_t HAL_Read16(void)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Read16: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Read16: Transfer Failed \n");
     }
 
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val16);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val16);
     // Return combined 16-bit value.
     return Platform_le16toh(val16);
 }
@@ -680,10 +662,10 @@ uint8_t HAL_Read8(void)
 
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_Read8: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_Read8: Transfer Failed \n");
     }
 
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val8);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val8);
     // Return 8-bit value read.
     return val8;
 }
@@ -698,7 +680,7 @@ uint8_t HAL_Read8(void)
 // Write a 32-bit value to specified address.
 void HAL_MemWrite32(uint32_t address, uint32_t val32)
 {
-    dbg_printf("%s: %0x%x 0x%x \n", __FUNCTION__, address, val32);
+    EVE_DEBUG_INFO("%s: %0x%x 0x%x \n", __FUNCTION__, address, val32);
 
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
@@ -714,7 +696,7 @@ void HAL_MemWrite32(uint32_t address, uint32_t val32)
 // Write a 16-bit value to specified address.
 void HAL_MemWrite16(uint32_t address, uint16_t val16)
 {
-    dbg_printf("%s: %0x%x 0x%x \n", __FUNCTION__, address, val16);
+    EVE_DEBUG_INFO("%s: %0x%x 0x%x \n", __FUNCTION__, address, val16);
 
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
@@ -731,7 +713,7 @@ void HAL_MemWrite16(uint32_t address, uint16_t val16)
 // Write an 8-bit value to specified address.
 void HAL_MemWrite8(uint32_t address, uint8_t val8)
 {
-    dbg_printf("%s: %0x%x 0x%x \n", __FUNCTION__, address, val8);
+    EVE_DEBUG_INFO("%s: %0x%x 0x%x \n", __FUNCTION__, address, val8);
 
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
@@ -748,7 +730,7 @@ void HAL_MemWrite8(uint32_t address, uint8_t val8)
 uint32_t HAL_MemRead32(uint32_t address)
 {
     uint32_t val32;
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, address);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, address);
 
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
@@ -759,7 +741,7 @@ uint32_t HAL_MemRead32(uint32_t address)
     // CS high terminates the SPI transfer.
     HAL_ChipSelect(0);
 
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val32);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val32);
     // Return 32-bit value read.
     return Platform_le32toh(val32);
 }
@@ -769,7 +751,7 @@ uint32_t HAL_MemRead32(uint32_t address)
 uint16_t HAL_MemRead16(uint32_t address)
 {
     uint16_t val16;
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, address);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, address);
 
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
@@ -780,7 +762,7 @@ uint16_t HAL_MemRead16(uint32_t address)
     // CS high terminates the SPI transfer.
     HAL_ChipSelect(0);
 
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val16);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val16);
     // Return 16-bit value read.
     return Platform_le16toh(val16);
 }
@@ -791,7 +773,7 @@ uint16_t HAL_MemRead16(uint32_t address)
 uint8_t HAL_MemRead8(uint32_t address)
 {
     uint8_t val8;
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, address);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, address);
 
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
@@ -802,7 +784,7 @@ uint8_t HAL_MemRead8(uint32_t address)
     // CS high terminates the SPI transfer.
     HAL_ChipSelect(0);
 
-    dbg_printf("%s: 0x%x \n", __FUNCTION__, val8);
+    EVE_DEBUG_INFO("%s: 0x%x \n", __FUNCTION__, val8);
     // Return 8-bit value read.
     return val8;
 }
@@ -840,7 +822,7 @@ void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
 
     if (Platform_SPI_transfer(xfer, 3) < 0)
     {
-        err_printf("HAL_HostCmdWrite: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_HostCmdWrite: Transfer Failed \n");
     }
 
     // CS high terminates the SPI transfer.
@@ -869,7 +851,7 @@ void HAL_HostCmdWrite(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint8_t b5
     // Send command.
     if (Platform_SPI_transfer(xfer, 1) < 0)
     {
-        err_printf("HAL_HostCmdWrite: Transfer Failed \n");
+        EVE_DEBUG_ERROR("HAL_HostCmdWrite: Transfer Failed \n");
     }
     // CS high terminates the SPI transfer.
     HAL_ChipSelect(0);
@@ -886,7 +868,7 @@ void HAL_IncCmdPointer(uint16_t commandSize)
 #if !defined(EVE_USE_CMDB_METHOD)
     // Calculate new offset.
     writeCmdPointer = (writeCmdPointer + commandSize) & (EVE_RAM_CMD_SIZE - 1);
-    dbg_printf("%s is now 0x%x\n", __FUNCTION__, writeCmdPointer);
+    EVE_DEBUG_INFO("%s is now 0x%x\n", __FUNCTION__, writeCmdPointer);
 #endif // defined(EVE_USE_CMDB_METHOD)
 
 #if defined(EVE_COPROC_PROFILE)
@@ -904,7 +886,7 @@ uint16_t HAL_GetCmdPointer(void)
     uint16_t writeCmdPointer;
     writeCmdPointer = HAL_MemRead32(EVE_REG_CMD_WRITE) & 0xffff;
 #endif // defined(EVE_USE_CMDB_METHOD)
-    dbg_printf("%s 0x%x\n", __FUNCTION__, writeCmdPointer);
+    EVE_DEBUG_INFO("%s 0x%x\n", __FUNCTION__, writeCmdPointer);
     // Return new offset.
     return writeCmdPointer;
 }
@@ -920,7 +902,7 @@ void HAL_ResetCmdPointer(void)
 #if !defined(EVE_USE_CMDB_METHOD)
 void HAL_WriteCmdPointer(void)
 {
-    dbg_printf("%s 0x%x\n", __FUNCTION__, writeCmdPointer);
+    EVE_DEBUG_INFO("%s 0x%x\n", __FUNCTION__, writeCmdPointer);
 #if defined(EVE_USE_INTERRUPT_METHOD)
     // Clear the interrupt flags register and reset the interrupt line.
     EVE_LIB_GetInterrupt(EVE_INT_CMDEMPTY);

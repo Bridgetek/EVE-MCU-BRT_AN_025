@@ -52,10 +52,9 @@
 #include "EVE_settings.h"
 
 /*
- * Include the EVE debug-output macros.
+ * Include the command and register definitions for the selected EVE API.
+ * A valid EVE API level must be selected before these headers are included.
  */
-#include "EVE_debug.h"
-
 #if IS_EVE_API(1, 2, 3, 4, 5)
     #include "EVE_commands.h"
     #include "EVE_registers.h"
@@ -282,7 +281,7 @@ uint16_t EVE_LIB_GetDlProfile(void);
  */
 int EVE_LIB_Int(void);
 
-#if defined (EVE_MANANGE_INTERRUPTS)
+#if defined (EVE_MANAGE_INTERRUPTS)
 /**
  * @brief EVE API: Test if an interrupt flag is set
  * @details Will read the interrupt flag register and add any newly pending to
@@ -295,7 +294,7 @@ int EVE_LIB_Int(void);
  *      set then the return value will contain bits set from the mask parameter.
  */
 uint8_t EVE_LIB_GetInterrupt(uint8_t mask);
-#endif // defined (EVE_MANANGE_INTERRUPTS)
+#endif // defined (EVE_MANAGE_INTERRUPTS)
 
 /**
  * @brief EVE API: Returns a result from the co-processor command buffer
