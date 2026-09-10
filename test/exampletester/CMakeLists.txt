@@ -86,9 +86,9 @@ include_directories(
 # Tell EVE library to use SOFTWARE_SIMULATOR as base class
 add_compile_definitions(SOFTWARE_SIMULATOR)
 
-add_compile_definitions(=2)
+add_compile_definitions(EVE_DEBUG_LEVEL=2)
 add_compile_definitions(EVE_SPI_TIMEOUT=8)
-add_compile_definitions(EVE_MCU_SPI_TRANSFER=0x100)
+add_compile_definitions(EVE_MAX_SPI_TRANSFER_SIZE=0x100)
 
 # Use look up table instead of maths functions for trig
 add_compile_definitions(USE_TRIG_TABLE) 

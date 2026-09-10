@@ -432,9 +432,9 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
             while (length > 0)
             {
                 uint32_t nn = length;
-                if (nn > EVE_MCU_SPI_TRANSFER)
+                if (nn > EVE_MAX_SPI_TRANSFER_SIZE)
                 {
-                    nn = EVE_MCU_SPI_TRANSFER;
+                    nn = EVE_MAX_SPI_TRANSFER_SIZE;
                 }
                 MCU_SPIRead(buffer, nn);
                 length -= nn;

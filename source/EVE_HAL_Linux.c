@@ -565,9 +565,9 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
             while (length > 0)
             {
                 uint32_t nn = length;
-                if (nn > PLATFORM_SPI_TRANSFER)
+                if (nn > EVE_MAX_SPI_TRANSFER_SIZE)
                 {
-                    nn = PLATFORM_SPI_TRANSFER;
+                    nn = EVE_MAX_SPI_TRANSFER_SIZE;
                 }
                 xfer[0].tx_buf = (uintptr_t)NULL;
                 xfer[0].rx_buf = (uintptr_t)buffer;

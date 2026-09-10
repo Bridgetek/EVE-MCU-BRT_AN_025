@@ -76,9 +76,9 @@ struct spi_ioc_transfer;
  */
 #if IS_EVE_API(5)
 #if defined(PLATFORM_RASPBERRYPI) 
-#define PLATFORM_SPI_TRANSFER sizeof(uint32_t)
+#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
 #elif defined(PLATFORM_BEAGLEBONE) 
-#define PLATFORM_SPI_TRANSFER sizeof(uint32_t)
+#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
 #endif
 #endif
 

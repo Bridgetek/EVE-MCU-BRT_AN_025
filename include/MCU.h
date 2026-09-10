@@ -74,13 +74,13 @@
     || defined(PLATFORM_NXPK64) || defined(PLATFORM_MSP430) \
     || defined(PLATFORM_ESP32) || defined(PLATFORM_RP2040) \
     || defined(PLATFORM_MSPM0)
-#define EVE_MCU_SPI_TRANSFER sizeof(uint32_t)
+#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
 #elif defined(ARDUINO)
-#define EVE_MCU_SPI_TRANSFER sizeof(uint32_t)
+#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
 #elif defined (USE_MPSSE) || defined (USE_FT4222) || defined(PLATFORM_EMULATOR)
-#define EVE_MCU_SPI_TRANSFER 0x100
+#define EVE_MAX_SPI_TRANSFER_SIZE 0x100
 #elif defined(USE_LINUX_SPI_DEV)
-#define EVE_MCU_SPI_TRANSFER sizeof(uint32_t)
+#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
 #endif
 #endif // IS_EVE_API(5)
 
