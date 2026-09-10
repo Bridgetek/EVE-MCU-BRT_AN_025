@@ -16,6 +16,7 @@ This library is intended to provide a **C** library for embedded designs.
     - [Common Library Files](#common-library-files)
     - [Port Files](#port-files)
     - [Example Files](#example-files)
+  - [Header Dependency](#header-dependency)
   - [Device and Panel Selection](#device-and-panel-selection)
     - [Device Selection](#device-selection)
     - [Display Panel Selection](#display-panel-selection)
@@ -253,7 +254,7 @@ It is further discussed in the [Ports](#ports) section.
 
 The examples directory contains all the examples provided. There are more details in the [Example Code](#example-code) section.
 
-### Header Dependancy
+### Header Dependency
 
 The library headers are grouped by logical layer below. The arrows show direct include dependencies between files, while the layer groupings indicate each file's role within the library structure.
 
