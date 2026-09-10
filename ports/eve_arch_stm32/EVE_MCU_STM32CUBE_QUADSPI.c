@@ -99,7 +99,7 @@ extern QSPI_HandleTypeDef hqspi;
  * sent in one go then the write address may not be
  * valid on subsequent packets.
  */
-#define MCU_BUFFER_SIZE (HAL_MAX_CHUNK_SIZE)
+#define MCU_BUFFER_SIZE (EVE_MAX_CHUNK_SIZE)
 static uint8_t *MCU_buffer;
 static uint16_t MCU_bufferLen;
 

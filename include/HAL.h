@@ -383,12 +383,4 @@ int HAL_Int(void);
 
 /* EVE HAL END */
 
-/**
- * @brief Maximum transfer size of data transmit or receive
- * @details The maximum number of bytes in a transfer using the
- *      HAL_Read or HAL_Write functions.
- *      This must be less than 65535 bytes in all cases.
- */
-#define HAL_MAX_CHUNK_SIZE (1024 - sizeof(uint32_t))
-
 #endif /* _EVE_HAL_HEADER_H */

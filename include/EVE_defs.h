@@ -45,6 +45,8 @@
 #ifndef _EVE_DEFS_H
 #define _EVE_DEFS_H
 
+#include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
+
 /* EVE DEFS */
 
 /**
@@ -225,5 +227,12 @@
 #define EVE_SPI_QUAD_CHANNEL      0x02U
 //@}
 
+/**
+ * @brief Maximum transfer size of data transmit or receive
+ * @details The maximum number of bytes in a transfer using 
+ *      Read or Write functions to EVE.
+ *      This must be less than 65535 bytes in all cases.
+ */
+#define EVE_MAX_CHUNK_SIZE (1024 - sizeof(uint32_t))
 
 #endif /* _EVE_DEFS_H */

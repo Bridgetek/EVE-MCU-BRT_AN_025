@@ -116,74 +116,38 @@ The software consists of several layers which are shown below. The different lay
 - EVE HAL Layer
 - MCU Specific or Platform Specific Layer
 
-The library structure is designed to provide a format where multiple examples with support for multiple platforms can be presented.
+The library is structured so that higher-level code depends on lower-level interfaces, while MCU and platform implementations remain independent of the public EVE API and HAL interfaces. This allows multiple examples to share the same library architecture across different supported platforms.
 
 ```mermaid
 flowchart TD
-    APP["Application"]
-    API["EVE.h / EVE_API.c<br/>(EVE API Layer)"]
-    HAL["HAL.h<br/>(Hardware Abstraction Layer)"]
 
-    MCUHAL["EVE_HAL.c"]
-    LINUXHAL["EVE_HAL_Linux.c"]
+    APP["Application Layer"]
 
-    MCU["MCU.h<br/>(MCU / Host Port)"]
-    PLATFORM["Platform.h<br/>(Linux Port)"]
+    API["EVE API Layer"]
+
+    HAL["EVE HAL Layer"]
+
+    MCU["MCU / Host Interface Layer"]
+    PLATFORM["Platform Interface Layer"]
+
+    MCUPORT["MCU / Host Port Implementation"]
+    LINUXPORT["Linux Platform Implementation"]
 
     APP --> API
     API --> HAL
 
-    HAL --> MCUHAL
-    HAL --> LINUXHAL
+    HAL --> MCU
+    HAL --> PLATFORM
 
-    MCUHAL --> MCU
-    LINUXHAL --> PLATFORM
-
+    MCU --> MCUPORT
+    PLATFORM --> LINUXPORT
 ```
 
-`EVE_HAL.c` is used by MCU-style ports and host interfaces which implement `MCU.h`. `EVE_HAL_Linux.c` is used by Linux SPI device ports which implement `Platform.h`.
+The intended architectural dependency direction is from the Application Layer through the EVE API and HAL layers to the MCU or Platform interface, and finally to the platform-specific implementation.
 
-The HAL layer contains EVE-specific protocol handling, while the MCU or Platform layer contains host-specific SPI, GPIO, timing and operating-system functionality.
+The HAL layer contains EVE-specific protocol handling, while the MCU and Platform layers provide host-specific SPI, GPIO, timing, interrupt, and operating-system functionality.
 
-### Header Dependencies
-
-The main header and configuration dependencies are shown below. Arrows show configuration and dependency flow from foundational headers toward the headers which consume them.
-```mermaid
-flowchart TD
-
-    DEFS["EVE_defs.h<br/>(EVE device, module, panel and option definitions)"]
-    CONFIG["EVE_config.h<br/>(EVE configuration)"]
-    SETTINGS["EVE_settings.h<br/>(Derived EVE configuration and API selection)"]
-
-    COMMANDS["EVE_commands.h<br/>(EVE Command definitions)"]
-    REGISTERS["EVE_registers.h<br/>(EVE Register definitions)"]
-    DEBUG["EVE_debug.h<br/>(Independent debug macros)"]
-
-    subgraph PUBLIC_LEVEL[" "]
-        direction LR
-        EVE["EVE.h<br/>(Public application header)"]
-        HAL["HAL.h<br/>(Hardware Abstraction Layer interface)"]
-        MCU["MCU.h<br/>(MCU / Host specific interface)"]
-        PLATFORM["Platform.h<br/>(Linux specific interface)"]
-    end
-
-    DEFS --> CONFIG
-    CONFIG --> SETTINGS
-
-    SETTINGS --> COMMANDS
-    SETTINGS --> REGISTERS
-
-    SETTINGS --> EVE
-    SETTINGS --> HAL
-    SETTINGS --> MCU
-    SETTINGS --> PLATFORM
-
-    COMMANDS --> EVE
-    REGISTERS --> EVE
-    DEBUG --> EVE
-
-    style PUBLIC_LEVEL fill:none,stroke:none
-```
+Lower-level MCU and platform implementations should remain independent of the public EVE API and HAL interfaces.
 
 ### Folder Structure
 
@@ -288,6 +252,134 @@ It is further discussed in the [Ports](#ports) section.
 #### Example Files
 
 The examples directory contains all the examples provided. There are more details in the [Example Code](#example-code) section.
+
+### Header Dependancy
+
+The library headers are grouped by logical layer below. The arrows show direct include dependencies between files, while the layer groupings indicate each file's role within the library structure.
+
+```text
++--------------------------------------------------------------+
+|                     Application Layer                        |
+|                                                              |
+|  Application source files                                    |
+|    +--> EVE.h                                                |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                        EVE API Layer                         |
+|                                                              |
+|  EVE.h                                                       |
+|    +--> EVE_commands.h                                       |
+|    +--> EVE_registers.h                                      |
+|    +--> EVE_settings.h                                       |
+|                                                              |
+|  EVE_API.c                                                   |
+|    +--> EVE.h                                                |
+|    +--> HAL.h                                                |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                  EVE Configuration Layer                     |
+|                                                              |
+|  EVE_settings.h                                              |
+|    +--> EVE_config.h                                         |
+|                                                              |
+|  EVE_config.h                                                |
+|    +--> EVE_defs.h                                           |
+|                                                              |
+|  EVE_defs.h                                                  |
+|    Common definitions shared between library layers          |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                   EVE Definition Layer                       |
+|                                                              |
+|  EVE_commands.h                                              |
+|    +--> EVE_settings.h                                       |
+|                                                              |
+|  EVE_registers.h                                             |
+|    +--> EVE_settings.h                                       |
+|                                                              |
+|  Command encodings and register definitions used by the      |
+|  EVE API and HAL implementations.                            |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                          HAL Layer                           |
+|                                                              |
+|  HAL.h                                                       |
+|    +--> EVE_settings.h                                       |
+|    +--> MCU.h / Platform.h [as required]                     |
+|                                                              |
+|  EVE_HAL.c                  |  EVE_HAL_Linux.c               |
+|    +--> HAL.h               |    +--> HAL.h                  |
+|    +--> MCU.h               |    +--> Platform.h             |
+|    +--> EVE_registers.h     |    +--> EVE_registers.h        |
+|    +--> EVE_commands.h      |    +--> EVE_commands.h         |
+|    +--> EVE_debug.h         |    +--> EVE_debug.h            |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                 MCU / Platform Interface Layer               |
+|                                                              |
+|  MCU.h                      |  Platform.h                    |
+|    +--> EVE_settings.h      |    +--> EVE_settings.h         |
+|                                                              |
+|  HAL-facing interfaces with no dependency on EVE.h/HAL.h.    |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                   Port Implementation Layer                  |
+|                                                              |
+|  ports/eve_*/EVE_*.c                                         |
+|    +--> MCU.h                                                |
+|    +--> EVE_debug.h [as required]                            |
+|                                                              |
+|  Linux platform implementation sources                       |
+|                                                              |
+|  Used by EVE_HAL_Linux.c through the Platform.h interface.   |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                       Extension Layer                        |
+|                                                              |
+|  include/extensions/*.h                                      |
+|  source/extensions/*.c                                       |
+|                                                              |
+|  e.g. custom_touch_fw.*, lcd_panel_init.*                    |
+|                                                              |
+|  Feature-specific code isolated behind its associated guard. |
++--------------------------------------------------------------+
+
++--------------------------------------------------------------+
+|                  Independent Utility Layer                   |
+|                                                              |
+|  EVE_debug.h                                                 |
+|                                                              |
+|  Shared debug interface with no dependency on EVE.h.         |
++--------------------------------------------------------------+
+```
+
+
+The configuration headers provide a shared foundation:
+
+```text
+EVE_defs.h
+    |
+    v
+EVE_config.h
+    |
+    v
+EVE_settings.h
+```
+
+`EVE_settings.h` is consumed by the API, HAL, MCU, platform, command, and register definition headers as required.
+
+Lower-level MCU and platform implementation files should not depend on higher-level headers such as `EVE.h` or `HAL.h`.
+
+`EVE_debug.h` remains independent and may be used by API, HAL, MCU, platform, or port implementation code without requiring `EVE.h`.
+
+Extension code under `include/extensions` and `source/extensions` should depend only on the EVE functionality required by that feature and should remain isolated behind the relevant feature guards.
 
 ### Device and Panel Selection
 
@@ -409,7 +501,7 @@ If `EVE_API` is used this will override any `EVE_DEVICE` values and a number fro
 #define EVE_API 2
 #define EVE_SUB_API 1
 ```
-**The default in the distribution will be a BT817 device**. This is the EVE device used in the IDK-BT817-70A modules.
+**The default in the distribution will be a BT817 device**. This is the EVE device used in the [IDK-BT817-70A](https://brtchip.com/product/idk-bt817-70a/) modules.
 
 Note that the example programs will take the `EVE_config.h` file from the `include` directory.
 
@@ -421,7 +513,7 @@ The macro `EVE_DISPLAY_RES` will enable one of the pre-defined panel settings to
 
 The display panel settings **must** be correct for the panel in used otherwise it is unlikely that there will be any output visible.
 
-**The default in the distribution will be a WVGA panel**. This is the panel used in the IDK-BT817-70A modules.
+**The default in the distribution will be a WVGA panel**. This is the panel used in the [IDK-BT817-70A](https://brtchip.com/product/idk-bt817-70a/) modules.
 
 #### Setting Device and Panel in Build Configuration
 
@@ -1725,7 +1817,7 @@ The value of REG_CMD_DL is read after executing the commands above but before th
 
 #### Writing RAM_G and RAM_CMD
 
-These functions allow burst writes to be performed to RAM_G and RAM_CMD. Data bursts must be less than or equal to 65535 bytes, if larger bursts are required then they must be split into smaller sections. The HAL layer and MCU layer will further limit transfers to `HAL_MAX_CHUNK_SIZE` bytes.
+These functions allow burst writes to be performed to RAM_G and RAM_CMD. Data bursts must be less than or equal to 65535 bytes, if larger bursts are required then they must be split into smaller sections. The HAL layer and MCU layer will further limit transfers to `EVE_MAX_CHUNK_SIZE` bytes.
 
 ```c
 void EVE_LIB_WriteDataToRAMG(const uint8_t *ImgData, uint32_t DataSize, uint32_t DestAddress)
