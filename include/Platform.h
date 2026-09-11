@@ -99,7 +99,7 @@ struct spi_ioc_transfer;
 #endif
 #endif //!defined(EVE_SPI_MAX_TRANSFER)
 
-#endif // #if IS_EVE_API(5)
+#endif // IS_EVE_API(5)
 
 /**
  * @brief Platform SPI bus speed.

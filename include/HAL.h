@@ -74,7 +74,9 @@
  *      or write functions in a single chunk. This value must always be less
  *      than 65535 bytes.
  */
+#if !defined(EVE_HAL_CHUNK_SIZE)
 #define EVE_HAL_CHUNK_SIZE (1024 - sizeof(uint32_t))
+#endif // !defined(EVE_HAL_CHUNK_SIZE)
 
 /**
  * @brief Initialise EVE HAL Layer.
@@ -374,6 +376,25 @@ uint16_t HAL_Read16(void);
 #if IS_EVE_API(1, 2, 3, 4) // Not supported on BT82x
 uint8_t HAL_Read8(void);
 #endif
+
+/**
+ * @brief Deprecated SPI interface width definitions.
+ * @details Retained for source compatibility for one release cycle.
+ *      New code should use the EVE_SPI_SINGLE_CHANNEL,
+ *      EVE_SPI_DUAL_CHANNEL, and EVE_SPI_QUAD_CHANNEL values directly
+ *      as defined in EVE_defs.h.
+ *      The EVE_SPI_CHANNELS_T type is deprecated and may be removed in a
+ *      future release.
+ *
+ *      Single and quad channel modes are used by the library. Dual channel
+ *      mode is defined for completeness but is not currently used.
+ */
+typedef enum EVE_SPI_CHANNELS_T
+{
+	EVE_SPI_SINGLE_CHANNEL = 0x00,
+	EVE_SPI_DUAL_CHANNEL = 0x01,
+	EVE_SPI_QUAD_CHANNEL = 0x02,
+} EVE_SPI_CHANNELS_T;
 
 #if defined(EVE_QSPI_ENABLE)
 /**

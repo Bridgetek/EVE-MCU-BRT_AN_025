@@ -224,9 +224,9 @@
  *      not currently used by the library.
  */
 //@{
-#define EVE_SPI_SINGLE_CHANNEL    0
-#define EVE_SPI_DUAL_CHANNEL      1
-#define EVE_SPI_QUAD_CHANNEL      2
+#define EVE_SPI_SINGLE_CHANNEL    0x00
+#define EVE_SPI_DUAL_CHANNEL      0x01
+#define EVE_SPI_QUAD_CHANNEL      0x02
 //@}
 
 #endif /* _EVE_DEFS_H */

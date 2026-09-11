@@ -81,7 +81,7 @@
  *      size plus a small number of bytes for protocol.
  *      A larger buffer is only needed if fast reads of large blocks 
  *      of data are required from the device. Normal operation can be
- *      acheived with 32-bit reads with good performance.
+ *      achieved with 32-bit reads with good performance.
  */
 #if IS_EVE_API(5)
 
@@ -130,11 +130,11 @@
 #define EVE_SPI_TIMEOUT 16
 
 #elif defined (USE_MPSSE) 
-/* libMPSSE and libft4222 generate a 15 MHz SPI bus - 16 bytes is sufficient. */
+/* libMPSSE generate a 15 MHz SPI bus - 16 bytes is sufficient. */
 #define EVE_SPI_TIMEOUT 16
 
 #elif defined (USE_FT4222)
-/* libMPSSE and libft4222 generate a 20 MHz SPI bus - 16 bytes is sufficient. */
+/* libft4222 generate a 20 MHz SPI bus - 16 bytes is sufficient. */
 #define EVE_SPI_TIMEOUT 16
 
 #elif defined (PLATFORM_STM32_CUBE)
@@ -148,7 +148,7 @@
 #elif  defined(PLATFORM_STM32) || defined(PLATFORM_PIC) \
     || defined(PLATFORM_NXPK64) || defined(PLATFORM_MSP430) \
     || defined(PLATFORM_ESP32)|| defined(PLATFORM_MSPM0)
-/* The default SPI bus for embedded MCUs to 1 MHz */
+/* The default SPI bus for embedded MCUs is set to 1 MHz */
 #define EVE_SPI_TIMEOUT 8
 
 #elif defined(ARDUINO)

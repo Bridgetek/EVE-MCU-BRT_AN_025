@@ -1831,7 +1831,7 @@ The value of REG_CMD_DL is read after executing the commands above but before th
 
 #### Writing RAM_G and RAM_CMD
 
-These functions allow burst writes to be performed to RAM_G and RAM_CMD. Data bursts must be less than or equal to 65535 bytes, if larger bursts are required then they must be split into smaller sections. The HAL layer and MCU layer will further limit transfers to `EVE_HAL_CHUNK_SIZE` bytes.
+These functions allow burst writes to RAM_G and RAM_CMD. Individual bursts must not exceed 65535 bytes; larger transfers must be split into smaller sections. The HAL further divides transfers into chunks of up to `EVE_HAL_CHUNK_SIZE` bytes, while the underlying MCU or Platform implementation may apply additional host-interface-specific transfer limits.
 
 ```c
 void EVE_LIB_WriteDataToRAMG(const uint8_t *ImgData, uint32_t DataSize, uint32_t DestAddress)
