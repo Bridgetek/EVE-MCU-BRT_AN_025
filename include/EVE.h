@@ -162,10 +162,6 @@ typedef struct
 
 /* EVE API */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 /**
  * @brief Initialise EVE API.
  * @details Initialise the EVE API layer, HAL layer and MCU-specific hardware layer.
@@ -728,12 +724,6 @@ void EVE_CMD_WAITCOND(uint32_t a, uint32_t func, uint32_t ref, uint32_t mask);
 void EVE_CMD_RESULT(uint32_t a);
 void EVE_CMD_I2SSTARTUP(uint32_t freq);
 #endif
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif /* __cplusplus */
-
-/* EVE API END */
 
 #if IS_EVE_API(5)
 // Base patch for BT82x

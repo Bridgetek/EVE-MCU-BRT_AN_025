@@ -68,10 +68,6 @@
 
 /* EVE HAL */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 /**
  * @brief Maximum size of an EVE data transfer chunk.
  * @details Defines the maximum number of data bytes passed to the EVE read
@@ -413,10 +409,6 @@ int HAL_SetSPIMode(uint8_t mode);
  *      the method is not supported on the MCU or platform.
  */
 int HAL_Int(void);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif /* __cplusplus */
 
 /* EVE HAL END */
 

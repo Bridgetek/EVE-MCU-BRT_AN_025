@@ -52,13 +52,18 @@
  *      library include directory, and the required source files from the
  *      library source directory to the sketch location.
  *
- *      This file uses the MCU interface provided by MCU.h. The header provides
- *      its own C/C++ linkage protection where required.
+ *      It will be possible to make a library with these files.
+ *      Include these files as "C" files.
  */
 //@{
-/* Include functions for the EVE-MCU-Dev MCU layer. */
+extern "C" {
+/* Include functions for EVE-MCU-Dev library API layer */
+#include <EVE.h> 
+/* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
+#include <HAL.h> 
+/* Include functions for EVE-MCU-Dev library MCU layer */
 #include <MCU.h>
-//@}
+}
 
 /* EVE MCU HEADER END */
 

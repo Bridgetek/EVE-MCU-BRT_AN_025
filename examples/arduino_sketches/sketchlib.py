@@ -3,25 +3,20 @@ import os
 import re
 
 # Add files to list of files to copy
-def add_files(src_dir, dest_dir, file_list, convert_c_to_ino=True):
+def add_files(src_dir, dest_dir, file_list):
     added_files = []
     if not os.path.exists(src_dir):
         raise Exception(f"The directory \"{src_dir}\" doesn't exist")
-
     # Add files to the list
     try:
         for d in file_list:
-            dest_name = d
-
-            if convert_c_to_ino and os.path.splitext(d)[1] == '.c':
-                dest_name = os.path.splitext(d)[0] + '.ino'
-
-            added_files.append((
-                os.path.join(src_dir, d),
-                os.path.join(dest_dir, dest_name)
-            ))
+            dino = d
+            if os.path.splitext(d)[1] == '.c':
+                dino = os.path.splitext(d)[0] + '.ino'
+            added_files.append((os.path.join(src_dir,d), os.path.join(dest_dir,dino)))
     except:
         raise Exception(f"The directory \"{src_dir}\" doesn't look correct")
+    return added_files
 
     return added_files
 
