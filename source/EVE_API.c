@@ -1195,9 +1195,9 @@ void EVE_BITMAP_ZORDER(uint8_t o)
     HAL_WriteCmd(EVE_ENC_BITMAP_ZORDER(o));
 }
 
-void EVE_PALLETE_SOURCE_H(uint8_t addr)
+void EVE_PALETTE_SOURCE_H(uint8_t addr)
 {
-    HAL_WriteCmd(EVE_ENC_PALLETE_SOURCE_H(addr));
+    HAL_WriteCmd(EVE_ENC_PALETTE_SOURCE_H(addr));
 }
 
 void EVE_REGION(uint8_t y, uint8_t h, uint16_t dest)

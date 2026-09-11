@@ -233,7 +233,7 @@ int HAL_EVE_Init(void)
         xfer[0].len = sizeof(bb);
         xfer[0].cs_change = 0;
 
-        if (Platform_SPI_transfer(xfer, 1) < 0)
+        if (Platform_SPITransfer(xfer, 1) < 0)
         {
             EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
             return -1;
@@ -371,7 +371,7 @@ void HAL_SetWriteAddress(uint32_t address)
     xfer[0].cs_change = 0;
 #endif
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_SetWriteAddress: 0x%x Transfer Failed 0x%x \n", address, addr);
     }
@@ -402,7 +402,7 @@ void HAL_SetReadAddress(uint32_t address)
     xfer[0].len = 4;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_SetReadAddress: Transfer Failed \n");
     }
@@ -424,7 +424,7 @@ void HAL_Write(const uint8_t *buffer, uint32_t length)
     xfer[0].len = length;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Write: Transfer Failed \n");
     }
@@ -466,7 +466,7 @@ void HAL_Write32(uint32_t val32)
     xfer[0].len = 4;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Write32: Transfer Failed \n");
     }
@@ -489,7 +489,7 @@ void HAL_Write16(uint16_t val16)
     xfer[0].len = 2;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Write16: Transfer Failed \n");
     }
@@ -512,7 +512,7 @@ void HAL_Write8(uint8_t val8)
     xfer[0].len = 1;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Write8: Transfer Failed \n");
     }
@@ -536,7 +536,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
     xfer[0].len = length;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
         return;
@@ -551,7 +551,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
     xfer[0].len = EVE_SPI_TIMEOUT;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
         return;
@@ -588,7 +588,7 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
                 xfer[0].len = nn;
                 xfer[0].cs_change = 0;
 
-                if (Platform_SPI_transfer(xfer, 1) < 0)
+                if (Platform_SPITransfer(xfer, 1) < 0)
                 {
                     EVE_DEBUG_ERROR("HAL_Read: Transfer Failed \n");
                     return;
@@ -617,7 +617,7 @@ uint32_t HAL_Read32(void)
     xfer[0].len = 4;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Read32: Transfer Failed \n");
     }
@@ -647,7 +647,7 @@ uint16_t HAL_Read16(void)
     xfer[0].len = 2;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Read16: Transfer Failed \n");
     }
@@ -674,7 +674,7 @@ uint8_t HAL_Read8(void)
     xfer[0].len = 1;
     xfer[0].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_Read8: Transfer Failed \n");
     }
@@ -834,7 +834,7 @@ void HAL_HostCmdWrite(uint8_t cmd, uint8_t param)
     xfer[2].len = 1;
     xfer[2].cs_change = 0;
 
-    if (Platform_SPI_transfer(xfer, 3) < 0)
+    if (Platform_SPITransfer(xfer, 3) < 0)
     {
         EVE_DEBUG_ERROR("HAL_HostCmdWrite: Transfer Failed \n");
     }
@@ -863,7 +863,7 @@ void HAL_HostCmdWrite(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint8_t b5
     // CS low begins the SPI transfer.
     HAL_ChipSelect(1);
     // Send command.
-    if (Platform_SPI_transfer(xfer, 1) < 0)
+    if (Platform_SPITransfer(xfer, 1) < 0)
     {
         EVE_DEBUG_ERROR("HAL_HostCmdWrite: Transfer Failed \n");
     }

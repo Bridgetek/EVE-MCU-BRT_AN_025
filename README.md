@@ -450,9 +450,9 @@ The following options are supported in `EVE_config.h`:
   | ----- | ----- | ----- |
   | **EVE_QVGA**    | 320 x 240   | [DP-0351-11A](https://brtchip.com/product/dp-0351-11a/) | 
   | **EVE_WQVGA**   | 320 x 240   | [DP-0431-11A](https://brtchip.com/product/dp-0431-11a/), [DP-0502-11A](https://brtchip.com/product/dp-0502-11a/) |
-  | **EVE_WQVGAR**  | 480 x 480   | [IDM2040-21R](https://brtchip.com/product/idm2040-21r/) with 2.1 inch round display |
-  | **EVE_WVGA**    | 800 x 480   | [DP-0501-01A](https://brtchip.com/product/dp-0501-01a/), [DP-0501-11A](https://brtchip.com/product/dp-0501-11a/), [DP-0701-11A](https://brtchip.com/product/dp-0701-01a/) |
-  | **EVE_WSVGA**   | 1024 x 600  | [ME817EV](https://brtchip.com/product/me817ev/) with 7 inch display |
+  | **EVE_WQVGAR**  | 480 x 480   | [IDM2040-21R](https://brtchip.com/product/idm2040-21r/) with 2.1-inch round display |
+  | **EVE_WVGA**    | 800 x 480   | [DP-0501-01A](https://brtchip.com/product/dp-0501-01a/), [DP-0501-11A](https://brtchip.com/product/dp-0501-11a/), [DP-0701-01A](https://brtchip.com/product/dp-0701-01a/) |
+  | **EVE_WSVGA**   | 1024 x 600  | [ME817EV](https://brtchip.com/product/me817ev/) with 7-inch display |
   | **EVE_WXGA**    | 1280 x 800  | [DP-1011-01A](https://brtchip.com/product/dp-1011-01a/) |
   | **EVE_WXGA_NG** | 1280 x 800  | [DP-1011-02A](https://brtchip.com/product/dp-1011-02a/) |
   | **EVE_FULLHD**  | 1920 x 1080 | [DP-1561-01A](https://brtchip.com/product/dp-1561-01a/), [DP-1561-02A](https://brtchip.com/product/dp-1561-02a/) |
@@ -463,37 +463,37 @@ The following options are supported in `EVE_config.h`:
   The following panels are defined:
   | Panel Name | Description | Touch Type |
   | ----- | ----- | ----- |
-  | **EVE_DP_0351_11A** | 3.5 inch display panel (**QVGA**) |  Resistive | 
-  | **EVE_DP_0431_11A** | 4.3 inch display panel (**WQVGA**) | Resistive  |
-  | **EVE_DP_0501_01A** | 5 inch display panel (**WVGA**) | Capacitive  |
-  | **EVE_DP_0501_11A** | 5 inch display panel (**WVGA**) | Resistive |
-  | **EVE_DP_0502_11A** | 5 inch display panel (**WQVGA**) |  Resistive |
-  | **EVE_DP_0701_01A** | 7 inch display panel (**WVGA**) | Capacitive |
-  | **EVE_DP_1011_01A** | 10.1 inch display panel (**WXGA**) | Capacitive |
-  | **EVE_DP_1011_02A** | 10.1 inch display panel (**WXGA_NG**) | Capacitive |
-  | **EVE_DP_1012_01A** | 10.1 inch  display panel (**WUXGA**) |  Capacitive |
-  | **EVE_DP_1561_01A** | 15.6 inch display panel (**FullHD**) | Capacitive |
-  | **EVE_DP_1561_02A** | 15.6 inch display panel (**FullHD**) | Capacitive |
-  | **EVE_DP_IDM43A**   | 4.3 inch display panel (**WQVGA**) | Capacitive |
-  | **EVE_DP_IDM21R**   | 2.1 inch display panel (**WQVGAR**) | Capacitive |
+  | **EVE_DP_0351_11A** | 3.5-inch display panel (**QVGA**) |  Resistive | 
+  | **EVE_DP_0431_11A** | 4.3-inch display panel (**WQVGA**) | Resistive  |
+  | **EVE_DP_0501_01A** | 5-inch display panel (**WVGA**) | Capacitive  |
+  | **EVE_DP_0501_11A** | 5-inch display panel (**WVGA**) | Resistive |
+  | **EVE_DP_0502_11A** | 5-inch display panel (**WQVGA**) |  Resistive |
+  | **EVE_DP_0701_01A** | 7-inch display panel (**WVGA**) | Capacitive |
+  | **EVE_DP_1011_01A** | 10.1-inch display panel (**WXGA**) | Capacitive |
+  | **EVE_DP_1011_02A** | 10.1-inch display panel (**WXGA_NG**) | Capacitive |
+  | **EVE_DP_1012_01A** | 10.1-inch  display panel (**WUXGA**) |  Capacitive |
+  | **EVE_DP_1561_01A** | 15.6-inch display panel (**FullHD**) | Capacitive |
+  | **EVE_DP_1561_02A** | 15.6-inch display panel (**FullHD**) | Capacitive |
+  | **EVE_DP_IDM43A**   | 4.3-inch display panel (**WQVGA**) | Capacitive |
+  | **EVE_DP_IDM21R**   | 2.1-inch display panel (**WQVGAR**) | Capacitive |
 
 - `EVE_MODULE` The Bridgetek module or development kit type for EVE device and display panel. The following options are defined:
   | Module or Kit Name | Description |
   | ----- | ----- |
-  | **EVE_VM800B**      | [VM800B35A-BK](https://brtchip.com/product/vm800b35a-bk/) with 3.5 inch display. (**FT800** with **DP-0351-11A**) |
-  | **EVE_VM800C35A**   | [VM800C35A-D](https://brtchip.com/product/vm800c35a-d/) with 3.5 inch display. (**FT800** with **DP-0351-11A**) |
-  | **EVE_VM800C43A**   | [VM800C43A-D](https://brtchip.com/product/vm800c43a-d/) with 4.3 inch display. (**FT800** with **DP-0431-11A**) |
-  | **EVE_VM800C50A**   | [VM800C50A-D]() with 5 inch display. (**FT800** with **DP-0502-11A**) |
-  | **EVE_VM810C**      | [VM810C50A-D](https://brtchip.com/product/vm810c50a-d/) with 5 inch display. (**FT810** with **DP-0501-11A**) |
-  | **EVE_ME812A**      | [ME812A-WH50R](https://brtchip.com/product/me812a-wh50r/), [ME812AU-WH50R](https://brtchip.com/product/me812au-wh50r/) with 5 inch display. (**FT812** with **DP-0501-11A**) |
-  | **EVE_ME813A**      | [ME813A-WH50C](https://brtchip.com/product/me813a-wh50c/) with 5 inch display. (**FT813** with **DP-0501-01A**) |
-  | **EVE_VM816C**      | [VM816C50A-D](https://brtchip.com/product/vm816c50a-d/), [VM816CU50A-D](https://brtchip.com/product/vm816cu50a-d/) with 5 inch display. (**BT816** with **DP-0501-11A**) |
-  | **EVE_VM880C**      | [VM880C](https://brtchip.com/product/vm880c/) with assumed 4.3 inch display. (**BT880** with **DP-0431-11A**) |
-  | **EVE_IDM204021R**  | [IDM2040-21R](https://brtchip.com/product/idm2040-21r/) (**FT800** with 2.1 inch display) |
+  | **EVE_VM800B**      | [VM800B35A-BK](https://brtchip.com/product/vm800b35a-bk/) with 3.5-inch display. (**FT800** with **DP-0351-11A**) |
+  | **EVE_VM800C35A**   | [VM800C35A-D](https://brtchip.com/product/vm800c35a-d/) with 3.5-inch display. (**FT800** with **DP-0351-11A**) |
+  | **EVE_VM800C43A**   | [VM800C43A-D](https://brtchip.com/product/vm800c43a-d/) with 4.3-inch display. (**FT800** with **DP-0431-11A**) |
+  | **EVE_VM800C50A**   | [VM800C50A-D]() with 5-inch display. (**FT800** with **DP-0502-11A**) |
+  | **EVE_VM810C**      | [VM810C50A-D](https://brtchip.com/product/vm810c50a-d/) with 5-inch display. (**FT810** with **DP-0501-11A**) |
+  | **EVE_ME812A**      | [ME812A-WH50R](https://brtchip.com/product/me812a-wh50r/), [ME812AU-WH50R](https://brtchip.com/product/me812au-wh50r/) with 5-inch display. (**FT812** with **DP-0501-11A**) |
+  | **EVE_ME813A**      | [ME813A-WH50C](https://brtchip.com/product/me813a-wh50c/) with 5-inch display. (**FT813** with **DP-0501-01A**) |
+  | **EVE_VM816C**      | [VM816C50A-D](https://brtchip.com/product/vm816c50a-d/), [VM816CU50A-D](https://brtchip.com/product/vm816cu50a-d/) with 5-inch display. (**BT816** with **DP-0501-11A**) |
+  | **EVE_VM880C**      | [VM880C](https://brtchip.com/product/vm880c/) with assumed 4.3-inch display. (**BT880** with **DP-0431-11A**) |
+  | **EVE_IDM204021R**  | [IDM2040-21R](https://brtchip.com/product/idm2040-21r/) (**FT800** with 2.1-inch display) |
   | **EVE_IDM204043A**  | [IDM2040-43A](https://brtchip.com/product/idm2040-43a/) (**BT883** with **DP-0431-11A**) |
   | **EVE_IDM20407A**   | [IDM2040-7A](https://brtchip.com/product/idm2040-7a/) (**BT817** with **DP-0701-01A**) |
-  | **EVE_VM820B10A**   | [VM820B10A](https://brtchip.com/product/vm820b10a/) with 10.1 inch display. (**BT820** with **DP-1011-02A**) |
-  | **EVE_VM820B15A**   | [VM820B15A](https://brtchip.com/product/vm820b15a/) with 15.6 inch display. (**BT820** with **DP-1561-02A**) |
+  | **EVE_VM820B10A**   | [VM820B10A](https://brtchip.com/product/vm820b10a/) with 10.1-inch display. (**BT820** with **DP-1011-02A**) |
+  | **EVE_VM820B15A**   | [VM820B15A](https://brtchip.com/product/vm820b15a/) with 15.6-inch display. (**BT820** with **DP-1561-02A**) |
   | **EVE_IDK_FT810_43A**   | [FT810 IC Development Kit](https://brtchip.com/product/idk-ft810-43a/) with 4.3-inch display. (**FT810** with **DP-0431-11A**) |
   | **EVE_IDK_BT816_50A**   | [BT816 IC Development Kit](https://brtchip.com/product/idk-bt816-50a/) with 5.0-inch display. (**BT816** with **DP-0501-11A**) |
   | **EVE_IDK_BT817_70A**   | [BT817 IC Development Kit](https://brtchip.com/product/idk-bt817-70a/) with 7.0-inch display. (**BT817** with **DP-0701-01A**) |

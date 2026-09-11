@@ -212,7 +212,7 @@
 /** Upper 8 bits of a > 24-bit bitmap source address. */
 #define EVE_ENC_BITMAP_SOURCE_H(addr)       ((0x31ul<<24)|((uint32_t)(addr)&0xfful))
 #define EVE_ENC_BITMAP_ZORDER(o)            ((0x33ul<<24)|(((o)&0xfful)<<0))
-#define EVE_ENC_PALLETE_SOURCE_H(addr)      ((0x32ul<<24)|((uint32_t)(addr)&0xfful))
+#define EVE_ENC_PALETTE_SOURCE_H(addr)      ((0x32ul<<24)|((uint32_t)(addr)&0xfful))
 #define EVE_ENC_REGION(y,h,dest)            ((0x34ul<<24)|(((y)&0x3ful)<<18)|(((h)&0x3ful)<<12)|(((dest)&0xffful)<<0))
 #endif /* IS_EVE_API(5) */
 

@@ -46,7 +46,7 @@
 #define _EVE_PLATFORM_HEADER_H
 
 #ifndef __linux__
-#error This file is for Linux-based systems. It is not intended for use on Microcontrollers.
+#error This file is for Linux-based systems. It is not intended for use on microcontrollers.
 #endif
 
 #include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
@@ -58,6 +58,10 @@
  */
 #include "EVE_settings.h"
 
+/*
+ * Forward declaration for the Linux SPI transfer structure.
+ * This avoids requiring Linux-specific SPI headers in Platform.h.
+ */
 struct spi_ioc_transfer;
 
 /*
@@ -79,7 +83,7 @@ struct spi_ioc_transfer;
 /**
  * @brief Platform allows large SPI transfers.
  * @details Set to maximum size of SPI transfers allowed, e.g. on
- *      microcontrollers. This has been added to support enhanced SPI
+ *      the target platform. This has been added to support enhanced SPI
  *      access on BT82x.
  *      Do not make this larger than required as on BT82x (EVE API 5) 
  *      there will be a stack buffer allocated in HAL_Read of this 
@@ -105,7 +109,7 @@ struct spi_ioc_transfer;
  * @brief Platform SPI bus speed.
  * @details In general, a port is responsible for ensuring timeout accuracy on 
  *      the SPI bus.
- *      Timeout for a read is a maximum of 7uS for BT82x.
+ *      Timeout for a read is a maximum of 7 uS for BT82x.
  *      The timeout value here must be adjusted for the host system SPI clock speed.
  *      The SPI clock speed is set in the Platform_Init(void) function for a port.
  *      Values here match the default values set in the ports.
@@ -123,7 +127,7 @@ struct spi_ioc_transfer;
 /* Raspberry Pi SPI bus is set to 1 MHz by default */
 #define EVE_SPI_TIMEOUT 8
 #elif defined(PLATFORM_BEAGLEBONE) 
-/* The default SPI on Beaglebone to 1 MHz */
+/* The default SPI on BeagleBone to 1 MHz */
 #define EVE_SPI_TIMEOUT 8
 #else
 /* Linux systems SPI busses are set to 1 MHz by default */
@@ -171,7 +175,7 @@ int Platform_Setup(void);
  * @returns 0 if successful, -1 if failed.
  */
 int Platform_SetSPIMode(uint8_t mode);
-#endif
+#endif // defined(EVE_QSPI_ENABLE)
 
 /**
  * @brief Platform specific SPI transfer
@@ -180,7 +184,7 @@ int Platform_SetSPIMode(uint8_t mode);
  *       of both. Multiple transfers can be grouped with the spi_ioc_transfer
  *       structure.
  */
-int Platform_SPI_transfer(struct spi_ioc_transfer *xfer, int count);
+int Platform_SPITransfer(struct spi_ioc_transfer *xfer, int count);
 
 /**
  * @brief Platform specific chip select enable
@@ -237,7 +241,7 @@ int Platform_Int(void);
 void Platform_SPIWrite(const uint8_t *DataToWrite, uint32_t length);
 
 /**
- * @brief Platform specific SPI 8 bit read
+ * @brief Platform specific SPI 8-bit read
  * @details Performs an SPI dummy write and returns the data received in
  *       response.
  * @returns Data received from EVE.
@@ -245,15 +249,15 @@ void Platform_SPIWrite(const uint8_t *DataToWrite, uint32_t length);
 uint8_t Platform_SPIRead8(void);
 
 /**
- * @brief Platform specific SPI 8 bit write
+ * @brief Platform specific SPI 8-bit write
  * @details Performs an SPI write and discards the data received in
  *       response.
- * @param Data to write to EVE.
+ * @param DataToWrite - Data to write to EVE.
  */
 void Platform_SPIWrite8(uint8_t DataToWrite);
 
 /**
- * @brief Platform specific SPI 16 bit read
+ * @brief Platform specific SPI 16-bit read
  * @details Performs an SPI dummy write and returns the data received in
  *       response.
  * @returns Data received from EVE.
@@ -261,15 +265,15 @@ void Platform_SPIWrite8(uint8_t DataToWrite);
 uint16_t Platform_SPIRead16(void);
 
 /**
- * @brief Platform specific SPI 16 bit write
+ * @brief Platform specific SPI 16-bit write
  * @details Performs an SPI write and discards the data received in
  *       response.
- * @param Data to write to EVE.
+ * @param DataToWrite - Data to write to EVE.
  */
 void Platform_SPIWrite16(uint16_t DataToWrite);
 
 /**
- * @brief Platform specific SPI 24 bit read
+ * @brief Platform specific SPI 24-bit read
  * @details Performs an SPI dummy write and returns the data received in
  *       response.
  * @returns Data received from EVE.
@@ -277,15 +281,15 @@ void Platform_SPIWrite16(uint16_t DataToWrite);
 /*uint32_t Platform_SPIRead24(void);*/
 
 /**
- * @brief Platform specific SPI 24 bit write
+ * @brief Platform specific SPI 24-bit write
  * @details Performs an SPI write and discards the data received in
  *       response.
- * @param Data to write to EVE.
+ * @param DataToWrite - Data to write to EVE.
  */
 void Platform_SPIWrite24(uint32_t DataToWrite);
 
 /**
- * @brief Platform specific SPI 32 bit read
+ * @brief Platform specific SPI 32-bit read
  * @details Performs an SPI dummy write and returns the data received in
  *       response.
  * @returns Data received from EVE.
@@ -293,7 +297,7 @@ void Platform_SPIWrite24(uint32_t DataToWrite);
 uint32_t Platform_SPIRead32(void);
 
 /**
- * @brief Platform specific SPI 32 bit write
+ * @brief Platform specific SPI 32-bit write
  * @details Performs an SPI write and discards the data received in
  *       response.
  * @param Data to write to EVE.
@@ -302,7 +306,7 @@ void Platform_SPIWrite32(uint32_t DataToWrite);
 
 /**
  * @brief Platform specific 20 ms delay
- * @details Cause the platform to idle or otherwise delay for a minimum of
+ * @details Causes the platform to idle or otherwise delay for a minimum of
  *       20 milliseconds. This is used during initialisation to perform a
  *       power down of the EVE for a controlled minimum period of time.
  */
@@ -310,14 +314,14 @@ void Platform_Delay_20ms(void);
 
 /**
  * @brief Platform specific 500 ms delay
- * @details Cause the platform to idle or otherwise delay for a minimum of
+ * @details Causes the platform to idle or otherwise delay for a minimum of
  *       500 milliseconds. This is used during initialisation to perform a
  *       power down of the EVE for a controlled minimum period of time.
  */
 void Platform_Delay_500ms(void);
 
 /**
- * @brief Platform specific ms clock counter
+ * @brief Platform specific millisecond clock counter
  * @details Get the current monotonic clock counter from the platform for the
  *       purpose of making a useful timeout.
  */

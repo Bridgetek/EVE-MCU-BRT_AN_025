@@ -41,7 +41,7 @@
 // Guard against being used for incorrect platform or architecture.
 #if defined(PLATFORM_BEAGLEBONE)
 
-#pragma message "Compiling " __FILE__ " for Beaglebone Black"
+#pragma message "Compiling " __FILE__ " for BeagleBone Black"
 
 /* EVE MCU HEADER */
 
@@ -211,13 +211,13 @@ int Platform_Setup(void)
 int Platform_SetSPIMode(uint8_t mode)
 {
     /* QSPI Configuration */
-    #error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on beaglebone
+    #error EVE_QSPI_ENABLE (QSPI interfaces to EVE) is currently not supported on BeagleBone
     /* Initialize IO2 and IO3 pad/pin for quad settings */
     return -1;
 }
 #endif // defined(EVE_QSPI_ENABLE)
 
-int Platform_SPI_transfer(struct spi_ioc_transfer *xfer, int count)
+int Platform_SPITransfer(struct spi_ioc_transfer *xfer, int count)
 {
     return (ioctl(spiHandle, SPI_IOC_MESSAGE(count), xfer));
 }

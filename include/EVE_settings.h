@@ -493,7 +493,7 @@
 #define EVE_DISPLAY_RES EVE_WQVGA   
 
 #elif EVE_PANEL == EVE_DP_0701_01A
-// DP-0701-11A WVGA (Capacitive)
+// DP-0701-01A WVGA (Capacitive)
 #define EVE_DISPLAY_RES EVE_WVGA
 
 #elif EVE_PANEL == EVE_DP_1011_01A

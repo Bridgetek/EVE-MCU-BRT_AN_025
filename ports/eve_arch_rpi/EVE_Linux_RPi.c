@@ -212,7 +212,7 @@ int Platform_SetSPIMode(uint8_t mode)
 }
 #endif // defined(EVE_QSPI_ENABLE)
 
-int Platform_SPI_transfer(struct spi_ioc_transfer *xfer, int count)
+int Platform_SPITransfer(struct spi_ioc_transfer *xfer, int count)
 {
     return (ioctl(spiHandle, SPI_IOC_MESSAGE(count), xfer));
 }
