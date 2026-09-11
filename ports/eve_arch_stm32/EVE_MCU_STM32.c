@@ -111,7 +111,13 @@ int MCU_Deinit(void)
 int MCU_Setup(void)
 {
     /* Additional SPI Configuration */
-    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+    /* Increase SPI speed after initialisation is complete.
+     * See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
+     * This will set the SPI to maximum speed configured
+     * in STM32CubeMX.
+     * This can be a maximum of 60 MHz for BT820, or 30 MHz
+     * on FT81x, BT88x, BT81x. */
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
     if (HAL_SPI_Init(&hspi1) != HAL_OK)
     {
         /* Initialization Error */

@@ -244,9 +244,9 @@ MCU-style and host-interface ports implement the interface declared by `MCU.h` a
 
 Linux SPI ports implement the interface declared by `Platform.h` and are used by `EVE_HAL_Linux.c`.
 
-These implementations provide the host-specific SPI, GPIO, timing, byte-order and optional interrupt functionality required by the HAL. Where supported, a port may also provide host-side configuration for optional interfaces such as Quad SPI.
+These implementations provide the host-specific SPI, GPIO, timing, byte-order and optional interrupt functionality required by the HAL. Where supported, a port may also provide host-side configuration for optional interfaces such as Quad SPI. Port-specific SPI buffer sizes and transfer limits are implementation details and are independent of `EVE_HAL_CHUNK_SIZE`.
 
-EVE-specific register and command handling remains in the HAL layer and should not normally be implemented by the MCU or Platform layer.
+EVE-specific register and command handling remains in the HAL layer and should not normally be implemented by the MCU or Platform layer. Likewise, HAL transfer chunking policy remains in the HAL layer, while MCU and Platform implementations manage only the transfer and buffering constraints of their host interface.
 
 It is further discussed in the [Ports](#ports) section.
 
@@ -257,7 +257,7 @@ The examples directory contains all the examples provided. There are more detail
 ### Header Dependency
 
 The library headers are grouped below by their role within the library structure. The arrows show direct include dependencies between files. Software layers are
-shown alongside shared configuration, definition, extension, and utility headers
+shown alongside shared configuration, definition, extension, and utility headers.
 
 The public EVE-MCU-Dev interface headers `EVE.h`, `HAL.h`, `MCU.h`, and `Platform.h` are included through the configured include path using angle brackets. Extension headers under `include/extensions` are also included through the configured include path, for example `<extensions/bt82x_patch.h>`.
 
@@ -1831,7 +1831,7 @@ The value of REG_CMD_DL is read after executing the commands above but before th
 
 #### Writing RAM_G and RAM_CMD
 
-These functions allow burst writes to be performed to RAM_G and RAM_CMD. Data bursts must be less than or equal to 65535 bytes, if larger bursts are required then they must be split into smaller sections. The HAL layer and MCU layer will further limit transfers to `EVE_MAX_CHUNK_SIZE` bytes.
+These functions allow burst writes to be performed to RAM_G and RAM_CMD. Data bursts must be less than or equal to 65535 bytes, if larger bursts are required then they must be split into smaller sections. The HAL layer and MCU layer will further limit transfers to `EVE_HAL_CHUNK_SIZE` bytes.
 
 ```c
 void EVE_LIB_WriteDataToRAMG(const uint8_t *ImgData, uint32_t DataSize, uint32_t DestAddress)

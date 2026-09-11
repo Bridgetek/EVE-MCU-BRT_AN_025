@@ -94,6 +94,13 @@
 
 // ----------------------- MCU Transmit Buffering  -----------------------------
 
+/*
+ * Size of the local buffered-write staging area.
+ *
+ * Writes larger than this buffer are automatically split into multiple
+ * SPI transfers by the port implementation. This value therefore does not
+ * represent the maximum transfer size accepted from the HAL.
+ */
 #define MCU_BUFFER_SIZE 512
 uint8_t *MCU_buffer;
 uint16_t MCU_bufferLen;

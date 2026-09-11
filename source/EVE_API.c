@@ -580,10 +580,10 @@ void EVE_LIB_WriteDataToRAMG(const uint8_t* ImgData, uint32_t DataSize, uint32_t
     while (CurrentIndex < DataSize)
     {
         // If more than ChunkSize bytes to send
-        if ((DataSize - CurrentIndex) > EVE_MAX_CHUNK_SIZE)
+        if ((DataSize - CurrentIndex) > EVE_HAL_CHUNK_SIZE)
         {
             // ... then add ChunkSize to the current target index to make new target
-            ChunkSize = EVE_MAX_CHUNK_SIZE;
+            ChunkSize = EVE_HAL_CHUNK_SIZE;
             // ... and this is not the last chunk
             IsLastChunk = 0;
         }
@@ -625,10 +625,10 @@ void EVE_LIB_ReadDataFromRAMG(uint8_t* ImgData, uint32_t DataSize, uint32_t SrcA
     while (CurrentIndex < DataSize)
     {
         // If more than ChunkSize bytes to receive
-        if ((DataSize - CurrentIndex) > EVE_MAX_CHUNK_SIZE)
+        if ((DataSize - CurrentIndex) > EVE_HAL_CHUNK_SIZE)
         {
             // ... then add ChunkSize to the current target index to make new target
-            ChunkSize = EVE_MAX_CHUNK_SIZE;
+            ChunkSize = EVE_HAL_CHUNK_SIZE;
             // ... and this is not the last chunk
             IsLastChunk = 0;
         }
@@ -670,8 +670,8 @@ void EVE_LIB_WriteDataToCMD(const uint8_t* ImgData, uint32_t DataSize)
     EVE_LIB_EndCoProList();
 
     // This code works by sending the data in a series of one or more bursts.
-    // If the data is more than EVE_MAX_CHUNK_SIZE bytes, it is sent as a series of
-    // one or more bursts and then the remainder. EVE_MAX_CHUNK_SIZE is a size which
+    // If the data is more than EVE_HAL_CHUNK_SIZE bytes, it is sent as a series of
+    // one or more bursts and then the remainder. EVE_HAL_CHUNK_SIZE is a size which
     // is smaller than the command buffer on the EVE and small enough to gain
     // maximum buffering effect from the MCU SPI hardware.
 
@@ -682,10 +682,10 @@ void EVE_LIB_WriteDataToCMD(const uint8_t* ImgData, uint32_t DataSize)
     while (CurrentIndex < DataSize)
     {
         // If more than ChunkSize bytes to send.
-        if ((DataSize - CurrentIndex) > EVE_MAX_CHUNK_SIZE)
+        if ((DataSize - CurrentIndex) > EVE_HAL_CHUNK_SIZE)
         {
             // ... then add ChunkSize to the current target index to make new target.
-            ChunkSize = EVE_MAX_CHUNK_SIZE;
+            ChunkSize = EVE_HAL_CHUNK_SIZE;
             // ... and this is not the last chunk.
             IsLastChunk = 0;
         }
@@ -701,7 +701,7 @@ void EVE_LIB_WriteDataToCMD(const uint8_t* ImgData, uint32_t DataSize)
 #if !defined(EVE_USE_INTERRUPT_METHOD)
         // Wait until there is space.
         uint32_t Freespace = 0;
-        while (Freespace < EVE_MAX_CHUNK_SIZE)
+        while (Freespace < EVE_HAL_CHUNK_SIZE)
         {
             Freespace = HAL_CheckCmdFreeSpace();
         }

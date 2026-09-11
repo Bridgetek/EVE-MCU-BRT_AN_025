@@ -109,11 +109,13 @@ static GPIO_Dir gpio_dir[4] = { GPIO_OUTPUT , GPIO_INPUT, GPIO_INPUT, GPIO_INPUT
 
 // ----------------------- MCU Transmit Buffering  -----------------------------
 
-/* Transfers are "chunked" to the EVE by the HAL.
- * This buffer is large enough to receive one chunk of
- * data and transmit it in one go. If it cannot be
- * sent in one go then the write address may not be
- * valid on subsequent packets.
+/*
+ * Size of the local SPI transfer buffer.
+ *
+ * EVE data transfers are chunked by the HAL. This buffer is sized to hold
+ * a complete HAL transfer chunk so that it can be sent to EVE in a single
+ * SPI transaction. Splitting a chunk across multiple transactions may
+ * invalidate the write address used by subsequent transfers.
  */
 #define MCU_BUFFER_SIZE (64 * 1024)
 static uint8_t *MCU_buffer;

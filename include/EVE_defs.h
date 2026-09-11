@@ -45,8 +45,6 @@
 #ifndef _EVE_DEFS_H
 #define _EVE_DEFS_H
 
-#include <stdint.h> // for Uint8/16/32 and Int8/16/32 data types
-
 /* EVE DEFS */
 
 /**
@@ -226,17 +224,9 @@
  *      not currently used by the library.
  */
 //@{
-#define EVE_SPI_SINGLE_CHANNEL    0x00U
-#define EVE_SPI_DUAL_CHANNEL      0x01U
-#define EVE_SPI_QUAD_CHANNEL      0x02U
+#define EVE_SPI_SINGLE_CHANNEL    0
+#define EVE_SPI_DUAL_CHANNEL      1
+#define EVE_SPI_QUAD_CHANNEL      2
 //@}
-
-/**
- * @brief Maximum size of an EVE data transfer chunk.
- * @details Defines the maximum number of data bytes passed to the EVE read
- *      or write functions in a single chunk. This value must always be less
- *      than 65535 bytes.
- */
-#define EVE_MAX_CHUNK_SIZE (1024 - sizeof(uint32_t))
 
 #endif /* _EVE_DEFS_H */

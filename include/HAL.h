@@ -55,7 +55,26 @@
  */
 #include "EVE_settings.h"
 
+/*
+ * Support deprecated MCU SPI configuration macros.
+ * User-supplied deprecated values take precedence over the replacement
+ * macros and are retained for one release cycle.
+ */
+#if defined(HAL_MAX_CHUNK_SIZE)
+#undef EVE_HAL_CHUNK_SIZE
+#define EVE_HAL_CHUNK_SIZE HAL_MAX_CHUNK_SIZE
+#endif // defined(HAL_MAX_CHUNK_SIZE)
+
+
 /* EVE HAL */
+
+/**
+ * @brief Maximum size of an EVE data transfer chunk.
+ * @details Defines the maximum number of data bytes passed to the EVE read
+ *      or write functions in a single chunk. This value must always be less
+ *      than 65535 bytes.
+ */
+#define EVE_HAL_CHUNK_SIZE (1024 - sizeof(uint32_t))
 
 /**
  * @brief Initialise EVE HAL Layer.

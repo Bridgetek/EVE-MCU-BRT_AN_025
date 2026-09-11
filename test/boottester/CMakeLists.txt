@@ -67,7 +67,7 @@ add_compile_definitions(SOFTWARE_SIMULATOR)
 
 add_compile_definitions(EVE_DEBUG_LEVEL=1)
 add_compile_definitions(EVE_SPI_TIMEOUT=8)
-add_compile_definitions(EVE_MAX_SPI_TRANSFER_SIZE=0x100)
+add_compile_definitions(EVE_SPI_MAX_TRANSFER=0x100)
 
 # Source code for EVE library (targetted at FT4222)
 add_library(eve_library # EVE library name

@@ -69,7 +69,20 @@
  * and must be below 11 MHz. The fastest speed is usually in the order of
  * 120 to 240 MHz. So a prescalar of 64 will be safely within that limit.
  * The speed will be set to the full speed after initialisation. */
-#define QSPI_CLK_DIV (64 - 1)
+#define QSPI_INIT_CLK_DIV (64 - 1)
+
+/*
+ * Runtime QSPI prescaler selected according to the EVE API level.
+ *
+ * Current STM32H7 simple examples use a 120 MHz QSPI kernel clock:
+ * API 2-4: 120 MHz / (4 + 1) = 24 MHz
+ * API 5:   120 MHz / (1 + 1) = 60 MHz
+ */
+#if IS_EVE_API(5)
+#define QSPI_RUN_CLK_DIV 1
+#else 
+#define QSPI_RUN_CLK_DIV 4
+#endif
 
 /* EVE MCU HEADER END */
 
@@ -88,16 +101,19 @@
 #endif
 
 /* SPI handler declaration */
+
 /* There is only one QUADSPI channel available. */
 extern QSPI_HandleTypeDef hqspi;
 
-/* Transfers are "chunked" to the EVE by the HAL.
- * This buffer is large enough to receive one chunk of
- * data and transmit it in one go. If it cannot be
- * sent in one go then the write address may not be
- * valid on subsequent packets.
+/*
+ * Size of the local SPI transfer buffer.
+ *
+ * EVE data transfers are chunked by the HAL. This buffer is sized to hold
+ * a complete HAL transfer chunk so that it can be sent to EVE in a single
+ * SPI transaction. Splitting a chunk across multiple transactions may
+ * invalidate the write address used by subsequent transfers.
  */
-#define MCU_BUFFER_SIZE (EVE_MAX_CHUNK_SIZE)
+#define MCU_BUFFER_SIZE 1024
 static uint8_t *MCU_buffer;
 static uint16_t MCU_bufferLen;
 
@@ -124,7 +140,7 @@ int MCU_Init(void)
      * Use the "safe" prescaler to get a safe clock for SPI
      * during initialisation.
      */
-    hqspi.Init.ClockPrescaler = QSPI_CLK_DIV;
+    hqspi.Init.ClockPrescaler = QSPI_INIT_CLK_DIV;
     if (HAL_QSPI_Init(&hqspi) != HAL_OK)
     {
       Error_Handler();
@@ -157,6 +173,15 @@ int MCU_Deinit(void)
 
 int MCU_Setup(void)
 {
+    /* Additional QSPI Configuration */
+    /* Increase the QSPI clock after EVE initialisation is complete. */
+    hqspi.Init.ClockPrescaler = QSPI_RUN_CLK_DIV;
+
+    if (HAL_QSPI_Init(&hqspi) != HAL_OK)
+    {
+        return -1;
+    }
+    
     return 0;
 }
 
@@ -169,15 +194,6 @@ int MCU_SetSPIMode(uint8_t mode)
     }
     else if (mode == EVE_SPI_QUAD_CHANNEL)
     {
-        /* QSPI Configuration */
-        /* Increase SPI speed after initialisation is complete.
-        * See the notes for EVE_SPI_TIMEOUT in the MCU.h file.
-        * This will set the QUADSPI to maximum speed configured
-        * in STM32CubeMX.
-        * This can be a maximum of 60 MHz for BT820, or 25 MHz
-        * on FT81x, BT88x, BT81x. */
-        MX_QUADSPI_Init();
-
         isQuadSPI = 1;
     }
     else

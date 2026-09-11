@@ -60,6 +60,20 @@
 
 struct spi_ioc_transfer;
 
+/*
+ * Support deprecated platform SPI configuration macros.
+ * These definitions are retained for one release cycle.
+ */
+#if defined(MCU_SPI_TRANSFER)
+#undef EVE_SPI_MAX_TRANSFER
+#define EVE_SPI_MAX_TRANSFER MCU_SPI_TRANSFER
+#endif // defined(MCU_SPI_TRANSFER)
+
+#if defined(MCU_SPI_TIMEOUT)
+#undef EVE_SPI_TIMEOUT
+#define EVE_SPI_TIMEOUT MCU_SPI_TIMEOUT
+#endif // defined(MCU_SPI_TIMEOUT)
+
 /* EVE PLATFORM */
 
 /**
@@ -75,12 +89,17 @@ struct spi_ioc_transfer;
  *      achieved with 32-bit reads with good performance.
  */
 #if IS_EVE_API(5)
+
+#if !defined(EVE_SPI_MAX_TRANSFER)
+/* platform-specific default */
 #if defined(PLATFORM_RASPBERRYPI) 
-#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
+#define EVE_SPI_MAX_TRANSFER sizeof(uint32_t)
 #elif defined(PLATFORM_BEAGLEBONE) 
-#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
+#define EVE_SPI_MAX_TRANSFER sizeof(uint32_t)
 #endif
-#endif
+#endif //!defined(EVE_SPI_MAX_TRANSFER)
+
+#endif // #if IS_EVE_API(5)
 
 /**
  * @brief Platform SPI bus speed.
@@ -97,6 +116,9 @@ struct spi_ioc_transfer;
  *      The minimum timeout allowed is 8 bytes.
  */
 #if IS_EVE_API(5)
+
+#if !defined(EVE_SPI_TIMEOUT)
+/* platform-specific default */
 #if defined(PLATFORM_RASPBERRYPI) 
 /* Raspberry Pi SPI bus is set to 1 MHz by default */
 #define EVE_SPI_TIMEOUT 8
@@ -107,7 +129,9 @@ struct spi_ioc_transfer;
 /* Linux systems SPI busses are set to 1 MHz by default */
 #define EVE_SPI_TIMEOUT 8
 #endif
-#endif
+#endif // !defined(EVE_SPI_TIMEOUT)
+
+#endif // IS_EVE_API(5)
 
 /**
  * @brief Platform specific initialisation

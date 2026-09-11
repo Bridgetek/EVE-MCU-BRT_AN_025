@@ -67,6 +67,20 @@
 
 /* EVE HAL */
 
+/*
+ * Report deprecated MCU SPI configuration items.
+ * This is done here since it will only occur once.
+ */
+#if defined(MCU_SPI_TRANSFER)
+#pragma message ("Warning: Configuration setting MCU_SPI_TRANSFER deprecated in favour of EVE_SPI_MAX_TRANSFER.")
+#endif // defined(MCU_SPI_TRANSFER)
+#if defined(MCU_SPI_TIMEOUT)
+#pragma message ("Warning: Configuration setting MCU_SPI_TIMEOUT deprecated in favour of EVE_SPI_TIMEOUT.")
+#endif // defined(MCU_SPI_TIMEOUT)
+#if defined(HAL_MAX_CHUNK_SIZE)
+#pragma message ("Warning: Configuration setting HAL_MAX_CHUNK_SIZE deprecated in favour of EVE_HAL_CHUNK_SIZE.")
+#endif // defined(HAL_MAX_CHUNK_SIZE)
+
 // Used to navigate command ring buffer on FT800 and when EVE_USE_CMDB_METHOD
 // is not defined.
 #if !defined(EVE_USE_CMDB_METHOD)
@@ -432,9 +446,9 @@ void HAL_Read(uint8_t *buffer, uint32_t length)
             while (length > 0)
             {
                 uint32_t nn = length;
-                if (nn > EVE_MAX_SPI_TRANSFER_SIZE)
+                if (nn > EVE_SPI_MAX_TRANSFER)
                 {
-                    nn = EVE_MAX_SPI_TRANSFER_SIZE;
+                    nn = EVE_SPI_MAX_TRANSFER;
                 }
                 MCU_SPIRead(buffer, nn);
                 length -= nn;

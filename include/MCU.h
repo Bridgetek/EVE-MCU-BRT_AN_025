@@ -54,6 +54,21 @@
  */
 #include "EVE_settings.h"
 
+/*
+ * Support deprecated MCU SPI configuration macros.
+ * User-supplied deprecated values take precedence over the replacement
+ * macros and are retained for one release cycle.
+ */
+#if defined(MCU_SPI_TRANSFER)
+#undef EVE_SPI_MAX_TRANSFER
+#define EVE_SPI_MAX_TRANSFER MCU_SPI_TRANSFER
+#endif // defined(MCU_SPI_TRANSFER)
+
+#if defined(MCU_SPI_TIMEOUT)
+#undef EVE_SPI_TIMEOUT
+#define EVE_SPI_TIMEOUT MCU_SPI_TIMEOUT
+#endif // defined(MCU_SPI_TIMEOUT)
+
 /* EVE MCU */
 
 /**
@@ -69,19 +84,24 @@
  *      acheived with 32-bit reads with good performance.
  */
 #if IS_EVE_API(5)
+
+#if !defined(EVE_SPI_MAX_TRANSFER)
+/* platform-specific default */
 #if defined (PLATFORM_STM32_CUBE) || defined(PLATFORM_FT9XX) \
     || defined(PLATFORM_STM32) || defined(PLATFORM_PIC) \
     || defined(PLATFORM_NXPK64) || defined(PLATFORM_MSP430) \
     || defined(PLATFORM_ESP32) || defined(PLATFORM_RP2040) \
     || defined(PLATFORM_MSPM0)
-#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
+#define EVE_SPI_MAX_TRANSFER sizeof(uint32_t)
 #elif defined(ARDUINO)
-#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
+#define EVE_SPI_MAX_TRANSFER sizeof(uint32_t)
 #elif defined (USE_MPSSE) || defined (USE_FT4222) || defined(PLATFORM_EMULATOR)
-#define EVE_MAX_SPI_TRANSFER_SIZE 0x100
+#define EVE_SPI_MAX_TRANSFER 0x100
 #elif defined(USE_LINUX_SPI_DEV)
-#define EVE_MAX_SPI_TRANSFER_SIZE sizeof(uint32_t)
+#define EVE_SPI_MAX_TRANSFER sizeof(uint32_t)
 #endif
+#endif // !defined(EVE_SPI_MAX_TRANSFER)
+
 #endif // IS_EVE_API(5)
 
 /**
@@ -98,6 +118,9 @@
  *      The minimum timeout allowed is 8 bytes.
  */
 #if IS_EVE_API(5)
+
+#if !defined(EVE_SPI_TIMEOUT)
+/* platform-specific default */
 #if defined(PLATFORM_FT9XX) 
 /* FT9xx SPI Bus is set to 12.5 MHz by default */
 #define EVE_SPI_TIMEOUT 16
@@ -115,12 +138,12 @@
 #define EVE_SPI_TIMEOUT 16
 
 #elif defined (PLATFORM_STM32_CUBE)
-/* STM32 SPI bus is set to 60 MHz by default */
+/* STM32 SPI bus is set to 60 MHz by default for EVE 5*/
 #if defined(EVE_QSPI_ENABLE)
 #define EVE_SPI_TIMEOUT 56
 #else
 #define EVE_SPI_TIMEOUT 16
-#endif
+#endif // defined(EVE_QSPI_ENABLE)
 
 #elif  defined(PLATFORM_STM32) || defined(PLATFORM_PIC) \
     || defined(PLATFORM_NXPK64) || defined(PLATFORM_MSP430) \
@@ -134,7 +157,8 @@
 
 #elif defined(PLATFORM_EMULATOR)
 #define EVE_SPI_TIMEOUT 8
-#endif
+#endif // platform selection
+#endif // !defined(EVE_SPI_TIMEOUT)
 
 #endif // IS_EVE_API(5)
 
