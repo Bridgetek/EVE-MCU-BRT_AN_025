@@ -68,6 +68,10 @@
 
 /* EVE HAL */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /**
  * @brief Maximum size of an EVE data transfer chunk.
  * @details Defines the maximum number of data bytes passed to the EVE read
@@ -378,23 +382,12 @@ uint8_t HAL_Read8(void);
 #endif
 
 /**
- * @brief Deprecated SPI interface width definitions.
+ * @brief Deprecated SPI interface width type.
  * @details Retained for source compatibility for one release cycle.
- *      New code should use the EVE_SPI_SINGLE_CHANNEL,
- *      EVE_SPI_DUAL_CHANNEL, and EVE_SPI_QUAD_CHANNEL values directly
- *      as defined in EVE_defs.h.
- *      The EVE_SPI_CHANNELS_T type is deprecated and may be removed in a
- *      future release.
- *
- *      Single and quad channel modes are used by the library. Dual channel
- *      mode is defined for completeness but is not currently used.
+ *      New code should use uint8_t with the EVE_SPI_*_CHANNEL definitions
+ *      from EVE_defs.h.
  */
-typedef enum EVE_SPI_CHANNELS_T
-{
-	EVE_SPI_SINGLE_CHANNEL = 0x00,
-	EVE_SPI_DUAL_CHANNEL = 0x01,
-	EVE_SPI_QUAD_CHANNEL = 0x02,
-} EVE_SPI_CHANNELS_T;
+typedef uint8_t EVE_SPI_CHANNELS_T;
 
 #if defined(EVE_QSPI_ENABLE)
 /**
@@ -420,6 +413,10 @@ int HAL_SetSPIMode(uint8_t mode);
  *      the method is not supported on the MCU or platform.
  */
 int HAL_Int(void);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif /* __cplusplus */
 
 /* EVE HAL END */
 

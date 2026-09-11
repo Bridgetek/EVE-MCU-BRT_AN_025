@@ -46,23 +46,18 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-/** @brief Library Includes
- * NOTE That all the file used in the example sketch must be in the same directory
- * as the sketch. Copy this file, the include files from the include directory,
- * the source files from the source directory of the library to the sketch 
- * location.
- * It will be possible to make a library with these files.
- * Include these files as "C" files.
+/** @brief Library includes
+ * @details All files used by the example sketch must be located in the same
+ *      directory as the sketch. Copy this file, the required headers from the
+ *      library include directory, and the required source files from the
+ *      library source directory to the sketch location.
+ *
+ *      This file uses the MCU interface provided by MCU.h. The header provides
+ *      its own C/C++ linkage protection where required.
  */
 //@{
-extern "C" {
-/* Include functions for EVE-MCU-Dev library API layer */
-#include <EVE.h> 
-/* Include functions for EVE-MCU-Dev library Hardware Abstraction layer */
-#include <HAL.h> 
-/* Include functions for EVE-MCU-Dev library MCU layer */
+/* Include functions for the EVE-MCU-Dev MCU layer. */
 #include <MCU.h>
-}
 //@}
 
 /* EVE MCU HEADER END */
